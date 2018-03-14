@@ -1,3 +1,5 @@
+//-- SHOUTOUT BallistyxStreams: YOU DA BOMB --//
+
 require('dotenv').config();
 const express = require('express');
 const twitch = require('./twitch/twitch.js');
@@ -15,28 +17,29 @@ app.get('/', (request, response) => {
 
 // Twitch Oauth //
 app.get(apiBase+'twitch/auth', (request, response) => {
-    var authUri = twitch.authBuilder();
+    var authPath = twitch.authPathBuilder();
     console.log('Starting Twitch auth...');
     
-    https.request({ 
-            method: 'get', 
-            path: authUri, 
-            headers: {accept: 'application/vnd.twitchtv.v5+json'
-        },  
-        res => {
-        
-        }        
-    });
-    
-    https.get(authUri, result => {
-        result.on('data', (data) => {
-            response.set('Content-Type', 'text/html');
-            response.send(data);
+    var oauthRequest = https.request({ 
+            method: 'GET',
+            hostname: twitch.authHostName, 
+            path: authPath, 
+            headers: { accept: 'application/vnd.twitchtv.v5+json' }
+        }, 
+        (res) => {
+            res.on('data', (data) => {
+                response.set('Content-Type', 'text/html');
+                response.send(data);
+            });
+        }).on('error', (error) => {
+            console.log(error);
         });
-    });
+    
+    //-- SHOUTOUT 73CN0109y: YOU DA BOMB --//
+    oauthRequest.end();
 });
 
 // Twitch Oauth Success //
-app.get(apiBase+'/twitch/auth/success', (request, response) => {
+app.get(apiBase+'twitch/auth/success', (request, response) => {
     response.send("SUCCESS");
 });
