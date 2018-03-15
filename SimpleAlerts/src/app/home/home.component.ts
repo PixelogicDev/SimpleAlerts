@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -7,13 +8,19 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-  authSuccessUrl = 'http://localhost:8000/api/v1/twitch/auth/success';
-  constructor(private http: HttpClient) { }
+  //-- Properties --//
+  // Need to save code from URI in order to generate access_tokens //
+  // To get access token will need to post to server //
+  code: String;
+  
+  constructor(
+      private http: HttpClient,
+      private route: ActivatedRoute,
+      private router: Router) { }
 
   ngOnInit() {
-      this.http.get(this.authSuccessUrl).subscribe(data => {
-          console.log(data);
+      this.route.queryParams.subscribe(params => {
+           this.code = params['code']);
+           console.log(this.code); 
       });
   }
-
-}

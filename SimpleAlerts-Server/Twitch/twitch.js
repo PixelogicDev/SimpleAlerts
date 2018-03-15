@@ -1,5 +1,5 @@
 const authBase = 'id.twitch.tv';
-const scopes = 'user:read:email+openid';
+const scopes = 'user:read:email+bits:read';
 
 module.exports = {
     authHostName: authBase,
