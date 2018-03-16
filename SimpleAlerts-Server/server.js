@@ -8,11 +8,11 @@ const https = require('https');
 const bodyParser = require('body-parser');
 const app = express();
 
+// Body Parser //
+app.use(bodyParser.json());
+
 // PROPS TO: https://stackoverflow.com/questions/18310394/no-access-control-allow-origin-node-apache-port-issue //
 app.use(function (req, res, next) {
-    // Body Parser //
-    bodyParser.json();
-    
     // Website you wish to allow to connect
     res.setHeader('Access-Control-Allow-Origin', '*');
 
@@ -38,23 +38,44 @@ app.get('/', (request, response) => {
     response.send('Hit /');
 });
 
-// Twitch Oauth //
+// Twitch Token Request //
 app.post(apiBase+'twitch/token', (request, response) => {
     console.log('Starting Twitch token generator...');
-    var tokenPath = twitch.tokenPathBuilder();
-    console.log(request.body);
+    console.log("Auth Code: "+request.body.code);
     
+    var tokenPath = twitch.tokenPathBuilder(request.body.code);
     var tokenRequest = https.request({ 
             method: 'POST',
-            hostname: twitch.baseHostName, 
+            hostname: twitch.authBaseHostName, 
             path: tokenPath, 
             headers: { accept: 'application/vnd.twitchtv.v5+json' }
         }, 
         (res) => {
             res.on('data', (data) => {
-                // response.set('Content-Type', 'text/html');
-                response.send('SUCCESS');
-                console.log(data);
+                var tokenJson = JSON.parse(data.toString());
+                
+                // Get user data and send to client //
+                var infoRequest = https.request({
+                    method: 'GET',
+                    hostname: twitch.apiBaseHostName,
+                    path: '/helix/users',
+                    headers: { Authorization: `Bearer ${tokenJson.access_token}`}
+                },
+                (userRes) => {
+                    userRes.on('data', (userData) => {
+                        var userDataArray = JSON.parse(userData.toString());
+                        var userData = userDataArray.data[0];
+                        
+                        console.log('Sending reply...');
+                        response.send({
+                            displayName: userData.display_name,
+                            email: userData.email
+                        });
+                        console.log('Reply sent.');
+                    });
+                });
+                
+                infoRequest.end();
                 console.log('Received Token.');
             });
         }).on('error', (error) => {

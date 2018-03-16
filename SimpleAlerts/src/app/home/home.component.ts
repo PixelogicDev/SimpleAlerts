@@ -13,6 +13,8 @@ export class HomeComponent implements OnInit {
   // To get access token will need to post to server //
   code: String;
   tokenUrl = 'http://localhost:8000/api/v1/twitch/token';
+  displayName: String;
+  email: String;
   
   constructor(
       private http: HttpClient,
@@ -21,20 +23,20 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
       this.route.queryParams.subscribe(params => {
-           this.code = params['code']);
-           console.log(this.code); 
-           
-           this.generateToken();
+        this.code = params['code'];
+        this.generateToken(); 
       });
-      
-    //-- Helpers --//
-    generateToken() {
-        let json = {
-            'code': this.code
-        };
-        
-        this.http.post(this.tokenUrl, json).subscribe(data => {
-            console.log('Some post request happened.');
-        });
-    }
   }
+  
+  //-- Helpers --//
+  generateToken() {
+      let json = {
+          'code': this.code
+      };
+      
+      this.http.post(this.tokenUrl, json).subscribe(data => {
+        this.displayName = data['displayName'];
+        this.email = data['email'];
+      });
+  }
+}
