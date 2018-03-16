@@ -1,11 +1,12 @@
-const authBase = 'id.twitch.tv';
-const scopes = 'user:read:email+bits:read';
-
 module.exports = {
-    authHostName: authBase,
+    baseHostName: 'id.twitch.tv',
     
-    authPathBuilder: () => {
-        return '/oauth2/authorize?client_id='+process.env.TWITCH_CLIENT_ID+'&redirect_uri='
-        +process.env.TWITCH_REDIRECT_URI+'&response_type=token+id_token'+'&scope='+scopes
+    tokenPathBuilder: (code) => {
+        return 
+            `/oauth2/token?client_id=${process.env.TWITCH_CLIENT_ID}`+
+            `&client_secret=${process.env.TWITCH_SECRET}`+
+            `&code=${code}`+
+            `&grant_type=authorization_code`+
+            `&redirect_uri=${process.env.TWITCH_REDIRECT_URI}`;
     }
 }

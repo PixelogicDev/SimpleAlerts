@@ -12,6 +12,7 @@ export class HomeComponent implements OnInit {
   // Need to save code from URI in order to generate access_tokens //
   // To get access token will need to post to server //
   code: String;
+  tokenUrl = 'http://localhost:8000/api/v1/twitch/token';
   
   constructor(
       private http: HttpClient,
@@ -22,5 +23,18 @@ export class HomeComponent implements OnInit {
       this.route.queryParams.subscribe(params => {
            this.code = params['code']);
            console.log(this.code); 
+           
+           this.generateToken();
       });
+      
+    //-- Helpers --//
+    generateToken() {
+        let json = {
+            'code': this.code
+        };
+        
+        this.http.post(this.tokenUrl, json).subscribe(data => {
+            console.log('Some post request happened.');
+        });
+    }
   }

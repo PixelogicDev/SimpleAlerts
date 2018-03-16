@@ -5,11 +5,14 @@ const express = require('express');
 const twitch = require('./twitch/twitch.js');
 const apiBase = '/api/v1/';
 const https = require('https');
+const bodyParser = require('body-parser');
 const app = express();
 
 // PROPS TO: https://stackoverflow.com/questions/18310394/no-access-control-allow-origin-node-apache-port-issue //
 app.use(function (req, res, next) {
-
+    // Body Parser //
+    bodyParser.json();
+    
     // Website you wish to allow to connect
     res.setHeader('Access-Control-Allow-Origin', '*');
 
@@ -36,28 +39,30 @@ app.get('/', (request, response) => {
 });
 
 // Twitch Oauth //
-app.get(apiBase+'twitch/auth', (request, response) => {
-    var authPath = twitch.authPathBuilder();
-    console.log('Starting Twitch auth...');
+app.post(apiBase+'twitch/token', (request, response) => {
+    console.log('Starting Twitch token generator...');
+    var tokenPath = twitch.tokenPathBuilder();
+    console.log(request.body);
     
-    var oauthRequest = https.request({ 
-            method: 'GET',
-            hostname: twitch.authHostName, 
-            path: authPath, 
+    var tokenRequest = https.request({ 
+            method: 'POST',
+            hostname: twitch.baseHostName, 
+            path: tokenPath, 
             headers: { accept: 'application/vnd.twitchtv.v5+json' }
         }, 
         (res) => {
             res.on('data', (data) => {
-                response.set('Content-Type', 'text/html');
-                response.send(data);
-                console.log('Sent Twitch Auth data.');
+                // response.set('Content-Type', 'text/html');
+                response.send('SUCCESS');
+                console.log(data);
+                console.log('Received Token.');
             });
         }).on('error', (error) => {
             console.log(error);
         });
     
     //-- SHOUTOUT 73CN0109y: YOU DA BOMB --//
-    oauthRequest.end();
+    tokenRequest.end();
 });
 
 // Twitch Oauth Success //
