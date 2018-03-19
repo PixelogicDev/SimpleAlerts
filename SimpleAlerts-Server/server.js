@@ -2,6 +2,7 @@
 require('dotenv').config();
 const express = require('express');
 const twitch = require('./twitch/twitch');
+const db = require('./database/db');
 const apiBase = '/api/v1/';
 const https = require('https');
 const bodyParser = require('body-parser');
@@ -11,7 +12,7 @@ const app = express();
 app.use(bodyParser.json());
 
 // PROPS TO: https://stackoverflow.com/questions/18310394/no-access-control-allow-origin-node-apache-port-issue //
-app.use(function (req, res, next) {
+app.use(function(req, res, next) {
   // Website you wish to allow to connect
   res.setHeader('Access-Control-Allow-Origin', '*');
 
@@ -54,6 +55,9 @@ app.post(apiBase + 'twitch/token', async (request, response) => {
 
   // Get user data to send back to client //
   var userJson = await twitch.getUserInfo(token);
+
+  // Create new user in db //
+  db.addNewUser(userJson.userID);
 
   // Send data to client //
   response.send(userJson);

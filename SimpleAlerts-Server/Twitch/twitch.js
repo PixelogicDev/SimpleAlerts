@@ -22,7 +22,8 @@ module.exports = {
       console.log('[getAuthToken] Starting auth token request...');
 
       https
-        .request({
+        .request(
+          {
             method: 'POST',
             hostname: authBaseHostName,
             path: tokenPathBuilder(code),
@@ -57,7 +58,9 @@ module.exports = {
     return new Promise((resolve, reject) => {
       console.log('[getUserInfo] Starting auth token request...');
 
-      https.request({
+      https
+        .request(
+          {
             method: 'GET',
             hostname: apiBaseHostName,
             path: '/helix/users',
@@ -73,11 +76,14 @@ module.exports = {
               var usersData = JSON.parse(userInfo.toString());
 
               if (usersData.length === 0) {
-                return reject('[getUserInfo] There was no data in the response.');
+                return reject(
+                  '[getUserInfo] There was no data in the response.'
+                );
               }
 
               var user = usersData.data[0];
               userJson = {
+                userID: user.id,
                 displayName: user.display_name,
                 email: user.email
               };
@@ -89,11 +95,11 @@ module.exports = {
             });
           }
         )
-        .on('error', (error) => {
+        .on('error', error => {
           console.log(error);
           reject(error);
         })
         .end();
     });
   }
-}
+};
