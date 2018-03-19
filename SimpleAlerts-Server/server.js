@@ -11,7 +11,7 @@ const app = express();
 app.use(bodyParser.json());
 
 // PROPS TO: https://stackoverflow.com/questions/18310394/no-access-control-allow-origin-node-apache-port-issue //
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   // Website you wish to allow to connect
   res.setHeader('Access-Control-Allow-Origin', '*');
 
@@ -49,16 +49,12 @@ app.post(apiBase + 'twitch/token', async (request, response) => {
   // Use code from client to request token //
   var authCode = request.body.code;
 
-  console.log('AUTHCODE: ' + authCode);
-
   // Request token //
   var token = await twitch.getAuthToken(authCode);
 
-  console.log(`TOKEN IN SERVER: ${token}`);
-
   // Get user data to send back to client //
-  //var userJson = await twitch.getUserInfo(token);
-  response.send('userJson');
+  var userJson = await twitch.getUserInfo(token);
+
   // Send data to client //
-  //response.send(userJson);
+  response.send(userJson);
 });

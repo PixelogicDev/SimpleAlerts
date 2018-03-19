@@ -19,9 +19,10 @@ module.exports = {
     let token;
 
     return new Promise((resolve, reject) => {
+      console.log('[getAuthToken] Starting auth token request...');
+
       https
-        .request(
-          {
+        .request({
             method: 'POST',
             hostname: authBaseHostName,
             path: tokenPathBuilder(code),
@@ -31,11 +32,12 @@ module.exports = {
           },
           response => {
             response.on('data', tokenJson => {
+              console.log('[getAuthToken] Response received.');
               token = JSON.parse(tokenJson.toString());
             });
 
             response.on('end', () => {
-              console.log('Promise resolved.');
+              console.log('[getAuthToken] Promise resolved.');
               resolve(token.access_token);
             });
           }
@@ -50,39 +52,48 @@ module.exports = {
 
   // This will take in a Twitch Oauth code to make request //
   getUserInfo: async token => {
-    var userInfoRequest = https
-      .request(
-        {
-          method: 'GET',
-          hostname: apiBaseHostName,
-          path: '/helix/users',
-          headers: { Authorization: `Bearer ${token}` }
-        },
-        response => {
-          response.on('data', userInfo => {
-            console.log(`TOKEN: ${token}`);
+    let userJson;
 
-            // Can request multiple users at a time, which is why we only get the first user //
-            var userInfoArray = JSON.parse(userInfo.toString());
-            console.log(userInfoArray);
-            var user = userInfoArray.data[0];
-            var userJson = {
-              displayName: user.display_name,
-              email: user.email
-            };
+    return new Promise((resolve, reject) => {
+      console.log('[getUserInfo] Starting auth token request...');
 
-            return Promise(resolve => {
+      https.request({
+            method: 'GET',
+            hostname: apiBaseHostName,
+            path: '/helix/users',
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          },
+          response => {
+            response.on('data', userInfo => {
+              console.log('[getUserInfo] Response Received.');
+
+              // Can request multiple users at a time, which is why we only get the first user //
+              var usersData = JSON.parse(userInfo.toString());
+
+              if (usersData.length === 0) {
+                return reject('[getUserInfo] There was no data in the response.');
+              }
+
+              var user = usersData.data[0];
+              userJson = {
+                displayName: user.display_name,
+                email: user.email
+              };
+            });
+
+            response.on('end', () => {
+              console.log('[getUserInfo] Promise resolved.');
               resolve(userJson);
             });
-          });
-        }
-      )
-      .on('error', error => {
-        console.log('Error thrown in User Info request:');
-        console.error(error);
-      });
-
-    // End the request //
-    userInfoRequest.end();
+          }
+        )
+        .on('error', (error) => {
+          console.log(error);
+          reject(error);
+        })
+        .end();
+    });
   }
-};
+}
