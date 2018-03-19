@@ -6,12 +6,12 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { RootComponent } from './root/root.component';
 import { LoginComponent } from './login/login.component';
-import { HomeComponent } from './home/home.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
 
 const routes: Routes = [
-    { path: '', component: LoginComponent },
-    { path: 'login', component: LoginComponent },
-    { path: 'home', component: HomeComponent }
+  { path: '', component: LoginComponent },
+  { path: 'login', component: LoginComponent },
+  { path: 'dashboard', component: DashboardComponent }
 ];
 
 @NgModule({
@@ -19,17 +19,14 @@ const routes: Routes = [
     AppComponent,
     RootComponent,
     LoginComponent,
-    HomeComponent
+    DashboardComponent
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
-    RouterModule.forRoot(
-        routes,
-        { enableTracing: true }
-    )
+    RouterModule.forRoot(routes, { enableTracing: true })
   ],
   providers: [],
   bootstrap: [RootComponent]
 })
-export class AppModule { }
+export class AppModule {}

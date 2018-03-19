@@ -3,11 +3,11 @@ import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
-  selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  selector: 'app-dashboard',
+  templateUrl: './dashboard.component.html',
+  styleUrls: ['./dashboard.component.css']
 })
-export class HomeComponent implements OnInit {
+export class DashboardComponent implements OnInit {
   // Properties //
   // Need to save code from URI in order to generate access_tokens //
   // To get access token will need to post to server //
