@@ -57,7 +57,7 @@ app.post(apiBase + 'twitch/token', async (request, response) => {
   var userJson = await twitch.getUserInfo(token);
 
   // Create new user in db //
-  db.addNewUser(userJson.userID);
+  db.addNewUser(userJson);
 
   // Send data to client //
   response.send(userJson);
