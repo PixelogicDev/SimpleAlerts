@@ -36,8 +36,8 @@ export class DashboardComponent implements OnInit {
     };
 
     this.http.post(this.tokenUrl, json).subscribe(data => {
-      this.displayName = data['displayName'];
-      this.email = data['email'];
+      this.displayName = data['twitchDisplayName'];
+      this.email = data['twitchEmail'];
     });
   }
 }

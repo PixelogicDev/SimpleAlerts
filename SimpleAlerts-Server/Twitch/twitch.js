@@ -1,6 +1,7 @@
 const https = require('https');
 const authBaseHostName = 'id.twitch.tv';
 const apiBaseHostName = 'api.twitch.tv';
+const webhookPath = '/helix/webhooks/hub';
 
 //-- Helpers --//
 var tokenPathBuilder = code => {
@@ -101,5 +102,60 @@ module.exports = {
         })
         .end();
     });
+  },
+
+  setupFollowerWebhook: (userData, token) => {
+    console.log('[setupFollowerWebhook] Starting...');
+
+    console.log('Follow Hook: ' + userData.followHook);
+    // Create json body params, passes back MongoDB object //
+    var hookParams = JSON.stringify({
+      'hub.callback': userData.followHook,
+      'hub.mode': 'subscribe',
+      'hub.topic': `https://api.twitch.tv/helix/users/follows?first=1&to_id=${
+        userData._id
+      }`,
+      'hub.lease_seconds': 20000
+    });
+
+    // Create & submit request //
+    var request = https.request(
+      {
+        method: 'POST',
+        hostname: apiBaseHostName,
+        path: webhookPath,
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+          'Content-Length': hookParams.length
+        }
+      },
+      response => {
+        response.on('error', error => {
+          console.log(error);
+        });
+
+        response.on('data', data => {
+          /* No data comes back, but this is required */
+        });
+
+        response.on('end', () => {
+          if (response.statusCode === 202) {
+            console.log(
+              '[setupFollowerWebhook] Follower webhook is listening.'
+            );
+          } else {
+            console.log('[setupFollowerWebhook] Follower webhook was denied.');
+          }
+        });
+      }
+    );
+
+    // Request fanciness //
+    request.on('error', error => {
+      console.log(error);
+    });
+    request.write(hookParams);
+    request.end();
   }
 };

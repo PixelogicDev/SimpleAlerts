@@ -1,69 +1,100 @@
 const MongoClient = require('mongodb').MongoClient;
 const assert = require('assert');
+const randomString = require('randomstring');
+const localtunnel = require('localtunnel');
+const twitch = require('../Twitch/twitch');
 var db;
+var basePath;
 
 // Use connect method to connect to the server
-MongoClient.connect(process.env.DB_URL, function(err, client) {
+MongoClient.connect(process.env.DB_URL, async (err, client) => {
   assert.equal(null, err);
   console.log('Database connection was successful.');
 
   db = client.db(process.env.DB_NAME);
+
+  if (process.env.NODE_ENV === 'dev') {
+    basePath = await createTunnel();
+  } else {
+    basePath = process.env.BASE_URL;
+  }
 });
 
-var findUser = userID => {
-  // Use Twitch ID to check for user in DB //
-  let usersCollection = db.collection('users');
+var createFollowHookRoute = userID => {
+  var rand = randomString.generate({ length: 8, charset: 'alphanumeric' });
+  return `${basePath}/hook/${rand}/follower/${userID.substring(0, 4)}`;
+};
 
+var createTunnel = () => {
   return new Promise((resolve, reject) => {
-    usersCollection.findOne(
-      {
-        _id: userID
-      },
-      (error, user) => {
-        if (error) {
-          console.log('[findUser] ' + error);
-          return reject(null);
-        }
-
-        if (user === null) return resolve(false);
-
-        return resolve(user);
+    var tunnel = localtunnel(8000, (tunnelErr, tunnel) => {
+      if (tunnelErr) {
+        console.log(tunnelErr);
+        return reject(null);
       }
-    );
+
+      console.log('Public tunnel: ' + tunnel.url);
+      return resolve(tunnel.url);
+    });
+
+    tunnel.on('close', () => {
+      console.log('Tunnel is closed.');
+    });
   });
 };
 
 module.exports = {
-  // Twitch user ID //
-  addNewUser: async userData => {
+  findUser: userID => {
+    // Use Twitch ID to check for user in DB //
     let usersCollection = db.collection('users');
 
-    console.log('[addNewUser] Starting...');
+    return new Promise((resolve, reject) => {
+      console.log('[findUser] Starting...');
+      usersCollection.findOne(
+        {
+          _id: userID
+        },
+        (error, user) => {
+          if (error) {
+            console.log('[findUser] ' + error);
+            return reject(error);
+          }
 
-    // Check for user in DB //
-    var user = await findUser(userData.userID);
+          if (user === null) return resolve(null);
 
-    if (user) {
-      // Return user settings from DB //
-      console.log('[addNewUser] User found.');
-      return;
-    }
+          console.log('[findUser] User found. Returning.');
+          if (process.env.NODE_ENV === 'dev') {
+            user.followHook = createFollowHookRoute(user._id);
+          }
+          return resolve(user);
+        }
+      );
+    });
+  },
 
-    console.log('[addNewUser] User not found. Inserting...');
-    // User not found, lets add them //
-    usersCollection.insertOne(
-      {
+  // Twitch user ID //
+  addNewUser: userData => {
+    return new Promise((resolve, reject) => {
+      console.log('[addNewUser] Starting...');
+
+      let usersCollection = db.collection('users');
+      let followHook = createFollowHookRoute(userData.userID);
+      let userObject = {
         _id: userData.userID,
         twitchDisplayName: userData.displayName,
-        twitchEmail: userData.email
-      },
-      (insertError, data) => {
+        twitchEmail: userData.email,
+        followHook: followHook
+      };
+
+      usersCollection.insertOne(userObject, (insertError, data) => {
         if (insertError) {
           console.log('[addNewUser] ' + insertError);
-          return;
+          return reject('[addNewUser] ' + insertError);
         }
+
         console.log(`[addNewUser] New user has been inserted.`);
-      }
-    );
+        return resolve(userObject);
+      });
+    });
   }
 };

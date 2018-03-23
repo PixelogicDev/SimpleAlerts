@@ -47,18 +47,41 @@ app.get('/', (request, response) => {
 
 // Twitch Token Request //
 app.post(apiBase + 'twitch/token', async (request, response) => {
+  //-- User property --//
+  var user = null;
+
   // Use code from client to request token //
   var authCode = request.body.code;
 
-  // Request token //
+  // Given code, need to get auth token for requests //
   var token = await twitch.getAuthToken(authCode);
 
-  // Get user data to send back to client //
+  // User just logged back in, lets find out who they are //
   var userJson = await twitch.getUserInfo(token);
 
-  // Create new user in db //
-  db.addNewUser(userJson);
+  if (process.env.NODE_ENV === 'dev') {
+    console.log('In dev env. Using other user ID.');
+    // Use Dr. Disrespect's Twitch ID to hook into followers/subs //
+    userJson.userID = process.env.TEST_TWITCH_ID;
+  }
+
+  // Check to see if user is part of SimpleAlerts //
+  user = await db.findUser(userJson.userID);
+
+  // If no user object is returned, create new user in DB //
+  if (user === null) {
+    // Create new user in db //
+    user = await db.addNewUser(userJson, token);
+  }
+
+  // After data is here, setup webhooks //
+  twitch.setupFollowerWebhook(user, token);
 
   // Send data to client //
-  response.send(userJson);
+  response.send(user);
+});
+
+// Twitch Follower Webhook //
+app.get('/hook/:rand/follower/:partial', (request, response) => {
+  console.log('New Follower!');
 });
