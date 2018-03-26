@@ -6,13 +6,13 @@ const db = require('./database/db');
 const apiBase = '/api/v1/';
 const https = require('https');
 const bodyParser = require('body-parser');
-const app = express();
+const server = express();
 
 // Body Parser //
-app.use(bodyParser.json());
+server.use(bodyParser.json());
 
 // PROPS TO: https://stackoverflow.com/questions/18310394/no-access-control-allow-origin-node-apache-port-issue //
-app.use(function(req, res, next) {
+server.use(function(req, res, next) {
   // Website you wish to allow to connect
   res.setHeader('Access-Control-Allow-Origin', '*');
 
@@ -36,17 +36,17 @@ app.use(function(req, res, next) {
   next();
 });
 
-app.listen(8000, () => {
+server.listen(8000, () => {
   console.log('Server started on port: 8000');
 });
 
 // -- Routes -- //
-app.get('/', (request, response) => {
+server.get('/', (request, response) => {
   response.send('Hit /');
 });
 
 // Twitch Token Request //
-app.post(apiBase + 'twitch/token', async (request, response) => {
+server.post(apiBase + 'twitch/token', async (request, response) => {
   //-- User property --//
   var user = null;
 
@@ -76,12 +76,22 @@ app.post(apiBase + 'twitch/token', async (request, response) => {
 
   // After data is here, setup webhooks //
   twitch.setupFollowerWebhook(user, token);
+  //twitch.setupPubSub(token);
 
   // Send data to client //
   response.send(user);
 });
 
 // Twitch Follower Webhook //
-app.get('/hook/:rand/follower/:partial', (request, response) => {
+server.get('/hook/:rand/follower/:partial', (request, response) => {
+  console.log('In FollowHook GET.');
+  console.log(request.query['hub.topic']);
+  var challenge = request.query['hub.challenge'].trim();
+  console.log(challenge);
+  response.status(200).send(challenge);
+});
+
+server.post('/hook/:rand/follower/:partial', (request, response) => {
   console.log('New Follower!');
+  response.sendStatus(200);
 });

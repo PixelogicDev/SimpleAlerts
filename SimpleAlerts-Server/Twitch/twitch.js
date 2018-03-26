@@ -1,7 +1,11 @@
 const https = require('https');
 const authBaseHostName = 'id.twitch.tv';
 const apiBaseHostName = 'api.twitch.tv';
+const channelEndpoint = '/kraken/channels/';
 const webhookPath = '/helix/webhooks/hub';
+const pubSubPath = 'wss://pubsub-edge.twitch.tv';
+const WebSocket = require('ws');
+// const socket = new WebSocket(pubSubPath);
 
 //-- Helpers --//
 var tokenPathBuilder = code => {
@@ -13,6 +17,72 @@ var tokenPathBuilder = code => {
     `&redirect_uri=${process.env.TWITCH_REDIRECT_URI}`
   );
 };
+
+//-- PubSub Socket Helpers --//
+// https://github.com/twitchdev/pubsub-samples/blob/master/javascript/main.js //
+/* var nonceGenerator = size => {
+  var value = '';
+  var possible =
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  for (var i = 0; i < size; i++) {
+    value += possible.charAt(Math.floor(Math.random() * possible.length));
+  }
+
+  return value;
+};
+
+var heartbeat = () => {
+  message = {
+    type: 'PING'
+  };
+
+  socket.send(JSON.stringify(message));
+  console.log('PING sent.');
+};
+
+var listen = (topics, token) => {
+  message = {
+    type: 'LISTEN',
+    nonce: nonceGenerator(15),
+    data: { topics: topics, auth_token: token }
+  };
+
+  socket.send(JSON.stringify(message));
+  console.log('LISTEN sent.');
+};
+
+var connect = () => {
+  var heartbeatInterval = 1000 * 60; //ms between PING's
+  var reconnectInterval = 1000 * 3; //ms to wait before reconnect
+  var heartbeatHandle;
+
+  socket.on('open', () => {
+    console.log('PubSub socket open.');
+    heartbeat();
+    heartbeatHandle = setInterval(heartbeat, heartbeatInterval);
+  });
+
+  socket.on('error', () => {
+    console.log('PubSub socket error: ' + error);
+  });
+
+  socket.on('message', event => {
+    console.log(event);
+    var message = JSON.parse(event.type);
+
+    console.log('PubSub message received: ' + message);
+    if (event.type === 'RECONNECT') {
+      console.log('Reconnecting...');
+      setTimeout(connect, reconnectInterval);
+    }
+  });
+
+  socket.on('close', () => {
+    onsole.log('PubSub socket closed.');
+    clearInterval(heartbeatHandle);
+    setTimeout(connect, reconnectInterval);
+  });
+}; */
 
 module.exports = {
   // This will return a token as a promise for our next call //
@@ -115,7 +185,7 @@ module.exports = {
       'hub.topic': `https://api.twitch.tv/helix/users/follows?first=1&to_id=${
         userData._id
       }`,
-      'hub.lease_seconds': 20000
+      'hub.lease_seconds': 864000
     });
 
     // Create & submit request //
@@ -158,4 +228,17 @@ module.exports = {
     request.write(hookParams);
     request.end();
   }
+
+  /* setupPubSub: token => {
+    // Connect to web socket //
+    connect();
+
+    // Listen to event //
+    var bits = `channel-bits-events-v1.${process.env.TEST_TWITCH_ID}`;
+    var subs = `channel-subscribe-events-v1.${process.env.TEST_TWITCH_ID}`;
+
+    console.log(token);
+
+    listen([bits, subs], token);
+  } */
 };
