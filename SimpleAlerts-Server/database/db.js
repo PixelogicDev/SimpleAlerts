@@ -14,33 +14,14 @@ MongoClient.connect(process.env.DB_URL, async (err, client) => {
   db = client.db(process.env.DB_NAME);
 
   if (process.env.NODE_ENV === 'dev') {
-    basePath = await createTunnel();
+    basePath = process.env.NGROK;
   } else {
     basePath = process.env.BASE_URL;
   }
 });
 
 var createFollowHookRoute = userID => {
-  var rand = randomString.generate({ length: 8, charset: 'alphanumeric' });
-  return `${basePath}/hook/${rand}/follower/${userID.substring(0, 4)}`;
-};
-
-var createTunnel = () => {
-  return new Promise((resolve, reject) => {
-    var tunnel = localtunnel(8000, (tunnelErr, tunnel) => {
-      if (tunnelErr) {
-        console.log(tunnelErr);
-        return reject(null);
-      }
-
-      console.log('Public tunnel: ' + tunnel.url);
-      return resolve(tunnel.url);
-    });
-
-    tunnel.on('close', () => {
-      console.log('Tunnel is closed.');
-    });
-  });
+  return `${basePath}/hook/follower/${userID}`;
 };
 
 module.exports = {

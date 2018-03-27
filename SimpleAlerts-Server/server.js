@@ -83,15 +83,22 @@ server.post(apiBase + 'twitch/token', async (request, response) => {
 });
 
 // Twitch Follower Webhook //
-server.get('/hook/:rand/follower/:partial', (request, response) => {
-  console.log('In FollowHook GET.');
-  console.log(request.query['hub.topic']);
-  var challenge = request.query['hub.challenge'].trim();
-  console.log(challenge);
-  response.status(200).send(challenge);
-});
+server.all('/hook/follower/:id', (request, response) => {
+  console.log('Twitch Follower Webhook.');
 
-server.post('/hook/:rand/follower/:partial', (request, response) => {
-  console.log('New Follower!');
-  response.sendStatus(200);
+  if (request.method === 'GET') {
+    if (request.query['hub.mode'] === 'denied') {
+      console.log('Follow Webhook Denied.');
+      console.log(request.query['hub.reason']);
+    } else {
+      console.log('Follow Webhook Accepted. Returning challenge...');
+      response.status(200, { 'Content-Type': 'text/plain' });
+      response.end(request.query['hub.challenge']);
+    }
+  }
+
+  if (request.method === 'POST') {
+    console.log('New Follower!');
+    console.log(request.body.data);
+  }
 });
