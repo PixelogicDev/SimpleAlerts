@@ -174,10 +174,56 @@ module.exports = {
     });
   },
 
-  setupFollowerWebhook: (userData, token) => {
-    console.log('[setupFollowerWebhook] Starting...');
+  getStreamStatus: userData => {
+    console.log('[getStreamStatus] Starting...');
+    var stream;
 
-    console.log('Follow Hook: ' + userData.followHook);
+    console.log('USERID: ' + userData.userID);
+
+    return new Promise((resolve, reject) => {
+      https
+        .request(
+          {
+            method: 'GET',
+            hostname: apiBaseHostName,
+            path: `/helix/streams?user_id=${userData._id}`,
+            headers: {
+              'Content-Type': 'application/json',
+              'Client-ID': process.env.TWITCH_CLIENT_ID
+            }
+          },
+          response => {
+            response.on('error', error => {
+              console.log(error);
+              reject(error);
+              return;
+            });
+
+            response.on('data', data => {
+              stream = JSON.parse(data.toString());
+            });
+
+            response.on('end', () => {
+              if (stream.data.length > 0) {
+                resolve(stream.data[0]);
+              } else {
+                reject('Data was null.');
+              }
+            });
+          }
+        )
+        .on('error', error => {
+          console.log(error);
+          reject(error);
+        })
+        .end();
+    });
+  },
+
+  initFollowerWebhook: (userData, token) => {
+    console.log('[initFollowerWebhook] Starting...');
+
+    console.log('[initFollowerWebhook] Follow Hook: ' + userData.followHook);
     // Create json body params, passes back MongoDB object //
     var hookParams = JSON.stringify({
       'hub.callback': userData.followHook,
@@ -211,11 +257,68 @@ module.exports = {
 
         response.on('end', () => {
           if (response.statusCode === 202) {
+            console.log('[initFollowerWebhook] Follower webhook is listening.');
+          } else {
+            console.log('[initFollowerWebhook] Follower webhook was denied.');
+          }
+        });
+      }
+    );
+
+    // Request fanciness //
+    request.on('error', error => {
+      console.log(error);
+    });
+    request.write(hookParams);
+    request.end();
+  },
+
+  initStreamStatusWebhook: (userData, token) => {
+    console.log('[initStreamStatusWebhook] Starting...');
+
+    console.log(
+      '[initStreamStatusWebhook] Stream Up/Down Hook: ' + userData.statusHook
+    );
+    // Create json body params, passes back MongoDB object //
+    var hookParams = JSON.stringify({
+      'hub.callback': userData.statusHook,
+      'hub.mode': 'subscribe',
+      'hub.topic': `https://api.twitch.tv/helix/streams?user_id=${
+        userData._id
+      }`,
+      'hub.lease_seconds': 864000
+    });
+
+    // Create & submit request //
+    var request = https.request(
+      {
+        method: 'POST',
+        hostname: apiBaseHostName,
+        path: webhookPath,
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+          'Content-Length': hookParams.length
+        }
+      },
+      response => {
+        response.on('error', error => {
+          console.log(error);
+        });
+
+        response.on('data', data => {
+          /* No data comes back, but this is required */
+        });
+
+        response.on('end', () => {
+          if (response.statusCode === 202) {
             console.log(
-              '[setupFollowerWebhook] Follower webhook is listening.'
+              '[initStreamStatusWebhook] Stream Up/Down webhook is listening.'
             );
           } else {
-            console.log('[setupFollowerWebhook] Follower webhook was denied.');
+            console.log(
+              '[initStreamStatusWebhook] Stream Up/Down webhook was denied.'
+            );
           }
         });
       }

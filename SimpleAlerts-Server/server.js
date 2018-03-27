@@ -6,10 +6,25 @@ const db = require('./database/db');
 const apiBase = '/api/v1/';
 const https = require('https');
 const bodyParser = require('body-parser');
+const session = require('express-session');
 const server = express();
+var sessionProps = {
+  secret: process.env.COOKIE_SECRET,
+  cookie: {},
+  resave: false,
+  saveUninitialized: false
+};
 
 // Body Parser //
 server.use(bodyParser.json());
+
+if (process.env.NODE_ENV === 'production') {
+  server.set('trust prozy', 1);
+  sessionProps.cookie.secure = true;
+}
+
+// Session Manager //
+server.use(session(sessionProps));
 
 // PROPS TO: https://stackoverflow.com/questions/18310394/no-access-control-allow-origin-node-apache-port-issue //
 server.use(function(req, res, next) {
@@ -65,6 +80,10 @@ server.post(apiBase + 'twitch/token', async (request, response) => {
     userJson.userID = process.env.TEST_TWITCH_ID;
   }
 
+  // After login, store auth token & userID in cookie session //
+  var currentSession = request.session;
+  currentSession.token = token;
+
   // Check to see if user is part of SimpleAlerts //
   user = await db.findUser(userJson.userID);
 
@@ -74,8 +93,14 @@ server.post(apiBase + 'twitch/token', async (request, response) => {
     user = await db.addNewUser(userJson, token);
   }
 
-  // After data is here, setup webhooks //
-  twitch.setupFollowerWebhook(user, token);
+  // If user is live, setup webhook //
+  var stream = await twitch.getStreamStatus(user);
+  if (stream.type === 'live' || stream.type === 'vodcast') {
+    console.log('User live, lets setup follower webhook.');
+    twitch.initFollowerWebhook(user, token);
+  }
+
+  twitch.initStreamStatusWebhook(user, token);
   //twitch.setupPubSub(token);
 
   // Send data to client //
@@ -100,5 +125,48 @@ server.all('/hook/follower/:id', (request, response) => {
   if (request.method === 'POST') {
     console.log('New Follower!');
     console.log(request.body.data);
+    response.status(200);
+  }
+});
+
+// Twitch Stream Up/Down Webhook //
+server.all('/hook/stream/status/:id', async (request, response) => {
+  console.log('Twitch Stream Up/Down Webhook.');
+
+  // Get user id param //
+  var userID = request.params.id;
+  // Get user from DB //
+  var user = await db.findUser(userID);
+  // Get Oauth Token from session cookie //
+  var token = request.session.token;
+
+  if (request.method === 'GET') {
+    if (request.query['hub.mode'] === 'denied') {
+      console.log('Twitch Stream Up/Down Webhook Denied.');
+      console.log(request.query['hub.reason']);
+    } else {
+      console.log(
+        'Twitch Stream Up/Down Webhook Accepted. Returning challenge...'
+      );
+      response.status(200, { 'Content-Type': 'text/plain' });
+      response.end(request.query['hub.challenge']);
+    }
+  }
+
+  if (request.method === 'POST') {
+    console.log('Stream Status Change.');
+
+    var data = request.body.data[0];
+    console.log(data);
+
+    if (data.length > 0) {
+      console.log('Stream up. Subscribing to Follow Hook...');
+
+      twitch.initFollowerWebhook(user, token);
+    } else {
+      console.log('Stream down.');
+    }
+
+    response.status(200);
   }
 });

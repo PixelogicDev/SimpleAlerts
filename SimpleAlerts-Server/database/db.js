@@ -1,7 +1,5 @@
 const MongoClient = require('mongodb').MongoClient;
 const assert = require('assert');
-const randomString = require('randomstring');
-const localtunnel = require('localtunnel');
 const twitch = require('../Twitch/twitch');
 var db;
 var basePath;
@@ -22,6 +20,10 @@ MongoClient.connect(process.env.DB_URL, async (err, client) => {
 
 var createFollowHookRoute = userID => {
   return `${basePath}/hook/follower/${userID}`;
+};
+
+var createStreamStatushookRoute = userID => {
+  return `${basePath}/hook/stream/status/${userID}`;
 };
 
 module.exports = {
@@ -60,11 +62,13 @@ module.exports = {
 
       let usersCollection = db.collection('users');
       let followHook = createFollowHookRoute(userData.userID);
+      let statusHook = createStreamStatushookRoute(userData.userID);
       let userObject = {
         _id: userData.userID,
         twitchDisplayName: userData.displayName,
         twitchEmail: userData.email,
-        followHook: followHook
+        followHook: followHook,
+        statusHook: statusHook
       };
 
       usersCollection.insertOne(userObject, (insertError, data) => {
