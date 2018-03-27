@@ -72,8 +72,8 @@ server.post(apiBase + 'twitch/token', async (request, response) => {
 
   // Given code, need to get auth token for requests //
   var token = await twitch.getAuthToken(authCode);
+
   // After login, store auth token in session //
-  console.log(request.session);
   request.session.token = token;
 
   // User just logged back in, lets find out who they are //
@@ -96,14 +96,14 @@ server.post(apiBase + 'twitch/token', async (request, response) => {
 
   // If user is live, setup webhook //
   var stream = await twitch.getStreamStatus(user);
-  if (stream.type === 'live' || stream.type === 'vodcast') {
+
+  if (stream !== null) {
     console.log('User live, lets setup follower webhook.');
     twitch.configFollowerWebhook(user, token, 'subscribe');
   } else {
-    console.log('User not live, lets setup stream status hook only!');
+    console.log('User is offline. Config Stream Status Webhook.');
   }
 
-  console.log('User not live, lets setup stream status hook only!');
   twitch.configStreamStatusWebhook(user, token, 'subscribe');
   //twitch.setupPubSub(token);
 
@@ -113,8 +113,6 @@ server.post(apiBase + 'twitch/token', async (request, response) => {
 
 // Twitch Follower Webhook //
 server.all('/hook/follower/:id', (request, response) => {
-  console.log('Twitch Follower Webhook.');
-
   if (request.method === 'GET') {
     if (request.query['hub.mode'] === 'denied') {
       console.log('Follow Webhook Denied.');
@@ -136,8 +134,6 @@ server.all('/hook/follower/:id', (request, response) => {
 
 // Twitch Stream Up/Down Webhook //
 server.all('/hook/stream/status/:id', async (request, response) => {
-  console.log('Twitch Stream Up/Down Webhook.');
-
   // Get user id param //
   var userID = request.params.id;
   // Get user from DB //

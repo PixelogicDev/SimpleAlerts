@@ -1,6 +1,7 @@
 const MongoClient = require('mongodb').MongoClient;
 const assert = require('assert');
 const twitch = require('../Twitch/twitch');
+const ngrok = require('ngrok');
 var db;
 var basePath;
 
@@ -12,7 +13,7 @@ MongoClient.connect(process.env.DB_URL, async (err, client) => {
   db = client.db(process.env.DB_NAME);
 
   if (process.env.NODE_ENV === 'dev') {
-    basePath = process.env.NGROK;
+    basePath = await ngrok.connect(8000);
   } else {
     basePath = process.env.BASE_URL;
   }
@@ -22,7 +23,7 @@ var createFollowHookRoute = userID => {
   return `${basePath}/hook/follower/${userID}`;
 };
 
-var createStreamStatushookRoute = userID => {
+var createStreamStatusHookRoute = userID => {
   return `${basePath}/hook/stream/status/${userID}`;
 };
 
@@ -48,6 +49,7 @@ module.exports = {
           console.log('[findUser] User found. Returning.');
           if (process.env.NODE_ENV === 'dev') {
             user.followHook = createFollowHookRoute(user._id);
+            user.statusHook = createStreamStatusHookRoute(user._id);
           }
           return resolve(user);
         }
@@ -62,7 +64,7 @@ module.exports = {
 
       let usersCollection = db.collection('users');
       let followHook = createFollowHookRoute(userData.userID);
-      let statusHook = createStreamStatushookRoute(userData.userID);
+      let statusHook = createStreamStatusHookRoute(userData.userID);
       let userObject = {
         _id: userData.userID,
         twitchDisplayName: userData.displayName,

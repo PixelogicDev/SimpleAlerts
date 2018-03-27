@@ -203,10 +203,12 @@ module.exports = {
             });
 
             response.on('end', () => {
-              if (stream.data.length > 0) {
-                resolve(stream.data[0]);
-              } else {
-                reject('Data was null.');
+              if (stream.data) {
+                if (stream.data.length > 0) {
+                  resolve(stream.data[0]);
+                } else {
+                  resolve(null);
+                }
               }
             });
           }
@@ -233,7 +235,7 @@ module.exports = {
       'hub.topic': `https://api.twitch.tv/helix/streams?user_id=${
         userData._id
       }`,
-      'hub.lease_seconds': 864000
+      'hub.lease_seconds': 1000
     });
 
     // Create & submit request //
@@ -291,7 +293,7 @@ module.exports = {
       'hub.topic': `https://api.twitch.tv/helix/users/follows?first=1&to_id=${
         userData._id
       }`,
-      'hub.lease_seconds': 864000
+      'hub.lease_seconds': 1000
     });
 
     // Create & submit request //
