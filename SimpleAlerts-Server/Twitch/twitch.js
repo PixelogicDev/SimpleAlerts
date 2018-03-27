@@ -174,11 +174,10 @@ module.exports = {
     });
   },
 
+  // This will get current status of stream in regards to it being up/down //
   getStreamStatus: userData => {
     console.log('[getStreamStatus] Starting...');
     var stream;
-
-    console.log('USERID: ' + userData.userID);
 
     return new Promise((resolve, reject) => {
       https
@@ -220,61 +219,9 @@ module.exports = {
     });
   },
 
-  initFollowerWebhook: (userData, token) => {
-    console.log('[initFollowerWebhook] Starting...');
-
-    console.log('[initFollowerWebhook] Follow Hook: ' + userData.followHook);
-    // Create json body params, passes back MongoDB object //
-    var hookParams = JSON.stringify({
-      'hub.callback': userData.followHook,
-      'hub.mode': 'subscribe',
-      'hub.topic': `https://api.twitch.tv/helix/users/follows?first=1&to_id=${
-        userData._id
-      }`,
-      'hub.lease_seconds': 864000
-    });
-
-    // Create & submit request //
-    var request = https.request(
-      {
-        method: 'POST',
-        hostname: apiBaseHostName,
-        path: webhookPath,
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-          'Content-Length': hookParams.length
-        }
-      },
-      response => {
-        response.on('error', error => {
-          console.log(error);
-        });
-
-        response.on('data', data => {
-          /* No data comes back, but this is required */
-        });
-
-        response.on('end', () => {
-          if (response.statusCode === 202) {
-            console.log('[initFollowerWebhook] Follower webhook is listening.');
-          } else {
-            console.log('[initFollowerWebhook] Follower webhook was denied.');
-          }
-        });
-      }
-    );
-
-    // Request fanciness //
-    request.on('error', error => {
-      console.log(error);
-    });
-    request.write(hookParams);
-    request.end();
-  },
-
-  initStreamStatusWebhook: (userData, token) => {
-    console.log('[initStreamStatusWebhook] Starting...');
+  // Subscribes to stream up/down webhook //
+  configStreamStatusWebhook: (userData, token, mode) => {
+    console.log('[configStreamStatusWebhook] Starting...');
 
     console.log(
       '[initStreamStatusWebhook] Stream Up/Down Hook: ' + userData.statusHook
@@ -282,7 +229,7 @@ module.exports = {
     // Create json body params, passes back MongoDB object //
     var hookParams = JSON.stringify({
       'hub.callback': userData.statusHook,
-      'hub.mode': 'subscribe',
+      'hub.mode': mode,
       'hub.topic': `https://api.twitch.tv/helix/streams?user_id=${
         userData._id
       }`,
@@ -313,12 +260,68 @@ module.exports = {
         response.on('end', () => {
           if (response.statusCode === 202) {
             console.log(
-              '[initStreamStatusWebhook] Stream Up/Down webhook is listening.'
+              '[configStreamStatusWebhook] Stream Up/Down webhook is listening.'
             );
           } else {
             console.log(
-              '[initStreamStatusWebhook] Stream Up/Down webhook was denied.'
+              '[configStreamStatusWebhook] Stream Up/Down webhook was denied.'
             );
+          }
+        });
+      }
+    );
+
+    // Request fanciness //
+    request.on('error', error => {
+      console.log(error);
+    });
+    request.write(hookParams);
+    request.end();
+  },
+
+  // Sets up / tears down subscription to follower webhook //
+  configFollowerWebhook: (userData, token, mode) => {
+    console.log('[configFollowerWebhook] Starting...');
+
+    console.log('[configFollowerWebhook] Follow Hook: ' + userData.followHook);
+    // Create json body params, passes back MongoDB object //
+    var hookParams = JSON.stringify({
+      'hub.callback': userData.followHook,
+      'hub.mode': mode,
+      'hub.topic': `https://api.twitch.tv/helix/users/follows?first=1&to_id=${
+        userData._id
+      }`,
+      'hub.lease_seconds': 864000
+    });
+
+    // Create & submit request //
+    var request = https.request(
+      {
+        method: 'POST',
+        hostname: apiBaseHostName,
+        path: webhookPath,
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+          'Content-Length': hookParams.length
+        }
+      },
+      response => {
+        response.on('error', error => {
+          console.log(error);
+        });
+
+        response.on('data', data => {
+          /* No data comes back, but this is required */
+        });
+
+        response.on('end', () => {
+          if (response.statusCode === 202) {
+            console.log(
+              '[configFollowerWebhook] Follower webhook is listening.'
+            );
+          } else {
+            console.log('[configFollowerWebhook] Follower webhook was denied.');
           }
         });
       }

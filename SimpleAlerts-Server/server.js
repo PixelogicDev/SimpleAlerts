@@ -10,7 +10,9 @@ const session = require('express-session');
 const server = express();
 var sessionProps = {
   secret: process.env.COOKIE_SECRET,
-  cookie: {},
+  cookie: {
+    httpOnly: false
+  },
   resave: false,
   saveUninitialized: false
 };
@@ -70,6 +72,9 @@ server.post(apiBase + 'twitch/token', async (request, response) => {
 
   // Given code, need to get auth token for requests //
   var token = await twitch.getAuthToken(authCode);
+  // After login, store auth token in session //
+  console.log(request.session);
+  request.session.token = token;
 
   // User just logged back in, lets find out who they are //
   var userJson = await twitch.getUserInfo(token);
@@ -79,10 +84,6 @@ server.post(apiBase + 'twitch/token', async (request, response) => {
     // Use Dr. Disrespect's Twitch ID to hook into followers/subs //
     userJson.userID = process.env.TEST_TWITCH_ID;
   }
-
-  // After login, store auth token & userID in cookie session //
-  var currentSession = request.session;
-  currentSession.token = token;
 
   // Check to see if user is part of SimpleAlerts //
   user = await db.findUser(userJson.userID);
@@ -97,10 +98,13 @@ server.post(apiBase + 'twitch/token', async (request, response) => {
   var stream = await twitch.getStreamStatus(user);
   if (stream.type === 'live' || stream.type === 'vodcast') {
     console.log('User live, lets setup follower webhook.');
-    twitch.initFollowerWebhook(user, token);
+    twitch.configFollowerWebhook(user, token, 'subscribe');
+  } else {
+    console.log('User not live, lets setup stream status hook only!');
   }
 
-  twitch.initStreamStatusWebhook(user, token);
+  console.log('User not live, lets setup stream status hook only!');
+  twitch.configStreamStatusWebhook(user, token, 'subscribe');
   //twitch.setupPubSub(token);
 
   // Send data to client //
@@ -119,6 +123,7 @@ server.all('/hook/follower/:id', (request, response) => {
       console.log('Follow Webhook Accepted. Returning challenge...');
       response.status(200, { 'Content-Type': 'text/plain' });
       response.end(request.query['hub.challenge']);
+      console.log('Challenge sent.');
     }
   }
 
@@ -140,6 +145,8 @@ server.all('/hook/stream/status/:id', async (request, response) => {
   // Get Oauth Token from session cookie //
   var token = request.session.token;
 
+  console.log('TOKEN: ' + token);
+
   if (request.method === 'GET') {
     if (request.query['hub.mode'] === 'denied') {
       console.log('Twitch Stream Up/Down Webhook Denied.');
@@ -150,6 +157,7 @@ server.all('/hook/stream/status/:id', async (request, response) => {
       );
       response.status(200, { 'Content-Type': 'text/plain' });
       response.end(request.query['hub.challenge']);
+      console.log('Challenge sent.');
     }
   }
 
@@ -161,10 +169,10 @@ server.all('/hook/stream/status/:id', async (request, response) => {
 
     if (data.length > 0) {
       console.log('Stream up. Subscribing to Follow Hook...');
-
-      twitch.initFollowerWebhook(user, token);
+      twitch.configFollowerWebhook(user, token, 'subscribe');
     } else {
       console.log('Stream down.');
+      twitch.configFollowerWebhook(user, token, 'unsubscribe');
     }
 
     response.status(200);
