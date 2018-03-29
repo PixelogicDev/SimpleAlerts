@@ -5,6 +5,7 @@ const twitch = require('./twitch/twitch');
 const db = require('./database/db');
 const apiBase = '/api/v1/';
 const https = require('https');
+const cors = require('cors');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const server = express();
@@ -26,10 +27,12 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 // Session Manager //
-server.use(session(sessionProps));
+// server.use(session(sessionProps));
 
-// PROPS TO: https://stackoverflow.com/questions/18310394/no-access-control-allow-origin-node-apache-port-issue //
-server.use(function(req, res, next) {
+// Setup CORS //
+server.use(cors());
+
+/*server.use(function (req, res, next) {
   // Website you wish to allow to connect
   res.setHeader('Access-Control-Allow-Origin', '*');
 
@@ -51,7 +54,7 @@ server.use(function(req, res, next) {
 
   // Pass to next layer of middleware
   next();
-});
+});*/
 
 server.listen(8000, () => {
   console.log('Server started on port: 8000');
@@ -74,7 +77,7 @@ server.post(apiBase + 'twitch/token', async (request, response) => {
   var token = await twitch.getAuthToken(authCode);
 
   // After login, store auth token in session //
-  request.session.token = token;
+  // request.session.token = token;
 
   // User just logged back in, lets find out who they are //
   var userJson = await twitch.getUserInfo(token);
@@ -119,7 +122,9 @@ server.all('/hook/follower/:id', (request, response) => {
       console.log(request.query['hub.reason']);
     } else {
       console.log('Follow Webhook Accepted. Returning challenge...');
-      response.status(200, { 'Content-Type': 'text/plain' });
+      response.status(200, {
+        'Content-Type': 'text/plain'
+      });
       response.end(request.query['hub.challenge']);
       console.log('Challenge sent.');
     }
@@ -139,7 +144,7 @@ server.all('/hook/stream/status/:id', async (request, response) => {
   // Get user from DB //
   var user = await db.findUser(userID);
   // Get Oauth Token from session cookie //
-  var token = request.session.token;
+  // var token = request.session.token;
 
   console.log('TOKEN: ' + token);
 
@@ -151,7 +156,9 @@ server.all('/hook/stream/status/:id', async (request, response) => {
       console.log(
         'Twitch Stream Up/Down Webhook Accepted. Returning challenge...'
       );
-      response.status(200, { 'Content-Type': 'text/plain' });
+      response.status(200, {
+        'Content-Type': 'text/plain'
+      });
       response.end(request.query['hub.challenge']);
       console.log('Challenge sent.');
     }
@@ -165,10 +172,10 @@ server.all('/hook/stream/status/:id', async (request, response) => {
 
     if (data.length > 0) {
       console.log('Stream up. Subscribing to Follow Hook...');
-      twitch.configFollowerWebhook(user, token, 'subscribe');
+      // twitch.configFollowerWebhook(user, token, 'subscribe');
     } else {
       console.log('Stream down.');
-      twitch.configFollowerWebhook(user, token, 'unsubscribe');
+      // twitch.configFollowerWebhook(user, token, 'unsubscribe');
     }
 
     response.status(200);
