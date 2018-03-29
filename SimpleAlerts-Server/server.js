@@ -108,7 +108,9 @@ server.post(apiBase + 'twitch/token', async (request, response) => {
   }
 
   twitch.configStreamStatusWebhook(user, token, 'subscribe');
-  //twitch.setupPubSub(token);
+
+  // Setup PubSub //
+  twitch.setupPubSub(token);
 
   // Send data to client //
   response.send(user);
@@ -146,7 +148,7 @@ server.all('/hook/stream/status/:id', async (request, response) => {
   // Get Oauth Token from session cookie //
   // var token = request.session.token;
 
-  console.log('TOKEN: ' + token);
+  // console.log('TOKEN: ' + token);
 
   if (request.method === 'GET') {
     if (request.query['hub.mode'] === 'denied') {
@@ -173,6 +175,7 @@ server.all('/hook/stream/status/:id', async (request, response) => {
     if (data.length > 0) {
       console.log('Stream up. Subscribing to Follow Hook...');
       // twitch.configFollowerWebhook(user, token, 'subscribe');
+      // Need to setup pub sub stuff here as //
     } else {
       console.log('Stream down.');
       // twitch.configFollowerWebhook(user, token, 'unsubscribe');

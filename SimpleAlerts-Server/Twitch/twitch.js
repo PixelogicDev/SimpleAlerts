@@ -1,11 +1,11 @@
 const https = require('https');
 const authBaseHostName = 'id.twitch.tv';
 const apiBaseHostName = 'api.twitch.tv';
-const channelEndpoint = '/kraken/channels/';
+const channelEndpoint = '/kraken/channel';
 const webhookPath = '/helix/webhooks/hub';
 const pubSubPath = 'wss://pubsub-edge.twitch.tv';
 const WebSocket = require('ws');
-// const socket = new WebSocket(pubSubPath);
+const socket = new WebSocket(pubSubPath);
 
 //-- Helpers --//
 var tokenPathBuilder = code => {
@@ -18,9 +18,18 @@ var tokenPathBuilder = code => {
   );
 };
 
+var channelTokenPathBuilder = () => {
+  return (
+    `/oauth2/token?client_id=${process.env.TWITCH_CLIENT_ID}` +
+    `&client_secret=${process.env.TWITCH_SECRET}` +
+    `&grant_type=client_credentials` +
+    `&scope=channel_subscriptions`
+  );
+};
+
 //-- PubSub Socket Helpers --//
 // https://github.com/twitchdev/pubsub-samples/blob/master/javascript/main.js //
-/* var nonceGenerator = size => {
+var nonceGenerator = size => {
   var value = '';
   var possible =
     'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -29,6 +38,77 @@ var tokenPathBuilder = code => {
   }
 
   return value;
+};
+
+var getChannelId = token => {
+  return new Promise((resolve, reject) => {
+    console.log('[getChannelId] Starting getChannelId...');
+    var channel;
+
+    https
+      .request(
+        {
+          method: 'GET',
+          hostname: apiBaseHostName,
+          path: channelEndpoint,
+          headers: {
+            'Client-ID': process.env.TWITCH_CLIENT_ID,
+            Authorization: `OAuth ${token}`
+          }
+        },
+        response => {
+          response.on('data', channelJson => {
+            console.log('[getChannelId] Response received.');
+            channel = JSON.parse(channelJson.toString());
+          });
+
+          response.on('end', () => {
+            console.log('[getChannelId] Promise resolved.');
+            resolve(channel._id);
+          });
+        }
+      )
+      .on('error', error => {
+        console.log(error);
+        reject(error);
+      })
+      .end();
+  });
+};
+
+var getChannelToken = () => {
+  var token;
+
+  return new Promise((resolve, reject) => {
+    console.log('[getChannelToken] Starting auth token request...');
+    https
+      .request(
+        {
+          method: 'POST',
+          hostname: authBaseHostName,
+          path: channelTokenPathBuilder(),
+          headers: {
+            accept: 'application/vnd.twitchtv.v5+json'
+          }
+        },
+        response => {
+          response.on('data', tokenJson => {
+            console.log('[getChannelToken] Response received.');
+            token = JSON.parse(tokenJson.toString());
+          });
+
+          response.on('end', () => {
+            console.log('[getChannelToken] Promise resolved.');
+            resolve(token.access_token);
+          });
+        }
+      )
+      .on('error', error => {
+        console.log(error);
+        reject(error);
+      })
+      .end();
+  });
 };
 
 var heartbeat = () => {
@@ -41,11 +121,15 @@ var heartbeat = () => {
 };
 
 var listen = (topics, token) => {
-  message = {
+  console.log(token);
+
+  var message = {
     type: 'LISTEN',
     nonce: nonceGenerator(15),
     data: { topics: topics, auth_token: token }
   };
+
+  console.log(message);
 
   socket.send(JSON.stringify(message));
   console.log('LISTEN sent.');
@@ -57,32 +141,29 @@ var connect = () => {
   var heartbeatHandle;
 
   socket.on('open', () => {
-    console.log('PubSub socket open.');
+    console.log('[PubSubConnect] PubSub socket open.');
     heartbeat();
     heartbeatHandle = setInterval(heartbeat, heartbeatInterval);
   });
 
   socket.on('error', () => {
-    console.log('PubSub socket error: ' + error);
+    console.log('[PubSubConnect] PubSub socket error: ' + error);
   });
 
   socket.on('message', event => {
-    console.log(event);
-    var message = JSON.parse(event.type);
-
-    console.log('PubSub message received: ' + message);
+    console.log('[PubSubConnect] PubSub message received: ' + event);
     if (event.type === 'RECONNECT') {
-      console.log('Reconnecting...');
+      console.log('[PubSubConnect] Reconnecting...');
       setTimeout(connect, reconnectInterval);
     }
   });
 
   socket.on('close', () => {
-    onsole.log('PubSub socket closed.');
+    console.log('[PubSubConnect] PubSub socket closed.');
     clearInterval(heartbeatHandle);
     setTimeout(connect, reconnectInterval);
   });
-}; */
+};
 
 module.exports = {
   // This will return a token as a promise for our next call //
@@ -335,18 +416,30 @@ module.exports = {
     });
     request.write(hookParams);
     request.end();
-  }
+  },
 
-  /* setupPubSub: token => {
+  setupPubSub: async token => {
+    var channelID;
+    var channelToken;
+
+    if (process.env.NODE_ENV === 'dev') {
+      channelID = process.env.TEST_TWITCH_CHANNEL_ID;
+      channelToken = await getChannelToken();
+    } else {
+      // Get Channel Id of User //
+      channelID = await getChannelId(token);
+      channelToken = token;
+    }
+
+    // TODO: Add Channel ID to user doc in DB //
+
     // Connect to web socket //
     connect();
 
     // Listen to event //
-    var bits = `channel-bits-events-v1.${process.env.TEST_TWITCH_ID}`;
-    var subs = `channel-subscribe-events-v1.${process.env.TEST_TWITCH_ID}`;
+    var bits = `channel-bits-events-v1.${channelID}`;
+    var subs = `channel-subscribe-events-v1.${channelID}`;
 
-    console.log(token);
-
-    listen([bits, subs], token);
-  } */
+    listen([bits, subs], channelToken);
+  }
 };
