@@ -76,41 +76,6 @@ var getChannelId = token => {
   });
 };
 
-var getChannelToken = () => {
-  var token;
-
-  return new Promise((resolve, reject) => {
-    console.log('[getChannelToken] Starting auth token request...');
-    https
-      .request(
-        {
-          method: 'POST',
-          hostname: authBaseHostName,
-          path: channelTokenPathBuilder(),
-          headers: {
-            accept: 'application/vnd.twitchtv.v5+json'
-          }
-        },
-        response => {
-          response.on('data', tokenJson => {
-            console.log('[getChannelToken] Response received.');
-            token = JSON.parse(tokenJson.toString());
-          });
-
-          response.on('end', () => {
-            console.log('[getChannelToken] Promise resolved.');
-            resolve(token.access_token);
-          });
-        }
-      )
-      .on('error', error => {
-        console.log(error);
-        reject(error);
-      })
-      .end();
-  });
-};
-
 var heartbeat = () => {
   message = {
     type: 'PING'
@@ -121,18 +86,13 @@ var heartbeat = () => {
 };
 
 var listen = (topics, token) => {
-  console.log(token);
-
   var message = {
     type: 'LISTEN',
     nonce: nonceGenerator(15),
     data: { topics: topics, auth_token: token }
   };
 
-  console.log(message);
-
   socket.send(JSON.stringify(message));
-  console.log('LISTEN sent.');
 };
 
 var connect = () => {
@@ -151,10 +111,22 @@ var connect = () => {
   });
 
   socket.on('message', event => {
-    console.log('[PubSubConnect] PubSub message received: ' + event);
     if (event.type === 'RECONNECT') {
       console.log('[PubSubConnect] Reconnecting...');
       setTimeout(connect, reconnectInterval);
+    }
+
+    if (event.type === 'RESPONSE') {
+      if (event.error) {
+        console.log('[PubSubConnect] PubSub error received: ' + event);
+      } else {
+        console.log('[PubSubConnect] PubSub initialized.');
+      }
+    }
+
+    if (event.type === 'MESSAGE') {
+      console.log(`[PubSubConnect] Message received: ${event.topic}`);
+      console.log(event.message);
     }
   });
 
@@ -306,9 +278,11 @@ module.exports = {
   configStreamStatusWebhook: (userData, token, mode) => {
     console.log('[configStreamStatusWebhook] Starting...');
 
-    console.log(
-      '[initStreamStatusWebhook] Stream Up/Down Hook: ' + userData.statusHook
-    );
+    if (process.env.NODE_ENV === 'dev') {
+      console.log(
+        '[initStreamStatusWebhook] Stream Up/Down Hook: ' + userData.statusHook
+      );
+    }
     // Create json body params, passes back MongoDB object //
     var hookParams = JSON.stringify({
       'hub.callback': userData.statusHook,
@@ -420,18 +394,9 @@ module.exports = {
 
   setupPubSub: async token => {
     var channelID;
-    var channelToken;
 
-    if (process.env.NODE_ENV === 'dev') {
-      channelID = process.env.TEST_TWITCH_CHANNEL_ID;
-      channelToken = await getChannelToken();
-    } else {
-      // Get Channel Id of User //
-      channelID = await getChannelId(token);
-      channelToken = token;
-    }
-
-    // TODO: Add Channel ID to user doc in DB //
+    // Get Channel Id of User //
+    channelID = await getChannelId(token);
 
     // Connect to web socket //
     connect();
@@ -440,6 +405,6 @@ module.exports = {
     var bits = `channel-bits-events-v1.${channelID}`;
     var subs = `channel-subscribe-events-v1.${channelID}`;
 
-    listen([bits, subs], channelToken);
+    listen([bits, subs], token);
   }
 };
