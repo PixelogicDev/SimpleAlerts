@@ -12,9 +12,15 @@ export class DashboardComponent implements OnInit {
   // Need to save code from URI in order to generate access_tokens //
   // To get access token will need to post to server //
   code: String;
-  tokenUrl = 'http://localhost:8000/api/v1/twitch/token';
+  twitchTokenRoute = 'http://localhost:8000/api/v1/twitch/token';
+  streamlabsTokenRoute = 'http://localhost:8000/api/v1/streamlabs/token';
   displayName: String;
   email: String;
+  streamLabsAuthUrl = 'https://www.streamlabs.com/api/v1.0/authorize' +
+    '?client_id=3cHN5exsWXQhEaKKvTkcuFQTA70Besv08T5aWMjw' +
+    '&redirect_uri=http://localhost:4200/dashboard' +
+    '&response_type=code&scope=donations.read+socket.token';
+  twitchAuthComplete: String;
 
   constructor(
     private http: HttpClient,
@@ -25,19 +31,41 @@ export class DashboardComponent implements OnInit {
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
       this.code = params['code'];
-      this.generateToken();
+      // -- MAD PROPS Sliomere -- //
+      this.twitchAuthComplete = window.document.referrer;
+
+      if (this.twitchAuthComplete === '') {
+        console.log('Coming from another auth redirect.');
+        this.getStreamlabsData();
+      } else {
+        this.getTwitchData();
+      }
     });
   }
 
   // Helpers //
   generateToken() {
-    const json = {
+    return {
       code: this.code
     };
+  }
 
-    this.http.post(this.tokenUrl, json).subscribe(data => {
-      this.displayName = data['twitchDisplayName'];
-      this.email = data['twitchEmail'];
-    });
+  getTwitchData() {
+    this.http
+      .post(this.twitchTokenRoute, this.generateToken())
+      .subscribe(data => {
+        console.log('Received Twitch Data.');
+        this.displayName = data['twitchDisplayName'];
+        this.email = data['twitchEmail'];
+      });
+  }
+
+  getStreamlabsData() {
+    this.http
+      .post(this.streamlabsTokenRoute, this.generateToken())
+      .subscribe(data => {
+        console.log('Received Streamlabs Data.');
+        console.log(data);
+      });
   }
 }

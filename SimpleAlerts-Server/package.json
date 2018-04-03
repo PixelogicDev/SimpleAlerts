@@ -17,6 +17,7 @@
     "mongodb": "^3.0.4",
     "ngrok": "^3.0.1",
     "randomstring": "^1.1.5",
+    "streamlabs-socket-client": "0.0.4",
     "ws": "^5.1.0"
   }
 }

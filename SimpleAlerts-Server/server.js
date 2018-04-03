@@ -2,6 +2,7 @@
 require('dotenv').config();
 const express = require('express');
 const twitch = require('./twitch/twitch');
+const streamlabs = require('./streamlabs/streamlabs');
 const db = require('./database/db');
 const apiBase = '/api/v1/';
 const https = require('https');
@@ -183,4 +184,20 @@ server.all('/hook/stream/status/:id', async (request, response) => {
 
     response.status(200);
   }
+});
+
+server.post(apiBase + 'streamlabs/token', async (request, response) => {
+  // Use code from client to request token //
+  var authCode = request.body.code;
+
+  // Given code, need to get auth token for requests //
+  var token = await streamlabs.getAuthToken(authCode);
+  console.log(token);
+
+  // Given access_token, get socket tocken //
+  var socketToken = await streamlabs.getSocketToken(token);
+  console.log(socketToken);
+
+  // Setup socket to receive alert //
+  streamlabs.setupSocket(socketToken);
 });
