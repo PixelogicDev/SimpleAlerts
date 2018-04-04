@@ -91,11 +91,29 @@ module.exports = {
   setupSocket: socketToken => {
     var client = new StreamlabsSocketClient({
       token: socketToken,
-      emitTests: true
+      emitTests: true,
+      rawEvent: ['connect']
     });
 
-    client.on('bits', donation => {
+    client.on('follow', follow => {
+      console.log(follow);
+    });
+
+    client.on('donation', donation => {
       console.log(donation);
+    });
+
+    client.on('subscription', subscription => {
+      console.log(subscription);
+    });
+
+    client.on('resubscription', resubscription => {
+      console.log(resubscription);
+    });
+
+    // Bit event //
+    client.on('bits', bits => {
+      console.log(bits);
     });
 
     client.connect();

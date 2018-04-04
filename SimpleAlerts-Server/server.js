@@ -54,7 +54,6 @@ server.post(apiBase + 'streamlabs/token', async (request, response) => {
 
   // Get user data from Streamlabs //
   streamlabsUser = await streamlabs.getUserInfo(token);
-  console.log(user);
 
   // Check to see if user is part of SimpleAlerts //
   user = await db.findUser(streamlabsUser.twitch.id);
