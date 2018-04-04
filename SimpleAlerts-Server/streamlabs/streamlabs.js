@@ -1,6 +1,7 @@
 const https = require('https');
 const authBaseHostName = 'streamlabs.com';
 const StreamlabsSocketClient = require('streamlabs-socket-client');
+const websocket = require('../websocket/ws');
 
 //-- Helpers --//
 var tokenBodyBuilder = code => {
@@ -95,8 +96,18 @@ module.exports = {
       rawEvent: ['connect']
     });
 
-    client.on('follow', follow => {
-      console.log(follow);
+    client.on('follow', follower => {
+      var followerObj = JSON.stringify({
+        type: 'new_follower',
+        data: {
+          name: follower.name,
+          isTest: follower.isTest,
+          _id: follower._id
+        }
+      });
+
+      console.log(followerObj);
+      websocket.streamData(followerObj);
     });
 
     client.on('donation', donation => {

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
+import { $WebSocket } from 'angular2-websocket/angular2-websocket';
 
 @Component({
   selector: 'app-dashboard',
@@ -20,6 +21,7 @@ export class DashboardComponent implements OnInit {
     '?client_id=3cHN5exsWXQhEaKKvTkcuFQTA70Besv08T5aWMjw' +
     '&redirect_uri=http://localhost:4200/dashboard' +
     '&response_type=code&scope=donations.read+socket.token';
+  ws = new $WebSocket('ws://127.0.0.1:8080');
 
   constructor(
     private http: HttpClient,
@@ -34,6 +36,26 @@ export class DashboardComponent implements OnInit {
       // this.twitchAuthComplete = window.document.referrer;
 
       this.getStreamlabsData();
+
+      // Setup Websocket //
+      this.ws.onMessage(
+        (msg: MessageEvent) => {
+          let messageObj;
+
+          try {
+            messageObj = JSON.parse(msg.data);
+
+            if (messageObj.type === 'new_follower') {
+              console.log(messageObj.data);
+            } else {
+              console.log(messageObj.data);
+            }
+          } catch (error) {
+            console.log('Error parsing JSON in SimpleAlertsSocket: ' + error);
+          }
+        },
+        { autoApply: false }
+      );
 
       /* if (this.twitchAuthComplete === '') {
         console.log('Coming from another auth redirect.');
@@ -66,7 +88,6 @@ export class DashboardComponent implements OnInit {
       .post(this.streamlabsTokenRoute, this.generateToken())
       .subscribe(data => {
         console.log('Received Streamlabs Data.');
-        console.log(data);
         this.twitchDisplayName = data['twitchDisplayName'];
       });
   }

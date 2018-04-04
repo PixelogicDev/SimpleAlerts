@@ -3,9 +3,9 @@ const authBaseHostName = 'id.twitch.tv';
 const apiBaseHostName = 'api.twitch.tv';
 const channelEndpoint = '/kraken/channel';
 const webhookPath = '/helix/webhooks/hub';
-const pubSubPath = 'wss://pubsub-edge.twitch.tv';
-const WebSocket = require('ws');
-const socket = new WebSocket(pubSubPath);
+// const pubSubPath = 'wss://pubsub-edge.twitch.tv';
+// const WebSocket = require('ws');
+// const socket = new WebSocket(pubSubPath);
 
 //-- Helpers --//
 var tokenPathBuilder = code => {
