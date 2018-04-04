@@ -12,20 +12,20 @@ MongoClient.connect(process.env.DB_URL, async (err, client) => {
 
   db = client.db(process.env.DB_NAME);
 
-  if (process.env.NODE_ENV === 'dev') {
+  /* if (process.env.NODE_ENV === 'dev') {
     basePath = await ngrok.connect(8000);
   } else {
     basePath = process.env.BASE_URL;
-  }
+  } */
 });
 
-var createFollowHookRoute = userID => {
+/* var createFollowHookRoute = userID => {
   return `${basePath}/hook/follower/${userID}`;
 };
 
 var createStreamStatusHookRoute = userID => {
   return `${basePath}/hook/stream/status/${userID}`;
-};
+}; */
 
 module.exports = {
   findUser: userID => {
@@ -47,10 +47,10 @@ module.exports = {
           if (user === null) return resolve(null);
 
           console.log('[findUser] User found. Returning.');
-          if (process.env.NODE_ENV === 'dev') {
+          /* if (process.env.NODE_ENV === 'dev') {
             user.followHook = createFollowHookRoute(user._id);
             user.statusHook = createStreamStatusHookRoute(user._id);
-          }
+          } */
           return resolve(user);
         }
       );
@@ -63,14 +63,10 @@ module.exports = {
       console.log('[addNewUser] Starting...');
 
       let usersCollection = db.collection('users');
-      let followHook = createFollowHookRoute(userData.userID);
-      let statusHook = createStreamStatusHookRoute(userData.userID);
       let userObject = {
-        _id: userData.userID,
-        twitchDisplayName: userData.displayName,
-        twitchEmail: userData.email,
-        followHook: followHook,
-        statusHook: statusHook
+        _id: userData.id,
+        twitchDisplayName: userData.display_name,
+        username: userData.name
       };
 
       usersCollection.insertOne(userObject, (insertError, data) => {

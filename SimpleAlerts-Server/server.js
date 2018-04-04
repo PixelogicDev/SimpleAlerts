@@ -33,30 +33,6 @@ if (process.env.NODE_ENV === 'production') {
 // Setup CORS //
 server.use(cors());
 
-/*server.use(function (req, res, next) {
-  // Website you wish to allow to connect
-  res.setHeader('Access-Control-Allow-Origin', '*');
-
-  // Request methods you wish to allow
-  res.setHeader(
-    'Access-Control-Allow-Methods',
-    'GET, POST, OPTIONS, PUT, PATCH, DELETE'
-  );
-
-  // Request headers you wish to allow
-  res.setHeader(
-    'Access-Control-Allow-Headers',
-    'X-Requested-With,content-type'
-  );
-
-  // Set to true if you need the website to include cookies in the requests sent
-  // to the API (e.g. in case you use sessions)
-  res.setHeader('Access-Control-Allow-Credentials', true);
-
-  // Pass to next layer of middleware
-  next();
-});*/
-
 server.listen(8000, () => {
   console.log('Server started on port: 8000');
 });
@@ -66,8 +42,40 @@ server.get('/', (request, response) => {
   response.send('Hit /');
 });
 
+server.post(apiBase + 'streamlabs/token', async (request, response) => {
+  //-- User property --//
+  var user = null;
+
+  // Use code from client to request token //
+  var authCode = request.body.code;
+
+  // Given code, need to get auth token for requests //
+  var token = await streamlabs.getAuthToken(authCode);
+
+  // Get user data from Streamlabs //
+  streamlabsUser = await streamlabs.getUserInfo(token);
+  console.log(user);
+
+  // Check to see if user is part of SimpleAlerts //
+  user = await db.findUser(streamlabsUser.twitch.id);
+
+  // If no user object is returned, create new user in DB //
+  if (user === null) {
+    // Create new user in db //
+    user = await db.addNewUser(streamlabsUser.twitch, token);
+  }
+
+  // Given access_token, get socket tocken //
+  var socketToken = await streamlabs.getSocketToken(token);
+
+  // Setup socket to receive alert //
+  streamlabs.setupSocket(socketToken);
+
+  response.send(user);
+});
+
 // Twitch Token Request //
-server.post(apiBase + 'twitch/token', async (request, response) => {
+/*server.post(apiBase + 'twitch/token', async (request, response) => {
   //-- User property --//
   var user = null;
 
@@ -184,20 +192,4 @@ server.all('/hook/stream/status/:id', async (request, response) => {
 
     response.status(200);
   }
-});
-
-server.post(apiBase + 'streamlabs/token', async (request, response) => {
-  // Use code from client to request token //
-  var authCode = request.body.code;
-
-  // Given code, need to get auth token for requests //
-  var token = await streamlabs.getAuthToken(authCode);
-  console.log(token);
-
-  // Given access_token, get socket tocken //
-  var socketToken = await streamlabs.getSocketToken(token);
-  console.log(socketToken);
-
-  // Setup socket to receive alert //
-  streamlabs.setupSocket(socketToken);
-});
+}); */

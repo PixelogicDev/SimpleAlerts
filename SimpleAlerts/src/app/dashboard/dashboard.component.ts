@@ -12,15 +12,14 @@ export class DashboardComponent implements OnInit {
   // Need to save code from URI in order to generate access_tokens //
   // To get access token will need to post to server //
   code: String;
-  twitchTokenRoute = 'http://localhost:8000/api/v1/twitch/token';
+  // twitchTokenRoute = 'http://localhost:8000/api/v1/twitch/token';
   streamlabsTokenRoute = 'http://localhost:8000/api/v1/streamlabs/token';
-  displayName: String;
-  email: String;
+  twitchDisplayName: String;
+  // email: String;
   streamLabsAuthUrl = 'https://www.streamlabs.com/api/v1.0/authorize' +
     '?client_id=3cHN5exsWXQhEaKKvTkcuFQTA70Besv08T5aWMjw' +
     '&redirect_uri=http://localhost:4200/dashboard' +
     '&response_type=code&scope=donations.read+socket.token';
-  twitchAuthComplete: String;
 
   constructor(
     private http: HttpClient,
@@ -32,14 +31,16 @@ export class DashboardComponent implements OnInit {
     this.route.queryParams.subscribe(params => {
       this.code = params['code'];
       // -- MAD PROPS Sliomere -- //
-      this.twitchAuthComplete = window.document.referrer;
+      // this.twitchAuthComplete = window.document.referrer;
 
-      if (this.twitchAuthComplete === '') {
+      this.getStreamlabsData();
+
+      /* if (this.twitchAuthComplete === '') {
         console.log('Coming from another auth redirect.');
         this.getStreamlabsData();
       } else {
         this.getTwitchData();
-      }
+      } */
     });
   }
 
@@ -50,7 +51,7 @@ export class DashboardComponent implements OnInit {
     };
   }
 
-  getTwitchData() {
+  /* getTwitchData() {
     this.http
       .post(this.twitchTokenRoute, this.generateToken())
       .subscribe(data => {
@@ -58,7 +59,7 @@ export class DashboardComponent implements OnInit {
         this.displayName = data['twitchDisplayName'];
         this.email = data['twitchEmail'];
       });
-  }
+  } */
 
   getStreamlabsData() {
     this.http
@@ -66,6 +67,7 @@ export class DashboardComponent implements OnInit {
       .subscribe(data => {
         console.log('Received Streamlabs Data.');
         console.log(data);
+        this.twitchDisplayName = data['twitchDisplayName'];
       });
   }
 }

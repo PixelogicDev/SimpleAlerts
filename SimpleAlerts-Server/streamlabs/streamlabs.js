@@ -99,5 +99,38 @@ module.exports = {
     });
 
     client.connect();
+  },
+
+  getUserInfo: token => {
+    return new Promise((resolve, reject) => {
+      var userData;
+
+      var request = https.get(
+        `https://streamlabs.com/api/v1.0/user?access_token=${token}`,
+        response => {
+          if (response.statusCode === 400) {
+            console.log('[getUserInfo] Error requesting user from Streamlabs.');
+            reject(`${response.error}: ${response.message}`);
+            return;
+          }
+
+          response.on('data', data => {
+            userData = data;
+          });
+
+          response.on('end', () => {
+            console.log('[getUserInfo] Resolved User Data.');
+            resolve(JSON.parse(userData.toString()));
+          });
+        }
+      );
+      request.on('error', error => {
+        console.log('[getUserInfo] ERROR: ' + error);
+        reject(error);
+        return;
+      });
+
+      request.end();
+    });
   }
 };
