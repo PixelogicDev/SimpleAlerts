@@ -14,6 +14,86 @@ var tokenBodyBuilder = code => {
   });
 };
 
+var eventDataParser = (event, type) => {
+  console.log(`[eventDataParser] Starting to parse ${type}...`);
+  var eventObj;
+
+  switch (type) {
+    case 'new_follower':
+      eventObj = JSON.stringify({
+        type: type,
+        data: {
+          _id: event._id,
+          timestamp: new Date(),
+          name: event.name,
+          isTest: event.isTest
+        }
+      });
+      break;
+    case 'new_donation':
+      eventObj = JSON.stringify({
+        type: type,
+        data: {
+          id: event.id,
+          timestamp: new Date(),
+          from: event.from,
+          amount: event.amount,
+          stringAmount: event.formattedAmount,
+          currency: event.currency,
+          isTest: event.isTest
+        }
+      });
+      break;
+    case 'new_subscription':
+      eventObj = JSON.stringify({
+        type: type,
+        data: {
+          _id: event._id,
+          timestamp: new Date(),
+          name: event.from,
+          months: event.months,
+          message: event.message,
+          sub_plan: event.sub_plan,
+          isTest: event.isTest
+        }
+      });
+      break;
+    case 'new_resubscription':
+      eventObj = JSON.stringify({
+        type: type,
+        data: {
+          _id: event._id,
+          timestamp: new Date(),
+          name: event.from,
+          months: event.months,
+          message: event.message,
+          sub_plan: event.sub_plan,
+          isTest: event.isTest
+        }
+      });
+      break;
+    case 'new_bits':
+      eventObj = JSON.stringify({
+        type: type,
+        data: {
+          _id: event._id,
+          timestamp: new Date(),
+          name: event.name,
+          amount: event.amount,
+          stringAmount: event.formattedAmount,
+          message: event.message,
+          isTest: event.isTest
+        }
+      });
+      break;
+      defualt: console.log(`[eventDataParser] ${type} not found.`);
+      return;
+  }
+
+  console.log(`[eventDataParser] ${type} parsed.`);
+  return eventObj;
+};
+
 module.exports = {
   getAuthToken: code => {
     let token;
@@ -97,34 +177,31 @@ module.exports = {
     });
 
     client.on('follow', follower => {
-      var followerObj = JSON.stringify({
-        type: 'new_follower',
-        data: {
-          name: follower.name,
-          isTest: follower.isTest,
-          _id: follower._id
-        }
-      });
-
-      console.log(followerObj);
+      var followerObj = eventDataParser(follower, 'new_follower');
       websocket.streamData(followerObj, username);
     });
 
     client.on('donation', donation => {
-      console.log(donation);
+      var donationObj = eventDataParser(donation, 'new_donation');
+      websocket.streamData(donationObj, username);
     });
 
     client.on('subscription', subscription => {
-      console.log(subscription);
+      var subscriptionObj = eventDataParser(subscription, 'new_subscription');
+      websocket.streamData(subscriptionObj, username);
     });
 
     client.on('resubscription', resubscription => {
-      console.log(resubscription);
+      var resubscriptionObj = eventDataParser(
+        resubscription,
+        'new_resubscription'
+      );
+      websocket.streamData(resubscriptionObj, username);
     });
 
-    // Bit event //
     client.on('bits', bits => {
-      console.log(bits);
+      var bitsObj = eventDataParser(bits, 'new_bits');
+      websocket.streamData(bitsObj, username);
     });
 
     client.connect();
