@@ -1,7 +1,6 @@
 const MongoClient = require('mongodb').MongoClient;
 const assert = require('assert');
 const twitch = require('../Twitch/twitch');
-const ngrok = require('ngrok');
 var db;
 var basePath;
 

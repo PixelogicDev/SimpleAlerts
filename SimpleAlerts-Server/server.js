@@ -23,7 +23,7 @@ var sessionProps = {
 server.use(bodyParser.json());
 
 if (process.env.NODE_ENV === 'production') {
-  server.set('trust prozy', 1);
+  server.set('trust proxy', 1);
   sessionProps.cookie.secure = true;
 }
 
@@ -68,7 +68,7 @@ server.post(apiBase + 'streamlabs/token', async (request, response) => {
   var socketToken = await streamlabs.getSocketToken(token);
 
   // Setup socket to receive alert //
-  streamlabs.setupSocket(socketToken);
+  streamlabs.setupSocket(socketToken, user.username);
 
   response.send(user);
 });

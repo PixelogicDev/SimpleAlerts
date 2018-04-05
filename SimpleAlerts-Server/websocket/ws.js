@@ -1,9 +1,12 @@
 // ws://localhost:8080
 const WebSocket = require('ws');
+const db = require('../database/db');
 const wss = new WebSocket.Server({ port: 8080 });
-var currentSocket;
 
-wss.on('connection', ws => {
+wss.on('connection', (ws, request) => {
+  // Set Id on socket //
+  ws.id = request.url;
+
   ws.on('message', message => {
     console.log('New Message Received: ' + message);
   });
@@ -17,11 +20,16 @@ wss.on('connection', ws => {
 });
 
 module.exports = {
-  streamData: data => {
+  streamData: (data, username) => {
     console.log('Sending stream data to client...');
+
     wss.clients.forEach(client => {
-      client.send(data);
+      if (client.id === `/?user=${username}`) {
+        console.log('Socket found, sending data...');
+        client.send(data);
+        console.log('Data has been sent.');
+        return;
+      }
     });
-    console.log('Data has been sent.');
   }
 };

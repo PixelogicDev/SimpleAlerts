@@ -89,7 +89,7 @@ module.exports = {
     });
   },
 
-  setupSocket: socketToken => {
+  setupSocket: (socketToken, username) => {
     var client = new StreamlabsSocketClient({
       token: socketToken,
       emitTests: true,
@@ -107,7 +107,7 @@ module.exports = {
       });
 
       console.log(followerObj);
-      websocket.streamData(followerObj);
+      websocket.streamData(followerObj, username);
     });
 
     client.on('donation', donation => {

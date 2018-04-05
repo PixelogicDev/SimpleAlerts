@@ -13,15 +13,16 @@ export class DashboardComponent implements OnInit {
   // Need to save code from URI in order to generate access_tokens //
   // To get access token will need to post to server //
   code: String;
-  // twitchTokenRoute = 'http://localhost:8000/api/v1/twitch/token';
+  ws: $WebSocket;
   streamlabsTokenRoute = 'http://localhost:8000/api/v1/streamlabs/token';
   twitchDisplayName: String;
-  // email: String;
+  username: String;
   streamLabsAuthUrl = 'https://www.streamlabs.com/api/v1.0/authorize' +
     '?client_id=3cHN5exsWXQhEaKKvTkcuFQTA70Besv08T5aWMjw' +
     '&redirect_uri=http://localhost:4200/dashboard' +
     '&response_type=code&scope=donations.read+socket.token';
-  ws = new $WebSocket('ws://127.0.0.1:8080');
+  // email: String;
+  // twitchTokenRoute = 'http://localhost:8000/api/v1/twitch/token';
 
   constructor(
     private http: HttpClient,
@@ -35,28 +36,29 @@ export class DashboardComponent implements OnInit {
       // -- MAD PROPS Sliomere -- //
       // this.twitchAuthComplete = window.document.referrer;
 
-      this.getStreamlabsData();
+      this.getStreamlabsData(() => {
+        // Setup Websocket //
+        this.ws.onMessage(
+          (msg: MessageEvent) => {
+            let messageObj;
 
-      // Setup Websocket //
-      this.ws.onMessage(
-        (msg: MessageEvent) => {
-          let messageObj;
+            try {
+              messageObj = JSON.parse(msg.data);
 
-          try {
-            messageObj = JSON.parse(msg.data);
-
-            if (messageObj.type === 'new_follower') {
-              console.log(messageObj.data);
-            } else {
-              console.log(messageObj.data);
+              if (messageObj.type === 'new_follower') {
+                console.log(messageObj.data);
+              } else {
+                console.log(messageObj.data);
+              }
+            } catch (error) {
+              console.log('Error parsing JSON in SimpleAlertsSocket: ' + error);
             }
-          } catch (error) {
-            console.log('Error parsing JSON in SimpleAlertsSocket: ' + error);
+          },
+          {
+            autoApply: false
           }
-        },
-        { autoApply: false }
-      );
-
+        );
+      });
       /* if (this.twitchAuthComplete === '') {
         console.log('Coming from another auth redirect.');
         this.getStreamlabsData();
@@ -83,12 +85,18 @@ export class DashboardComponent implements OnInit {
       });
   } */
 
-  getStreamlabsData() {
+  getStreamlabsData(complete) {
     this.http
       .post(this.streamlabsTokenRoute, this.generateToken())
       .subscribe(data => {
         console.log('Received Streamlabs Data.');
         this.twitchDisplayName = data['twitchDisplayName'];
+        this.username = data['username'];
+        this.ws = new $WebSocket(
+          `ws://127.0.0.1:8080/?user=${data['username']}`
+        );
+
+        complete();
       });
   }
 }
