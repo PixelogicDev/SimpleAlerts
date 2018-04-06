@@ -23,9 +23,9 @@ var eventDataParser = (event, type) => {
       eventObj = JSON.stringify({
         type: type,
         data: {
-          _id: event._id,
+          id: event._id,
           timestamp: new Date(),
-          name: event.name,
+          from: event.name,
           isTest: event.isTest
         }
       });
@@ -40,6 +40,7 @@ var eventDataParser = (event, type) => {
           amount: event.amount,
           stringAmount: event.formattedAmount,
           currency: event.currency,
+          message: event.message,
           isTest: event.isTest
         }
       });
@@ -48,9 +49,9 @@ var eventDataParser = (event, type) => {
       eventObj = JSON.stringify({
         type: type,
         data: {
-          _id: event._id,
+          id: event._id,
           timestamp: new Date(),
-          name: event.from,
+          from: event.from,
           months: event.months,
           message: event.message,
           sub_plan: event.sub_plan,
@@ -62,7 +63,7 @@ var eventDataParser = (event, type) => {
       eventObj = JSON.stringify({
         type: type,
         data: {
-          _id: event._id,
+          id: event._id,
           timestamp: new Date(),
           name: event.from,
           months: event.months,
@@ -72,13 +73,13 @@ var eventDataParser = (event, type) => {
         }
       });
       break;
-    case 'new_bits':
+    case 'new_cheer':
       eventObj = JSON.stringify({
         type: type,
         data: {
-          _id: event._id,
+          id: event._id,
           timestamp: new Date(),
-          name: event.name,
+          from: event.name,
           amount: event.amount,
           stringAmount: event.formattedAmount,
           message: event.message,
@@ -200,7 +201,7 @@ module.exports = {
     });
 
     client.on('bits', bits => {
-      var bitsObj = eventDataParser(bits, 'new_bits');
+      var bitsObj = eventDataParser(bits, 'new_cheer');
       websocket.streamData(bitsObj, username);
     });
 

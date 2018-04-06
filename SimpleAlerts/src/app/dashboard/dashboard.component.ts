@@ -3,6 +3,12 @@ import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { $WebSocket } from 'angular2-websocket/angular2-websocket';
 
+// Models //
+import { Follower } from '../shared/models/follower.model';
+import { Donation } from '../shared/models/donation.model';
+import { Subscription } from '../shared/models/subscription.model';
+import { Cheer } from '../shared/models/cheer.model';
+
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -40,16 +46,12 @@ export class DashboardComponent implements OnInit {
         // Setup Websocket //
         this.ws.onMessage(
           (msg: MessageEvent) => {
-            let messageObj;
+            let eventObj;
 
             try {
-              messageObj = JSON.parse(msg.data);
-
-              if (messageObj.type === 'new_follower') {
-                console.log(messageObj.data);
-              } else {
-                console.log(messageObj.data);
-              }
+              eventObj = JSON.parse(msg.data);
+              const eventType = this.generateEventType(eventObj);
+              console.log(eventType);
             } catch (error) {
               console.log('Error parsing JSON in SimpleAlertsSocket: ' + error);
             }
@@ -69,25 +71,9 @@ export class DashboardComponent implements OnInit {
   }
 
   // Helpers //
-  generateToken() {
-    return {
-      code: this.code
-    };
-  }
-
-  /* getTwitchData() {
-    this.http
-      .post(this.twitchTokenRoute, this.generateToken())
-      .subscribe(data => {
-        console.log('Received Twitch Data.');
-        this.displayName = data['twitchDisplayName'];
-        this.email = data['twitchEmail'];
-      });
-  } */
-
   getStreamlabsData(complete) {
     this.http
-      .post(this.streamlabsTokenRoute, this.generateToken())
+      .post(this.streamlabsTokenRoute, { code: this.code })
       .subscribe(data => {
         console.log('Received Streamlabs Data.');
         this.twitchDisplayName = data['twitchDisplayName'];
@@ -99,4 +85,31 @@ export class DashboardComponent implements OnInit {
         complete();
       });
   }
+
+  generateEventType(json: any): any {
+    switch (json.type) {
+      case 'new_follower':
+        return new Follower(json.data);
+      case 'new_donation':
+        return new Donation(json.data);
+      case 'new_subscription':
+        return new Subscription(json.data);
+      case 'new_resubscription':
+        return new Subscription(json.data);
+      case 'new_cheer':
+        return new Cheer(json.data);
+      case 'connection_open':
+        return json.data;
+    }
+  }
+
+  /* getTwitchData() {
+    this.http
+      .post(this.twitchTokenRoute, this.generateToken())
+      .subscribe(data => {
+        console.log('Received Twitch Data.');
+        this.displayName = data['twitchDisplayName'];
+        this.email = data['twitchEmail'];
+      });
+  } */
 }
