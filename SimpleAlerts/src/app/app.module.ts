@@ -7,6 +7,9 @@ import { AppComponent } from './app.component';
 import { RootComponent } from './root/root.component';
 import { LoginComponent } from './login/login.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { EventListComponent } from './event-list/event-list.component';
+
+import { MessageService } from './services/message.service';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -19,14 +22,15 @@ const routes: Routes = [
     AppComponent,
     RootComponent,
     LoginComponent,
-    DashboardComponent
+    DashboardComponent,
+    EventListComponent
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     RouterModule.forRoot(routes, { enableTracing: true })
   ],
-  providers: [],
+  providers: [MessageService],
   bootstrap: [RootComponent]
 })
 export class AppModule {}

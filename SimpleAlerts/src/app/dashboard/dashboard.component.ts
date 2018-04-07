@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { $WebSocket } from 'angular2-websocket/angular2-websocket';
+import { MessageService } from '../services/message.service';
 
 // Models //
 import { Follower } from '../shared/models/follower.model';
@@ -16,8 +17,6 @@ import { Cheer } from '../shared/models/cheer.model';
 })
 export class DashboardComponent implements OnInit {
   // Properties //
-  // Need to save code from URI in order to generate access_tokens //
-  // To get access token will need to post to server //
   code: String;
   ws: $WebSocket;
   streamlabsTokenRoute = 'http://localhost:8000/api/v1/streamlabs/token';
@@ -33,7 +32,8 @@ export class DashboardComponent implements OnInit {
   constructor(
     private http: HttpClient,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private messageService: MessageService
   ) {}
 
   ngOnInit() {
@@ -50,8 +50,13 @@ export class DashboardComponent implements OnInit {
 
             try {
               eventObj = JSON.parse(msg.data);
-              const eventType = this.generateEventType(eventObj);
-              console.log(eventType);
+
+              if (eventObj.type === 'connection_open') {
+                console.log(eventObj.data);
+              } else {
+                const eventType = this.generateEventType(eventObj);
+                this.messageService.sendEvent(eventType);
+              }
             } catch (error) {
               console.log('Error parsing JSON in SimpleAlertsSocket: ' + error);
             }
@@ -86,6 +91,7 @@ export class DashboardComponent implements OnInit {
       });
   }
 
+  // Can send subscription message out in this method as well //
   generateEventType(json: any): any {
     switch (json.type) {
       case 'new_follower':
@@ -98,8 +104,6 @@ export class DashboardComponent implements OnInit {
         return new Subscription(json.data);
       case 'new_cheer':
         return new Cheer(json.data);
-      case 'connection_open':
-        return json.data;
     }
   }
 
