@@ -16,8 +16,8 @@ import { Event } from '../shared/models/event.model';
 })
 export class EventListComponent implements OnInit {
   // Properties //
-  @Input() title: string;
   @Input() eventTypes: Array<string>;
+  title: string;
   subscription: rxSubscription;
   eventList = new Array<Event>();
 
@@ -32,5 +32,7 @@ export class EventListComponent implements OnInit {
     });
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.title = 'New Event';
+  }
 }

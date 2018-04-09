@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { $WebSocket } from 'angular2-websocket/angular2-websocket';
 import { MessageService } from '../services/message.service';
+import { EventListComponent } from '../event-list/event-list.component';
 
 // Models //
 import { Follower } from '../shared/models/follower.model';
@@ -26,6 +27,7 @@ export class DashboardComponent implements OnInit {
     '?client_id=3cHN5exsWXQhEaKKvTkcuFQTA70Besv08T5aWMjw' +
     '&redirect_uri=http://localhost:4200/dashboard' +
     '&response_type=code&scope=donations.read+socket.token';
+  eventListComponents: Array<Array<string>> = [];
   // email: String;
   // twitchTokenRoute = 'http://localhost:8000/api/v1/twitch/token';
 
@@ -107,6 +109,9 @@ export class DashboardComponent implements OnInit {
     }
   }
 
+  addEventList(eventTypes: Array<string>, title: string) {
+    this.eventListComponents.push(eventTypes);
+  }
   /* getTwitchData() {
     this.http
       .post(this.twitchTokenRoute, this.generateToken())
