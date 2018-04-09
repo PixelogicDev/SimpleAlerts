@@ -1,5 +1,6 @@
 export class Donation {
   id: string;
+  type: string;
   timestamp: string;
   from: string;
   amount: number;
@@ -10,6 +11,7 @@ export class Donation {
 
   constructor(donation: any) {
     this.id = donation.id;
+    this.type = 'new_donation';
     this.timestamp = donation.timestamp;
     this.from = donation.from;
     this.amount = donation.amount;

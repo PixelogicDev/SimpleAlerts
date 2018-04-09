@@ -1,5 +1,6 @@
 export class Cheer {
   id: string;
+  type: string;
   timestamp: string;
   from: string;
   amount: number;
@@ -9,6 +10,7 @@ export class Cheer {
 
   constructor(cheer: any) {
     this.id = cheer.id;
+    this.type = 'new_cheer';
     this.timestamp = cheer.timestamp;
     this.from = cheer.from;
     this.amount = cheer.amount;

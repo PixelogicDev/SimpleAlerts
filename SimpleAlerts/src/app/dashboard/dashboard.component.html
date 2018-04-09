@@ -1,3 +1,5 @@
 <h1>Hi, {{twitchDisplayName}}!</h1>
 
-<app-event-list></app-event-list>
+<!-- Test Components -->
+<app-event-list [eventTypes]="['new_follower', 'new_cheer']" [title]="'Some Other Events'"></app-event-list>
+<app-event-list [eventTypes]="['new_subscription']" [title]="'Some New Events'"></app-event-list>

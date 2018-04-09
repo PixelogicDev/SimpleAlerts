@@ -51,7 +51,7 @@ var eventDataParser = (event, type) => {
         data: {
           id: event._id,
           timestamp: new Date(),
-          from: event.from,
+          from: event.name,
           months: event.months,
           message: event.message,
           sub_plan: event.sub_plan,

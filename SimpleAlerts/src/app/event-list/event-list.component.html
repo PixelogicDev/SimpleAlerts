@@ -1,3 +1,11 @@
-<p>
-  event-list works!
-</p>
+<h3>{{title}}</h3>
+
+<div class="events" *ngFor="let event of eventList">
+  {{event.id}}
+  <br>{{event.timestamp}}
+  <br>{{event.from}}
+  <br>{{event.message}}
+  <br>{{event.amount}}
+  <br>{{event.months}}
+  <br>{{event.sub_plan}}
+</div>
