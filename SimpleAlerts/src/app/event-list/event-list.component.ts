@@ -2,11 +2,6 @@ import { Component, OnInit, Input } from '@angular/core';
 import { Subscription as rxSubscription } from 'rxjs/Subscription';
 import { MessageService } from '../services/message.service';
 
-// Models //
-// import { Follower } from '../shared/models/follower.model';
-// import { Donation } from '../shared/models/donation.model';
-// import { Subscription } from '../shared/models/subscription.model';
-// import { Cheer } from '../shared/models/cheer.model';
 import { Event } from '../shared/models/event.model';
 
 @Component({
@@ -16,8 +11,8 @@ import { Event } from '../shared/models/event.model';
 })
 export class EventListComponent implements OnInit {
   // Properties //
-  @Input() eventTypes: Array<string>;
-  title: string;
+  @Input() title: string;
+  eventTypes: Array<string>;
   subscription: rxSubscription;
   eventList = new Array<Event>();
 
@@ -33,6 +28,7 @@ export class EventListComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.title = 'New Event';
+    // Setup checkboxes for selection before listening for events //
+    // Need to create a deletion event //
   }
 }

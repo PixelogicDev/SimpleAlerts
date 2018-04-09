@@ -27,7 +27,7 @@ export class DashboardComponent implements OnInit {
     '?client_id=3cHN5exsWXQhEaKKvTkcuFQTA70Besv08T5aWMjw' +
     '&redirect_uri=http://localhost:4200/dashboard' +
     '&response_type=code&scope=donations.read+socket.token';
-  eventListComponents: Array<Array<string>> = [];
+  eventListTitles: Array<string> = [];
   // email: String;
   // twitchTokenRoute = 'http://localhost:8000/api/v1/twitch/token';
 
@@ -109,8 +109,12 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-  addEventList(eventTypes: Array<string>, title: string) {
-    this.eventListComponents.push(eventTypes);
+  addEventList(title: string) {
+    if (title !== null) {
+      this.eventListTitles.push(title);
+    }
+
+    document.getElementById('#listTitle').nodeValue = '';
   }
   /* getTwitchData() {
     this.http
