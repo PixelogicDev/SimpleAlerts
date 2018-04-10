@@ -112,9 +112,10 @@ export class DashboardComponent implements OnInit {
   addEventList(title: string) {
     if (title !== null) {
       this.eventListTitles.push(title);
-    }
 
-    document.getElementById('#listTitle').nodeValue = '';
+      // MAD PROPS 3sm_ //
+      (<HTMLInputElement>document.getElementById('listTitle')).value = '';
+    }
   }
   /* getTwitchData() {
     this.http

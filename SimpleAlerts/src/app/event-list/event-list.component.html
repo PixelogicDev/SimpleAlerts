@@ -1,5 +1,21 @@
 <h3>{{title}}</h3>
 
+<!-- Follow Event -->
+<input type="checkbox" name="follows" [checked]="follows" (change)="follows = !follows" />
+<label for="follows">Follow Alerts</label>
+
+<!-- Sub Event -->
+<input type="checkbox" name="subscriptions" [checked]="subscriptions" (change)="subscriptions = !subscriptions" />
+<label for="subscriptions">Subscriptions Alerts</label>
+
+<!-- Cheer Event -->
+<input type="checkbox" name="cheers" [checked]="cheers" (change)="cheers = !cheers" />
+<label for="cheers">Cheer Alerts</label>
+
+<!-- Donation Event -->
+<input type="checkbox" name="donations" [checked]="donations" (change)="donations = !donations" />
+<label for="donations">Donation Alerts</label>
+
 <div class="events" *ngFor="let event of eventList">
   {{event.id}}
   <br>{{event.timestamp}}
