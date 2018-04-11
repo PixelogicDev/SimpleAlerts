@@ -10,6 +10,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { EventListComponent } from './event-list/event-list.component';
 
 import { MessageService } from './services/message.service';
+import { Filter } from './shared/models/filters/filter.model';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -30,7 +31,7 @@ const routes: Routes = [
     HttpClientModule,
     RouterModule.forRoot(routes, { enableTracing: true })
   ],
-  providers: [MessageService],
+  providers: [MessageService, Filter],
   bootstrap: [RootComponent]
 })
 export class AppModule {}

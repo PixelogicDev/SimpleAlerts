@@ -3,7 +3,10 @@ import { Subscription as rxSubscription } from 'rxjs/Subscription';
 import { MessageService } from '../services/message.service';
 
 import { Event } from '../shared/models/event.model';
-import { FollowFilter } from '../shared/models/follow/followFilter.model';
+
+// -- Filters -- //
+import { Filter } from '../shared/models/filters/filter.model';
+import { FollowFilter } from '../shared/models/filters/followFilter.model';
 
 @Component({
   selector: 'app-event-list',
@@ -20,58 +23,71 @@ export class EventListComponent implements OnInit {
   subscriptions: Boolean = false;
   cheers: Boolean = false;
   donations: Boolean = false;
-  followFilter = new FollowFilter();
 
-  constructor(private messageService: MessageService) {
+  constructor(private messageService: MessageService, private filter: Filter) {
+    // Create new filter //
+    this.filter = new Filter();
+
     // Subscribe to Dashboard component events //
     this.messageService.subscribeToEvent().subscribe(event => {
-      if (event.type === 'new_follower' && this.follows) {
-        this.eventList.push(new Event(event));
-        // Apply Filters //
-        this.eventList = this.followFilter.sort('descend', this.eventList);
+      console.log(`
+        follows: ${this.follows}\n
+        subs: ${this.subscriptions}\n
+        cheers: ${this.cheers}\n
+        donations: ${this.donations}
+      `);
+
+      if (this.follows && event.type === 'new_follower') {
+        this.eventList.unshift(new Event(event));
       }
 
-      if (event.type === 'new_subscription' && this.subscriptions) {
-        this.eventList.push(new Event(event));
+      if (this.subscriptions && event.type === 'new_subscription') {
+        this.eventList.unshift(new Event(event));
       }
 
-      if (event.type === 'new_cheer' && this.cheers) {
-        this.eventList.push(new Event(event));
+      if (this.cheers && event.type === 'new_cheer') {
+        this.eventList.unshift(new Event(event));
       }
 
-      if (event.type === 'new_donation' && this.donations) {
-        this.eventList.push(new Event(event));
+      if (this.donations && event.type === 'new_donation') {
+        this.eventList.unshift(new Event(event));
+      }
+
+      if (this.filter.isActive) {
+        // Run bump to top filter //
+        if (this.filter.bumpThreshold !== 0) {
+          this.eventList = this.filter.bumpToTop(this.eventList);
+        }
       }
     });
   }
 
   ngOnInit() {}
 
-  /*
-    Filters
-    - Toggle on/off for filter based on options selected
-    - Input/Checkbox for filter options
-    - Logic to handle filters
+  // -- Helpers -- //
+  changedEvent(type: string) {
+    if (type === 'follows') {
+      this.follows = !this.follows;
+    }
 
-    Followers
-      -> Time Order (Desc/Asc)
-        -> Default value is Desc (or newest follows appear on top)
+    if (type === 'subscriptions') {
+      this.subscriptions = !this.subscriptions;
+    }
 
-      -> Subscriptions
-        -> Time Order (Desc/Asc)
-        -> Tier (1000, 2000, 3000)
-        -> Resub Month value (x2, x3, x4)
+    if (type === 'cheers') {
+      this.cheers = !this.cheers;
+    }
 
-      -> Cheers
-        -> Time Order (Desc/Asc)
-        -> Amount
-          -> Threshold (If over certain amount, jump to top of list)
-          -> Highest amount, lowest amount
+    if (type === 'donations') {
+      this.donations = !this.donations;
+    }
+  }
 
-      -> Donations
-        -> Time Order (Des/Asc)
-        -> Amount
-          -> Threshold (If over certain amount, jump to top of list)
-          -> Highest amount, lowest amount
-  */
+  changeFilterValue(type: string, value: number) {
+    if (type === 'follows') {
+      if (value !== null) {
+        this.filter.bumpThreshold = +value;
+      }
+    }
+  }
 }

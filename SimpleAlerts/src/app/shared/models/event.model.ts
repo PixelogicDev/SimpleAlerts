@@ -1,6 +1,9 @@
 export class Event {
   id: string;
+  didRead: boolean;
+  didBump: boolean;
   timestamp: string;
+  localeTimestamp: string;
   from: string;
   message: string;
   amount: string;
@@ -9,7 +12,10 @@ export class Event {
 
   constructor(event: any) {
     this.id = event.id;
+    this.didRead = false;
+    this.didBump = false;
     this.timestamp = event.timestamp;
+    this.localeTimestamp = new Date(this.timestamp).toLocaleTimeString();
     this.from = event.from;
 
     if (event.message) {
