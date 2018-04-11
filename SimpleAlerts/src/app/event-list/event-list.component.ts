@@ -6,6 +6,7 @@ import { Event } from '../shared/models/event.model';
 
 // -- Filters -- //
 import { Filter } from '../shared/models/filters/filter.model';
+import { SubFilter } from '../shared/models/filters/subFilter.model';
 
 @Component({
   selector: 'app-event-list',
@@ -45,12 +46,7 @@ export class EventListComponent implements OnInit {
         this.eventList.unshift(new Event(event));
       }
 
-      if (this.filter.isActive) {
-        // Run bump to top filter //
-        if (this.filter.bumpThreshold !== 0) {
-          this.eventList = this.filter.bumpToTop(this.eventList);
-        }
-      }
+      this.eventList = this.filter.runFilters(this.eventList);
     });
   }
 
@@ -64,6 +60,15 @@ export class EventListComponent implements OnInit {
 
     if (type === 'subscriptions') {
       this.subscriptions = !this.subscriptions;
+
+      if (this.subscriptions) {
+        this.filter.subscriptionFilter = new SubFilter();
+
+        // Set filterByMonth to true for testing; this should be set on the UI //
+        this.filter.subscriptionFilter.filterByMonths = true;
+      } else {
+        this.filter.subscriptionFilter = null;
+      }
     }
 
     if (type === 'cheers') {
@@ -79,6 +84,11 @@ export class EventListComponent implements OnInit {
     if (type === 'follows') {
       if (value !== null) {
         this.filter.bumpThreshold = +value;
+      }
+    }
+
+    if (type === 'subscriptions') {
+      if (value !== null) {
       }
     }
   }
