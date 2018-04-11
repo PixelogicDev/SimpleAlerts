@@ -1,7 +1,5 @@
 import { Event } from '../event.model';
 
-import { FollowFilter } from './followFilter.model';
-
 // Each component gets its own filter. This filter model controls all the filter propertiers per event-list //
 export class Filter {
   isActive: boolean;

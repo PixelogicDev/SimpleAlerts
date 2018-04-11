@@ -29,13 +29,6 @@ export class EventListComponent implements OnInit {
 
     // Subscribe to Dashboard component events //
     this.messageService.subscribeToEvent().subscribe(event => {
-      console.log(`
-        follows: ${this.follows}\n
-        subs: ${this.subscriptions}\n
-        cheers: ${this.cheers}\n
-        donations: ${this.donations}
-      `);
-
       if (this.follows && event.type === 'new_follower') {
         this.eventList.unshift(new Event(event));
       }
@@ -87,6 +80,32 @@ export class EventListComponent implements OnInit {
       if (value !== null) {
         this.filter.bumpThreshold = +value;
       }
+    }
+  }
+
+  // MAD PROPS BarneyRubbble //
+  eventRead(id: string) {
+    console.log(`Did read: ${id}`);
+    let foundEvent: Event;
+    let eventIndex: number;
+
+    foundEvent = this.eventList.find((event, index) => {
+      eventIndex = index;
+      return event.id === id;
+    });
+
+    if (foundEvent !== undefined) {
+      console.log('Did find event, changing properties.');
+      foundEvent.didRead = true;
+
+      // Remove current event from array //
+      this.eventList.splice(eventIndex, 1);
+
+      // Push updated property to bottom of list //
+      this.eventList.push(foundEvent);
+      console.log('Property changed.');
+    } else {
+      console.log('Could not find event.');
     }
   }
 }

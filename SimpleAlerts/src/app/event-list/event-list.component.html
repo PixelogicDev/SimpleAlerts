@@ -23,7 +23,7 @@
 <input type="checkbox" name="donations" [checked]="donations" (change)="changedEvent('donations')" />
 <label for="donations">Donation Alerts</label>
 
-<div class="events" *ngFor="let event of eventList">
+<div id="event_row" *ngFor="let event of eventList" [ngClass]="event.didRead ? 'event-read': ''" (click)="eventRead(event.id)">
   {{event.id}}
   <br>{{event.localeTimestamp}}
   <br>{{event.from}}
