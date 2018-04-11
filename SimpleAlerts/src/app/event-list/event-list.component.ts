@@ -6,7 +6,6 @@ import { Event } from '../shared/models/event.model';
 
 // -- Filters -- //
 import { Filter } from '../shared/models/filters/filter.model';
-import { FollowFilter } from '../shared/models/filters/followFilter.model';
 
 @Component({
   selector: 'app-event-list',
