@@ -13,6 +13,7 @@ Coming Soon!
 
 ## Tech
 
+Design: Sketch (Checkout [SketchView](https://sketchviewer.com/) to view sketch files on Windows)
 Client: Angular
 Server: Node.js/Express
 Database: MongoDB
