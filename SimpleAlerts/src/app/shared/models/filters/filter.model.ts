@@ -2,21 +2,20 @@ import { Event } from '../event.model';
 
 // Filters //
 import { SubFilter } from '../filters/subFilter.model';
+import { AmountFilter } from '../filters/amountFilter.model';
 
 // Each component gets its own filter. This filter model controls all the filter propertiers per event-list //
 export class Filter {
   isActive: boolean;
   bumpThreshold: number; // Number of ms until bumping to top of list
   subscriptionFilter: SubFilter;
-  cheerFilter: any;
-  donationFilter: any;
+  amountFilter: AmountFilter;
 
   constructor() {
     this.isActive = true;
     this.bumpThreshold = 0;
     this.subscriptionFilter = null;
-    this.cheerFilter = null;
-    this.donationFilter = null;
+    this.amountFilter = null;
   }
 
   // -- Filters -- //
@@ -25,12 +24,14 @@ export class Filter {
     if (this.isActive) {
       console.log('Filter is active.');
 
+      // -- All time threshold -- //
       if (this.bumpThreshold !== 0) {
         console.log('Filtering by timestamp...');
         filteredEvents = this.bumpToTopByTime(filteredEvents);
         console.log('Timestamp filter complete.');
       }
 
+      // -- Sub Filters --//
       if (this.subscriptionFilter !== null) {
         console.log('SubFilter available.');
 
@@ -42,6 +43,16 @@ export class Filter {
         if (this.subscriptionFilter.filterBySubPlan) {
           filteredEvents = this.subscriptionFilter.bySubPlan(filteredEvents);
           console.log('SubFilter complete.');
+        }
+      }
+
+      // -- Amount Filters (Donations & Cheers) -- //
+      if (this.amountFilter !== null) {
+        console.log('Amount filter is available.');
+
+        if (this.amountFilter.filterByAmount) {
+          filteredEvents = this.amountFilter.byAmount(filteredEvents);
+          console.log('AmountFilter complete.');
         }
       }
     }

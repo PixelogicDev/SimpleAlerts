@@ -1,5 +1,6 @@
 export class Event {
   id: string;
+  type: string;
   didRead: boolean;
   didBump: boolean;
   timestamp: string;
@@ -12,6 +13,7 @@ export class Event {
 
   constructor(event: any) {
     this.id = event.id;
+    this.type = event.type;
     this.didRead = false;
     this.didBump = false;
     this.timestamp = event.timestamp;

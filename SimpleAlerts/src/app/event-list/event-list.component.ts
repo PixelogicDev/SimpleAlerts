@@ -7,6 +7,7 @@ import { Event } from '../shared/models/event.model';
 // -- Filters -- //
 import { Filter } from '../shared/models/filters/filter.model';
 import { SubFilter } from '../shared/models/filters/subFilter.model';
+import { AmountFilter } from '../shared/models/filters/amountFilter.model';
 
 @Component({
   selector: 'app-event-list',
@@ -74,10 +75,36 @@ export class EventListComponent implements OnInit {
 
     if (type === 'cheers') {
       this.cheers = !this.cheers;
+
+      if (this.cheers) {
+        if (this.filter.amountFilter !== null) {
+          console.log('Amount filter already here.');
+        } else {
+          this.filter.amountFilter = new AmountFilter();
+        }
+
+        // this.filter.amountFilter.filterByAmount = true;
+      } else {
+        if (!this.donations) {
+          this.filter.amountFilter = null;
+        }
+      }
     }
 
     if (type === 'donations') {
       this.donations = !this.donations;
+
+      if (this.donations) {
+        if (this.filter.amountFilter !== null) {
+          console.log('Amount filter already here.');
+        } else {
+          this.filter.amountFilter = new AmountFilter();
+        }
+      } else {
+        if (!this.cheers) {
+          this.filter.amountFilter = null;
+        }
+      }
     }
   }
 
@@ -85,11 +112,6 @@ export class EventListComponent implements OnInit {
     if (type === 'follows') {
       if (value !== null) {
         this.filter.bumpThreshold = +value;
-      }
-    }
-
-    if (type === 'subscriptions') {
-      if (value !== null) {
       }
     }
   }
