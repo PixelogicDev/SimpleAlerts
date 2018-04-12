@@ -8,7 +8,7 @@ export class SubFilter {
 
   constructor() {
     this.filterByMonths = false;
-    this.monthsThreshold = 1;
+    this.monthsThreshold = 0;
     this.filterBySubPlan = false;
     this.subPlanThreshold = 0;
   }
@@ -27,10 +27,44 @@ export class SubFilter {
           );
 
           // Only bump one time //
-          if (this.filterByMonths && this.monthsThreshold >= +event.months) {
+          if (this.filterByMonths && +event.months >= this.monthsThreshold) {
             console.log('Bumping to top...');
             tempList.unshift(event);
             event.didBump = true;
+            console.log('Bumped!');
+          } else {
+            tempList.push(event);
+          }
+        } else {
+          tempList.push(event);
+        }
+      });
+    }
+
+    return tempList;
+  }
+
+  bySubPlan(eventList: Array<Event>): Array<Event> {
+    console.log('Filtering events by tier...');
+    const tempList = Array<Event>();
+
+    if (this.subPlanThreshold !== 0) {
+      eventList.forEach((event, index) => {
+        if (!event.didRead) {
+          console.log(
+            `subPlanThreshold: ${this.subPlanThreshold} : currentSubPlan: ${
+              event.sub_plan
+            }`
+          );
+
+          // Only bump one time //
+          if (
+            this.filterBySubPlan &&
+            +event.sub_plan >= this.subPlanThreshold
+          ) {
+            console.log('Bumping to top...');
+            event.didBump = true;
+            tempList.unshift(event);
             console.log('Bumped!');
           } else {
             tempList.push(event);

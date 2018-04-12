@@ -46,15 +46,25 @@ var eventDataParser = (event, type) => {
       });
       break;
     case 'new_subscription':
+      var subMonths = event.months;
+      var tier = event.sub_plan;
+      var subTiers = [1000, 2000, 3000];
+
+      // For testing filter by sub tier and month resub //
+      if (process.env.NODE_ENV === 'dev') {
+        subMonths = Math.floor(Math.random() * 24);
+        tier = subTiers[Math.floor(Math.random() * 3)];
+      }
+
       eventObj = JSON.stringify({
         type: type,
         data: {
           id: event._id,
           timestamp: new Date(),
           from: event.name,
-          months: event.months,
+          months: subMonths,
           message: event.message,
-          sub_plan: event.sub_plan,
+          sub_plan: tier,
           isTest: event.isTest
         }
       });

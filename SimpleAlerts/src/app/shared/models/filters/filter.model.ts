@@ -13,13 +13,42 @@ export class Filter {
 
   constructor() {
     this.isActive = true;
-    this.bumpThreshold = 60000;
+    this.bumpThreshold = 0;
     this.subscriptionFilter = null;
     this.cheerFilter = null;
     this.donationFilter = null;
   }
 
   // -- Filters -- //
+  public runFilters(eventList: Array<Event>): Array<Event> {
+    let filteredEvents = eventList;
+    if (this.isActive) {
+      console.log('Filter is active.');
+
+      if (this.bumpThreshold !== 0) {
+        console.log('Filtering by timestamp...');
+        filteredEvents = this.bumpToTopByTime(filteredEvents);
+        console.log('Timestamp filter complete.');
+      }
+
+      if (this.subscriptionFilter !== null) {
+        console.log('SubFilter available.');
+
+        if (this.subscriptionFilter.filterByMonths) {
+          filteredEvents = this.subscriptionFilter.byMonths(filteredEvents);
+          console.log('SubFilter complete.');
+        }
+
+        if (this.subscriptionFilter.filterBySubPlan) {
+          filteredEvents = this.subscriptionFilter.bySubPlan(filteredEvents);
+          console.log('SubFilter complete.');
+        }
+      }
+    }
+
+    return filteredEvents;
+  }
+
   private bumpToTopByTime(eventList: Array<Event>): Array<Event> {
     // Loop through each event, if threshold time has been passed, bump to top //
     const tempList = Array<Event>();
@@ -49,30 +78,5 @@ export class Filter {
     });
 
     return tempList;
-  }
-
-  public runFilters(eventList: Array<Event>): Array<Event> {
-    let filteredEvents = eventList;
-    if (this.isActive) {
-      console.log('Filter is active.');
-
-      if (this.bumpThreshold !== 0) {
-        console.log('Filtering by timestamp...');
-        filteredEvents = this.bumpToTopByTime(filteredEvents);
-        console.log('Timestamp filter complete.');
-      }
-
-      if (this.subscriptionFilter !== null) {
-        console.log('SubFilter available.');
-
-        if (this.subscriptionFilter.filterByMonths) {
-          console.log('Filtering by sub month...');
-          filteredEvents = this.subscriptionFilter.byMonths(filteredEvents);
-          console.log('SubFilter complete.');
-        }
-      }
-    }
-
-    return filteredEvents;
   }
 }

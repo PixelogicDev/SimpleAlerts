@@ -65,7 +65,8 @@ export class EventListComponent implements OnInit {
         this.filter.subscriptionFilter = new SubFilter();
 
         // Set filterByMonth to true for testing; this should be set on the UI //
-        this.filter.subscriptionFilter.filterByMonths = true;
+        // this.filter.subscriptionFilter.filterByMonths = true;
+        // this.filter.subscriptionFilter.filterBySubPlan = true;
       } else {
         this.filter.subscriptionFilter = null;
       }
