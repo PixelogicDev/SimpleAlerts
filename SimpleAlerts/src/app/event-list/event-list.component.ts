@@ -26,6 +26,10 @@ export class EventListComponent implements OnInit {
   donations: Boolean = false;
   isEdit: Boolean = false;
 
+  // Edit Options //
+  color = 'accent';
+  checked = false;
+
   constructor(private messageService: MessageService, private filter: Filter) {
     // Create new filter //
     this.filter = new Filter();

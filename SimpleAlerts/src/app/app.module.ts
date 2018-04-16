@@ -12,6 +12,10 @@ import { EventListComponent } from './event-list/event-list.component';
 import { MessageService } from './services/message.service';
 import { Filter } from './shared/models/filters/filter.model';
 
+// Material Design //
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatInputModule } from '@angular/material/input';
+
 const routes: Routes = [
   { path: '', component: LoginComponent },
   { path: 'login', component: LoginComponent },
@@ -29,7 +33,9 @@ const routes: Routes = [
   imports: [
     BrowserModule,
     HttpClientModule,
-    RouterModule.forRoot(routes, { enableTracing: true })
+    RouterModule.forRoot(routes, { enableTracing: true }),
+    MatSlideToggleModule,
+    MatInputModule
   ],
   providers: [MessageService, Filter],
   bootstrap: [RootComponent]

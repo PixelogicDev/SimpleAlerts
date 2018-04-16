@@ -70,9 +70,25 @@
   top: 283px;
 }
 
-.edit-panel {
-}
-
 .event-read {
   background-color: aquamarine;
+}
+
+/* Edit Panel */
+.edit-panel .edit-content {
+  padding: 3%;
+}
+
+.edit-panel .edit-content .title-label {
+  font-size: 24px;
+}
+
+.edit-panel .edit-content .all-filters {
+  padding: 15px 0 0 0;
+}
+
+.edit-detail {
+  font-size: 12px;
+  font-style: italic;
+  font-weight: 200;
 }

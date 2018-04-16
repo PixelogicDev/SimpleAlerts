@@ -50,6 +50,22 @@
   </div>
   <!-- Will display edit panel for alert list -->
   <div class="edit-panel" *ngIf="isEdit">
+    <div class="edit-content">
+      <div class="title-label">
+        All Events
+      </div>
+      <div class="all-filters">
+        <mat-slide-toggle class="example-margin" [color]="color" [checked]="checked">
+          All Filters
+        </mat-slide-toggle>
+        <p class="edit-detail">
+          Turn on/off all the filters applied on this event list.
+        </p>
+      </div>
+      <!-- <mat-form-field class="example-full-width">
+        <input #bumpTime matInput placeholder="Minutes">
+      </mat-form-field> -->
+    </div>
     <button (click)="isEdit = false">Cancel</button>
   </div>
 </div>
