@@ -28,9 +28,15 @@ export class EventListComponent implements OnInit {
 
   // Edit Options //
   color = 'accent';
+  bumpFilterVal: Number = 0;
+  resubFilterVal: Number = 0;
+
+  // All Filters //
   allFilterActive: Boolean = false;
   bumpFilterAcive: Boolean = false;
-  bumpFilterVal: Number = 0;
+
+  // Subscriptions Filters //
+  resubFilterActive: Boolean = false;
 
   constructor(private messageService: MessageService, private filter: Filter) {
     // Create new filter //
@@ -150,14 +156,39 @@ export class EventListComponent implements OnInit {
         this.bumpFilterAcive = false;
       }
     }
+
+    if (type === 'resubFilter') {
+      console.log('resubFilter is toggled...');
+      if (event.checked) {
+        console.log('Turning resub filter on...');
+        this.filter.subscriptionFilter.filterByMonths = true;
+        this.resubFilterActive = true;
+      } else {
+        console.log('Turning resub filter off...');
+        this.filter.subscriptionFilter.filterByMonths = false;
+        this.resubFilterActive = false;
+      }
+    }
   }
 
-  bumpInputChange(input) {
-    console.log('Setting bump threshold...');
-    const valMs = input.value * 60000;
-    this.filter.bumpThreshold = valMs;
-    this.bumpFilterVal = input.value;
-    console.log(`Bump threshold set to: ${valMs}`);
+  bumpInputChange(input, type) {
+    if (type === 'bumpVal') {
+      console.log('Setting bump threshold...');
+      const valMs = input.value * 60000;
+      this.filter.bumpThreshold = valMs;
+      this.bumpFilterVal = input.value;
+      console.log(`Bump threshold set to: ${valMs}`);
+    }
+
+    if (type === 'resubVal') {
+      console.log('Setting resub threshold...');
+
+      if (this.filter.subscriptionFilter !== null) {
+        this.filter.subscriptionFilter.monthsThreshold = input.value;
+        this.resubFilterVal = input.value;
+        console.log(`Resub threshold set to: ${this.resubFilterVal}`);
+      }
+    }
   }
 
   removeList() {

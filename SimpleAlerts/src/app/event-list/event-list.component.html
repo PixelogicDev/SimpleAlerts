@@ -61,14 +61,30 @@
         <p class="edit-detail">
           Turn on/off all the filters applied on this event list.
         </p>
-        <mat-slide-toggle class="bump-toggle" [color]="color" [checked]="bumpFilterAcive" (change)="filtersChanged($event, 'bumpFilter')">
+        <mat-slide-toggle class="filter-toggle" [color]="color" [checked]="bumpFilterAcive" (change)="filtersChanged($event, 'bumpFilter')">
           Bump Time
         </mat-slide-toggle>
-        <mat-form-field *ngIf="bumpFilterAcive" type="number" class="bump-input">
-          <input #bumpTime matInput placeholder="Minutes" value={{bumpFilterVal}} (change)="bumpInputChange(bumpTime)">
+        <mat-form-field class="filter-input" *ngIf="bumpFilterAcive" type="number">
+          <input #bumpTime matInput placeholder="Minutes" value={{bumpFilterVal}} (change)="bumpInputChange(bumpTime, 'bumpVal')">
         </mat-form-field>
         <p class="edit-detail">
           Set the amount of time to wait before bumping an event to the top of the list if you have not read it yet!
+        </p>
+      </div>
+    </div>
+    <div *ngIf="subscriptions" class="subscriptions-filter">
+      <div class="edit-content">
+        <div class="title-label">
+          Subscriptions
+        </div>
+        <mat-slide-toggle class="filter-toggle" [color]="color" [checked]="resubFilterActive" (change)="filtersChanged($event, 'resubFilter')">
+          Bump Resub
+        </mat-slide-toggle>
+        <mat-form-field class="filter-input" *ngIf="resubFilterActive" type="number">
+          <input #resubVal matInput placeholder="Months" value={{resubFilterVal}} (change)="bumpInputChange(resubVal, 'resubVal')">
+        </mat-form-field>
+        <p class="edit-detail">
+          Set the resub month amount to bump the event to the top of the list if you have not read it yet!
         </p>
       </div>
     </div>

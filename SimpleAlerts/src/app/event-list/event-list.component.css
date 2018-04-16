@@ -75,6 +75,12 @@
 }
 
 /* Edit Panel */
+.edit-panel {
+  height: 302px;
+  overflow: scroll;
+  overflow-x: hidden;
+}
+
 .edit-panel .edit-content {
   padding: 3%;
 }
@@ -87,7 +93,7 @@
   padding: 15px 0 0 0;
 }
 
-.bump-input {
+.filter-input {
   display: block;
   width: 50%;
   padding-top: 15px;
