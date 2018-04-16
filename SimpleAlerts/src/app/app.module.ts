@@ -15,6 +15,7 @@ import { Filter } from './shared/models/filters/filter.model';
 // Material Design //
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatInputModule } from '@angular/material/input';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -35,7 +36,8 @@ const routes: Routes = [
     HttpClientModule,
     RouterModule.forRoot(routes, { enableTracing: true }),
     MatSlideToggleModule,
-    MatInputModule
+    MatInputModule,
+    BrowserAnimationsModule
   ],
   providers: [MessageService, Filter],
   bootstrap: [RootComponent]

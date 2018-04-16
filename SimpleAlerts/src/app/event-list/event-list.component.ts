@@ -28,7 +28,9 @@ export class EventListComponent implements OnInit {
 
   // Edit Options //
   color = 'accent';
-  checked = false;
+  allFilterActive: Boolean = false;
+  bumpFilterAcive: Boolean = false;
+  bumpFilterVal: Number = 0;
 
   constructor(private messageService: MessageService, private filter: Filter) {
     // Create new filter //
@@ -119,6 +121,43 @@ export class EventListComponent implements OnInit {
         this.filter.bumpThreshold = +value;
       }
     }
+  }
+
+  // -- Edit Helpers -- //
+  filtersChanged(event, type) {
+    if (type === 'allFilter') {
+      console.log('allFilterChanged is toggled...');
+      if (event.checked) {
+        console.log('Turning all filters on...');
+        this.filter.isActive = true;
+        this.allFilterActive = true;
+        console.log('Filter activated.');
+      } else {
+        console.log('Turning all filters off...');
+        this.filter.isActive = false;
+        this.allFilterActive = false;
+        console.log('Filter deactivatd.');
+      }
+    }
+
+    if (type === 'bumpFilter') {
+      console.log('bumpFilter is toggled...');
+      if (event.checked) {
+        console.log('Turning bump filter on...');
+        this.bumpFilterAcive = true;
+      } else {
+        console.log('Turning bump filter off...');
+        this.bumpFilterAcive = false;
+      }
+    }
+  }
+
+  bumpInputChange(input) {
+    console.log('Setting bump threshold...');
+    const valMs = input.value * 60000;
+    this.filter.bumpThreshold = valMs;
+    this.bumpFilterVal = input.value;
+    console.log(`Bump threshold set to: ${valMs}`);
   }
 
   removeList() {
