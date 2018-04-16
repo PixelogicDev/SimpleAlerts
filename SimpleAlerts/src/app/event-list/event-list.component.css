@@ -1,3 +1,78 @@
+.list-card {
+  border: 1px solid #979797;
+  border-radius: 5px;
+  width: 48%;
+  height: 390px;
+}
+
+.list-card .header {
+  min-height: 88px;
+  height: auto;
+  border-bottom: 1px solid #979797;
+}
+
+.header .header-content {
+  padding: 3%;
+}
+
+.list-card .header .title-section {
+  font-size: 30px;
+  width: 31%;
+}
+
+.event-icons {
+  width: 36%;
+  text-align: center;
+}
+
+.action-button {
+  width: 31%;
+}
+
+.action-button img {
+  cursor: pointer;
+  float: right;
+}
+
+.title-section,
+.event-icons,
+.action-button,
+.donations,
+.cheers,
+.follows,
+.subscriptions {
+  display: inline-block;
+}
+
+.donations,
+.cheers,
+.follows,
+.subscriptions {
+  cursor: pointer;
+}
+
+.donations,
+.cheers,
+.follows {
+  padding-right: 10%;
+}
+
+.subscriptions img {
+  width: 32px;
+}
+
+.display-list {
+}
+
+.display-list button {
+  float: right;
+  position: relative;
+  top: 283px;
+}
+
+.edit-panel {
+}
+
 .event-read {
   background-color: aquamarine;
 }

@@ -1,8 +1,58 @@
-<h3>{{title}}</h3>
-
-<!-- Follow Event -->
-<input type="checkbox" name="follows" [checked]="follows" (change)="changedEvent('follows')" />
-<label for="follows">Follow Alerts</label>
+<div class="list-card">
+  <div class="header">
+    <div class="header-content">
+      <div class="title-section">
+        {{title}}
+      </div>
+      <div class="event-icons">
+        <div class="donations" (click)="changedEvent('donations')">
+          <img *ngIf="donations; else donationsDisabled" src="../../assets/event-list/icons/donations-enabled.png" />
+          <ng-template #donationsDisabled>
+            <img src="../../assets/event-list/icons/donations-disabled.png" />
+          </ng-template>
+        </div>
+        <div class="cheers" (click)="changedEvent('cheers')">
+          <img *ngIf="cheers; else cheersDisabled" src="../../assets/event-list/icons/cheers-enabled.png" />
+          <ng-template #cheersDisabled>
+            <img src="../../assets/event-list/icons/cheers-disabled.png" />
+          </ng-template>
+        </div>
+        <div class="follows" (click)="changedEvent('follows')">
+          <img *ngIf="follows; else followsDisabled" src="../../assets/event-list/icons/follows-enabled.png" />
+          <ng-template #followsDisabled>
+            <img src="../../assets/event-list/icons/follows-disabled.png" />
+          </ng-template>
+        </div>
+        <div class="subscriptions" (click)="changedEvent('subscriptions')">
+          <img *ngIf="subscriptions; else subscriptionsDisabled" src="../../assets/event-list/icons/subscriptions-enabled.png" />
+          <ng-template #subscriptionsDisabled>
+            <img src="../../assets/event-list/icons/subscriptions-disabled.png" />
+          </ng-template>
+        </div>
+      </div>
+      <div class="action-button">
+        <img (click)="removeList()" src="../../assets/event-list/icons/delete-x-icon.png" />
+      </div>
+    </div>
+  </div>
+  <!-- Will display all alerts -->
+  <div class="display-list" *ngIf="!isEdit">
+    <div id="event_row" *ngFor="let event of eventList" [ngClass]="event.didRead ? 'event-read': ''" (click)="eventRead(event.id)">
+      {{event.id}}
+      <br>{{event.localeTimestamp}}
+      <br>{{event.from}}
+      <br>{{event.message}}
+      <br>{{event.amount}}
+      <br>{{event.months}}
+      <br>{{event.sub_plan}}
+    </div>
+    <button (click)="isEdit = true">Edit</button>
+  </div>
+  <!-- Will display edit panel for alert list -->
+  <div class="edit-panel" *ngIf="isEdit">
+    <button (click)="isEdit = false">Cancel</button>
+  </div>
+</div>
 
 <!-- <div class="follows-filters" *ngIf="follows">
   <span>Bump To Top Value: {{filter.bumpThreshold}}</span>
@@ -10,25 +60,3 @@
   <label for="follows_threshold">Bump To Top Value:</label>
   <button (click)="changeFilterValue(follows, followsThreshold.value)">Confirm</button>
 </div> -->
-
-<!-- Sub Event -->
-<input type="checkbox" name="subscriptions" [checked]="subscriptions" (change)="changedEvent('subscriptions')" />
-<label for="subscriptions">Subscriptions Alerts</label>
-
-<!-- Cheer Event -->
-<input type="checkbox" name="cheers" [checked]="cheers" (change)="changedEvent('cheers')" />
-<label for="cheers">Cheer Alerts</label>
-
-<!-- Donation Event -->
-<input type="checkbox" name="donations" [checked]="donations" (change)="changedEvent('donations')" />
-<label for="donations">Donation Alerts</label>
-
-<div id="event_row" *ngFor="let event of eventList" [ngClass]="event.didRead ? 'event-read': ''" (click)="eventRead(event.id)">
-  {{event.id}}
-  <br>{{event.localeTimestamp}}
-  <br>{{event.from}}
-  <br>{{event.message}}
-  <br>{{event.amount}}
-  <br>{{event.months}}
-  <br>{{event.sub_plan}}
-</div>

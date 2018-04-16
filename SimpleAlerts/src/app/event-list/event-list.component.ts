@@ -24,6 +24,7 @@ export class EventListComponent implements OnInit {
   subscriptions: Boolean = false;
   cheers: Boolean = false;
   donations: Boolean = false;
+  isEdit: Boolean = false;
 
   constructor(private messageService: MessageService, private filter: Filter) {
     // Create new filter //
@@ -114,6 +115,10 @@ export class EventListComponent implements OnInit {
         this.filter.bumpThreshold = +value;
       }
     }
+  }
+
+  removeList() {
+    console.log('Removing list...');
   }
 
   // MAD PROPS BarneyRubbble //
