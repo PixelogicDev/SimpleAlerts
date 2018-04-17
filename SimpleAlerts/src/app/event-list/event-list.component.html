@@ -71,9 +71,7 @@
           Set the amount of minutes to wait before bumping an event to the top of the list if you have not read it yet.
         </p>
       </div>
-    </div>
-    <div *ngIf="subscriptions" class="subscriptions-filter">
-      <div class="edit-content">
+      <div *ngIf="subscriptions" class="subscriptions-filter">
         <div class="title-label">
           Subscriptions
         </div>
@@ -96,9 +94,7 @@
           Set the minimum tier level to bump the event to the top of the list.
         </p>
       </div>
-    </div>
-    <div *ngIf="donations" class="donations-filter">
-      <div class="edit-content">
+      <div *ngIf="donations" class="donations-filter">
         <div class="title-label">
           Donations
         </div>
@@ -112,9 +108,7 @@
           Set the minimum donation amount to bump the event to the top of the list.
         </p>
       </div>
-    </div>
-    <div *ngIf="cheers" class="cheers-filter">
-      <div class="edit-content">
+      <div *ngIf="cheers" class="cheers-filter">
         <div class="title-label">
           Cheers
         </div>
@@ -129,6 +123,7 @@
         </p>
       </div>
     </div>
-    <img src="../../assets/event-list/icons/confirm-check-icon.png" (click)="isEdit = false" />
   </div>
 </div>
+<img class="confirm-edit" *ngIf="isEdit" src="../../assets/event-list/icons/confirm-check-icon.png" (click)="isEdit = false"
+/>
