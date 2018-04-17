@@ -30,6 +30,7 @@ export class EventListComponent implements OnInit {
   color = 'accent';
   bumpFilterVal: Number = 0;
   resubFilterVal: Number = 0;
+  tierFilterVal: Number = 1;
 
   // All Filters //
   allFilterActive: Boolean = false;
@@ -37,6 +38,7 @@ export class EventListComponent implements OnInit {
 
   // Subscriptions Filters //
   resubFilterActive: Boolean = false;
+  tierFilterActive: Boolean = false;
 
   constructor(private messageService: MessageService, private filter: Filter) {
     // Create new filter //
@@ -169,6 +171,19 @@ export class EventListComponent implements OnInit {
         this.resubFilterActive = false;
       }
     }
+
+    if (type === 'tierFilter') {
+      console.log('tierFiler is toggled...');
+      if (event.checked) {
+        console.log('Turning tier filter on...');
+        this.filter.subscriptionFilter.filterBySubPlan = true;
+        this.tierFilterActive = true;
+      } else {
+        console.log('Turning tier filter off...');
+        this.filter.subscriptionFilter.filterBySubPlan = false;
+        this.tierFilterActive = false;
+      }
+    }
   }
 
   bumpInputChange(input, type) {
@@ -187,6 +202,16 @@ export class EventListComponent implements OnInit {
         this.filter.subscriptionFilter.monthsThreshold = input.value;
         this.resubFilterVal = input.value;
         console.log(`Resub threshold set to: ${this.resubFilterVal}`);
+      }
+    }
+
+    if (type === 'tierVal') {
+      console.log('Setting tier threshold...');
+      if (this.filter.subscriptionFilter !== null) {
+        // Times 1000 because sub plan goes by 1000, 2000, 3000 //
+        this.filter.subscriptionFilter.subPlanThreshold = input.value * 1000;
+        this.tierFilterVal = input.value;
+        console.log(`Tier threshold set to: ${this.tierFilterVal}`);
       }
     }
   }

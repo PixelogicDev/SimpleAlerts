@@ -62,13 +62,13 @@
           Turn on/off all the filters applied on this event list.
         </p>
         <mat-slide-toggle class="filter-toggle" [color]="color" [checked]="bumpFilterAcive" (change)="filtersChanged($event, 'bumpFilter')">
-          Bump Time
+          Bump By Time
         </mat-slide-toggle>
         <mat-form-field class="filter-input" *ngIf="bumpFilterAcive" type="number">
           <input #bumpTime matInput placeholder="Minutes" value={{bumpFilterVal}} (change)="bumpInputChange(bumpTime, 'bumpVal')">
         </mat-form-field>
         <p class="edit-detail">
-          Set the amount of time to wait before bumping an event to the top of the list if you have not read it yet!
+          Set the amount of minutes to wait before bumping an event to the top of the list if you have not read it yet!
         </p>
       </div>
     </div>
@@ -78,13 +78,22 @@
           Subscriptions
         </div>
         <mat-slide-toggle class="filter-toggle" [color]="color" [checked]="resubFilterActive" (change)="filtersChanged($event, 'resubFilter')">
-          Bump Resub
+          Bump By Months
         </mat-slide-toggle>
         <mat-form-field class="filter-input" *ngIf="resubFilterActive" type="number">
           <input #resubVal matInput placeholder="Months" value={{resubFilterVal}} (change)="bumpInputChange(resubVal, 'resubVal')">
         </mat-form-field>
         <p class="edit-detail">
           Set the resub month amount to bump the event to the top of the list if you have not read it yet!
+        </p>
+        <mat-slide-toggle class="filter-toggle" [color]="color" [checked]="tierFilterActive" (change)="filtersChanged($event, 'tierFilter')">
+          Bump By Tier
+        </mat-slide-toggle>
+        <mat-form-field class="filter-input" *ngIf="tierFilterActive" type="number">
+          <input #tierVal matInput placeholder="Tier Level" value={{tierFilterVal}} (change)="bumpInputChange(tierVal, 'tierVal')">
+        </mat-form-field>
+        <p class="edit-detail">
+          Set the tier level to bump the event to the top of the list if you have not read it yet!
         </p>
       </div>
     </div>
