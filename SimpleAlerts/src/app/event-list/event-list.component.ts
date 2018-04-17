@@ -28,9 +28,11 @@ export class EventListComponent implements OnInit {
 
   // Edit Options //
   color = 'accent';
-  bumpFilterVal: Number = 0;
-  resubFilterVal: Number = 0;
-  tierFilterVal: Number = 1;
+  bumpFilterVal: Number = 5;
+  resubFilterVal: Number = 6;
+  tierFilterVal: Number = 2;
+  donationFilterVal: Number = 25;
+  cheerFilterVal: Number = 1000;
 
   // All Filters //
   allFilterActive: Boolean = false;
@@ -39,6 +41,10 @@ export class EventListComponent implements OnInit {
   // Subscriptions Filters //
   resubFilterActive: Boolean = false;
   tierFilterActive: Boolean = false;
+
+  // Donations & Cheers //
+  donationsFilterActive: Boolean = false;
+  cheerFilterActive: Boolean = false;
 
   constructor(private messageService: MessageService, private filter: Filter) {
     // Create new filter //
@@ -184,6 +190,39 @@ export class EventListComponent implements OnInit {
         this.tierFilterActive = false;
       }
     }
+
+    if (type === 'donationFilter') {
+      console.log('donationFilter is toggled...');
+      if (event.checked) {
+        console.log('Turning donations filter on...');
+        this.filter.amountFilter.filterByAmount = true;
+        this.donationsFilterActive = true;
+      } else {
+        console.log('Turning donations filter off...');
+        if (!this.cheerFilterActive) {
+          this.filter.amountFilter.filterByAmount = false;
+        }
+
+        this.donationsFilterActive = false;
+      }
+    }
+
+    if (type === 'cheerFilter') {
+      console.log('cheerFilter is toggled...');
+      if (event.checked) {
+        console.log('Turning cheer filter on...');
+        this.filter.amountFilter.filterByAmount = true;
+        this.cheerFilterActive = true;
+      } else {
+        console.log('Turning donations filter off...');
+
+        if (!this.donationsFilterActive) {
+          this.filter.amountFilter.filterByAmount = false;
+        }
+
+        this.cheerFilterActive = false;
+      }
+    }
   }
 
   bumpInputChange(input, type) {
@@ -212,6 +251,24 @@ export class EventListComponent implements OnInit {
         this.filter.subscriptionFilter.subPlanThreshold = input.value * 1000;
         this.tierFilterVal = input.value;
         console.log(`Tier threshold set to: ${this.tierFilterVal}`);
+      }
+    }
+
+    if (type === 'donationVal') {
+      console.log('Setting donation threshold...');
+      if (this.filter.amountFilter !== null) {
+        this.filter.amountFilter.donationThreshold = input.value;
+        this.donationFilterVal = input.value;
+        console.log(`Donation threshold set to: ${this.donationFilterVal}`);
+      }
+    }
+
+    if (type === 'bitVal') {
+      console.log('Setting bit threshold...');
+      if (this.filter.amountFilter !== null) {
+        this.filter.amountFilter.cheerThreshold = input.value;
+        this.cheerFilterVal = input.value;
+        console.log(`Cheer threshold set to: ${this.cheerFilterVal}`);
       }
     }
   }

@@ -68,7 +68,7 @@
           <input #bumpTime matInput placeholder="Minutes" value={{bumpFilterVal}} (change)="bumpInputChange(bumpTime, 'bumpVal')">
         </mat-form-field>
         <p class="edit-detail">
-          Set the amount of minutes to wait before bumping an event to the top of the list if you have not read it yet!
+          Set the amount of minutes to wait before bumping an event to the top of the list if you have not read it yet.
         </p>
       </div>
     </div>
@@ -84,7 +84,7 @@
           <input #resubVal matInput placeholder="Months" value={{resubFilterVal}} (change)="bumpInputChange(resubVal, 'resubVal')">
         </mat-form-field>
         <p class="edit-detail">
-          Set the resub month amount to bump the event to the top of the list if you have not read it yet!
+          Set the minimum resub month amount to bump the event to the top of the list.
         </p>
         <mat-slide-toggle class="filter-toggle" [color]="color" [checked]="tierFilterActive" (change)="filtersChanged($event, 'tierFilter')">
           Bump By Tier
@@ -93,7 +93,39 @@
           <input #tierVal matInput placeholder="Tier Level" value={{tierFilterVal}} (change)="bumpInputChange(tierVal, 'tierVal')">
         </mat-form-field>
         <p class="edit-detail">
-          Set the tier level to bump the event to the top of the list if you have not read it yet!
+          Set the minimum tier level to bump the event to the top of the list.
+        </p>
+      </div>
+    </div>
+    <div *ngIf="donations" class="donations-filter">
+      <div class="edit-content">
+        <div class="title-label">
+          Donations
+        </div>
+        <mat-slide-toggle class="filter-toggle" [color]="color" [checked]="donationsFilterActive" (change)="filtersChanged($event, 'donationFilter')">
+          Bump By Amount
+        </mat-slide-toggle>
+        <mat-form-field class="filter-input" *ngIf="donationsFilterActive" type="number">
+          <input #donationVal matInput placeholder="Amount" value={{donationFilterVal}} (change)="bumpInputChange(donationVal, 'donationVal')">
+        </mat-form-field>
+        <p class="edit-detail">
+          Set the minimum donation amount to bump the event to the top of the list.
+        </p>
+      </div>
+    </div>
+    <div *ngIf="cheers" class="cheers-filter">
+      <div class="edit-content">
+        <div class="title-label">
+          Cheers
+        </div>
+        <mat-slide-toggle class="filter-toggle" [color]="color" [checked]="cheerFilterActive" (change)="filtersChanged($event, 'cheerFilter')">
+          Bump By Bits
+        </mat-slide-toggle>
+        <mat-form-field class="filter-input" *ngIf="cheerFilterActive" type="number">
+          <input #cheerVal matInput placeholder="Bits" value={{cheerFilterVal}} (change)="bumpInputChange(cheerVal, 'cheerVal')">
+        </mat-form-field>
+        <p class="edit-detail">
+          Set the minimum bit amount to bump the event to the top of the list.
         </p>
       </div>
     </div>
