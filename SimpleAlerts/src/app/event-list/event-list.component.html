@@ -61,11 +61,11 @@
         <p class="edit-detail">
           Turn on/off all the filters applied on this event list.
         </p>
-        <mat-slide-toggle class="filter-toggle" [color]="color" [checked]="bumpFilterAcive" (change)="filtersChanged($event, 'bumpFilter')">
+        <mat-slide-toggle class="filter-toggle" [color]="color" [checked]="bumpFilterActive" (change)="filtersChanged($event, 'bumpFilter')">
           Bump By Time
         </mat-slide-toggle>
-        <mat-form-field class="filter-input" *ngIf="bumpFilterAcive" type="number">
-          <input #bumpTime matInput placeholder="Minutes" value={{bumpFilterVal}} (change)="bumpInputChange(bumpTime, 'bumpVal')">
+        <mat-form-field class="filter-input" *ngIf="bumpFilterActive" type="number">
+          <input #bumpTime matInput placeholder="Minutes" value={{bumpFilterVal}} (change)="inputChange(bumpTime, 'bumpVal')">
         </mat-form-field>
         <p class="edit-detail">
           Set the amount of minutes to wait before bumping an event to the top of the list if you have not read it yet.
@@ -81,7 +81,7 @@
           Bump By Months
         </mat-slide-toggle>
         <mat-form-field class="filter-input" *ngIf="resubFilterActive" type="number">
-          <input #resubVal matInput placeholder="Months" value={{resubFilterVal}} (change)="bumpInputChange(resubVal, 'resubVal')">
+          <input #resubVal matInput placeholder="Months" value={{resubFilterVal}} (change)="inputChange(resubVal, 'resubVal')">
         </mat-form-field>
         <p class="edit-detail">
           Set the minimum resub month amount to bump the event to the top of the list.
@@ -90,7 +90,7 @@
           Bump By Tier
         </mat-slide-toggle>
         <mat-form-field class="filter-input" *ngIf="tierFilterActive" type="number">
-          <input #tierVal matInput placeholder="Tier Level" value={{tierFilterVal}} (change)="bumpInputChange(tierVal, 'tierVal')">
+          <input #tierVal matInput placeholder="Tier Level" value={{tierFilterVal}} (change)="inputChange(tierVal, 'tierVal')">
         </mat-form-field>
         <p class="edit-detail">
           Set the minimum tier level to bump the event to the top of the list.
@@ -106,7 +106,7 @@
           Bump By Amount
         </mat-slide-toggle>
         <mat-form-field class="filter-input" *ngIf="donationsFilterActive" type="number">
-          <input #donationVal matInput placeholder="Amount" value={{donationFilterVal}} (change)="bumpInputChange(donationVal, 'donationVal')">
+          <input #donationVal matInput placeholder="Amount" value={{donationFilterVal}} (change)="inputChange(donationVal, 'donationVal')">
         </mat-form-field>
         <p class="edit-detail">
           Set the minimum donation amount to bump the event to the top of the list.
@@ -122,7 +122,7 @@
           Bump By Bits
         </mat-slide-toggle>
         <mat-form-field class="filter-input" *ngIf="cheerFilterActive" type="number">
-          <input #cheerVal matInput placeholder="Bits" value={{cheerFilterVal}} (change)="bumpInputChange(cheerVal, 'cheerVal')">
+          <input #cheerVal matInput placeholder="Bits" value={{cheerFilterVal}} (change)="inputChange(cheerVal, 'cheerVal')">
         </mat-form-field>
         <p class="edit-detail">
           Set the minimum bit amount to bump the event to the top of the list.

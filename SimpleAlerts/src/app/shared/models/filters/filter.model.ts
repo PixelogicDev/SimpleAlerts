@@ -60,6 +60,19 @@ export class Filter {
     return filteredEvents;
   }
 
+  public enableAllFilters() {
+    // Subscriptions Filter //
+    if (this.subscriptionFilter !== null) {
+      this.subscriptionFilter.filterByMonths = true;
+      this.subscriptionFilter.filterBySubPlan = true;
+    }
+
+    // Amount Filter //
+    if (this.amountFilter !== null) {
+      this.amountFilter.filterByAmount = true;
+    }
+  }
+
   private bumpToTopByTime(eventList: Array<Event>): Array<Event> {
     // Loop through each event, if threshold time has been passed, bump to top //
     const tempList = Array<Event>();

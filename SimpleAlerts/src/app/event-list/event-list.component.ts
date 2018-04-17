@@ -28,15 +28,15 @@ export class EventListComponent implements OnInit {
 
   // Edit Options //
   color = 'accent';
-  bumpFilterVal: Number = 5;
-  resubFilterVal: Number = 6;
-  tierFilterVal: Number = 2;
-  donationFilterVal: Number = 25;
-  cheerFilterVal: Number = 1000;
+  bumpFilterVal: Number = 0;
+  resubFilterVal: Number = 0;
+  tierFilterVal: Number = 0;
+  donationFilterVal: Number = 0;
+  cheerFilterVal: Number = 0;
 
   // All Filters //
   allFilterActive: Boolean = false;
-  bumpFilterAcive: Boolean = false;
+  bumpFilterActive: Boolean = false;
 
   // Subscriptions Filters //
   resubFilterActive: Boolean = false;
@@ -129,27 +129,53 @@ export class EventListComponent implements OnInit {
     }
   }
 
-  changeFilterValue(type: string, value: number) {
-    if (type === 'follows') {
-      if (value !== null) {
-        this.filter.bumpThreshold = +value;
-      }
-    }
-  }
-
   // -- Edit Helpers -- //
   filtersChanged(event, type) {
     if (type === 'allFilter') {
       console.log('allFilterChanged is toggled...');
       if (event.checked) {
         console.log('Turning all filters on...');
+
+        // Activate Filter //
         this.filter.isActive = true;
         this.allFilterActive = true;
-        console.log('Filter activated.');
+        this.bumpFilterActive = true;
+
+        // Go through each filter and activate them as well //
+        this.filter.enableAllFilters();
+        if (this.subscriptions) {
+          this.resubFilterActive = true;
+          this.tierFilterActive = true;
+        }
+
+        if (this.donations) {
+          this.donationsFilterActive = true;
+        }
+
+        if (this.cheers) {
+          this.cheerFilterActive = true;
+        }
+
+        console.log('Filters activated.');
       } else {
         console.log('Turning all filters off...');
         this.filter.isActive = false;
         this.allFilterActive = false;
+        this.bumpFilterActive = false;
+
+        if (this.subscriptions) {
+          this.resubFilterActive = false;
+          this.tierFilterActive = false;
+        }
+
+        if (this.donations) {
+          this.donationsFilterActive = false;
+        }
+
+        if (this.cheers) {
+          this.cheerFilterActive = false;
+        }
+
         console.log('Filter deactivatd.');
       }
     }
@@ -158,10 +184,10 @@ export class EventListComponent implements OnInit {
       console.log('bumpFilter is toggled...');
       if (event.checked) {
         console.log('Turning bump filter on...');
-        this.bumpFilterAcive = true;
+        this.bumpFilterActive = true;
       } else {
         console.log('Turning bump filter off...');
-        this.bumpFilterAcive = false;
+        this.bumpFilterActive = false;
       }
     }
 
@@ -225,7 +251,7 @@ export class EventListComponent implements OnInit {
     }
   }
 
-  bumpInputChange(input, type) {
+  inputChange(input, type) {
     if (type === 'bumpVal') {
       console.log('Setting bump threshold...');
       const valMs = input.value * 60000;
@@ -263,7 +289,7 @@ export class EventListComponent implements OnInit {
       }
     }
 
-    if (type === 'bitVal') {
+    if (type === 'cheerVal') {
       console.log('Setting bit threshold...');
       if (this.filter.amountFilter !== null) {
         this.filter.amountFilter.cheerThreshold = input.value;
