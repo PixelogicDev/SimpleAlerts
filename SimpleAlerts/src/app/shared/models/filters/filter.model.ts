@@ -7,13 +7,15 @@ import { AmountFilter } from '../filters/amountFilter.model';
 // Each component gets its own filter. This filter model controls all the filter propertiers per event-list //
 export class Filter {
   isActive: boolean;
+  bumpIsActive: boolean;
   bumpThreshold: number; // Number of ms until bumping to top of list
   subscriptionFilter: SubFilter;
   amountFilter: AmountFilter;
 
   constructor() {
     this.isActive = true;
-    this.bumpThreshold = 0;
+    this.bumpIsActive = false;
+    this.bumpThreshold = 300000; // In ms
     this.subscriptionFilter = null;
     this.amountFilter = null;
   }
@@ -25,7 +27,7 @@ export class Filter {
       console.log('Filter is active.');
 
       // -- All time threshold -- //
-      if (this.bumpThreshold !== 0) {
+      if (this.bumpIsActive) {
         console.log('Filtering by timestamp...');
         filteredEvents = this.bumpToTopByTime(filteredEvents);
         console.log('Timestamp filter complete.');

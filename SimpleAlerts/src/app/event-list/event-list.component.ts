@@ -28,11 +28,11 @@ export class EventListComponent implements OnInit {
 
   // Edit Options //
   color = 'accent';
-  bumpFilterVal: Number = 0;
-  resubFilterVal: Number = 0;
-  tierFilterVal: Number = 0;
-  donationFilterVal: Number = 0;
-  cheerFilterVal: Number = 0;
+  bumpFilterVal: Number = 5;
+  resubFilterVal: Number = 5;
+  tierFilterVal: Number = 2;
+  donationFilterVal: Number = 25;
+  cheerFilterVal: Number = 1000;
 
   // All Filters //
   allFilterActive: Boolean = false;
@@ -184,9 +184,11 @@ export class EventListComponent implements OnInit {
       console.log('bumpFilter is toggled...');
       if (event.checked) {
         console.log('Turning bump filter on...');
+        this.filter.bumpIsActive = true;
         this.bumpFilterActive = true;
       } else {
         console.log('Turning bump filter off...');
+        this.filter.bumpIsActive = false;
         this.bumpFilterActive = false;
       }
     }
@@ -222,6 +224,7 @@ export class EventListComponent implements OnInit {
       if (event.checked) {
         console.log('Turning donations filter on...');
         this.filter.amountFilter.filterByAmount = true;
+        this.filter.amountFilter.donationIsActive = true;
         this.donationsFilterActive = true;
       } else {
         console.log('Turning donations filter off...');
@@ -229,6 +232,7 @@ export class EventListComponent implements OnInit {
           this.filter.amountFilter.filterByAmount = false;
         }
 
+        this.filter.amountFilter.donationIsActive = false;
         this.donationsFilterActive = false;
       }
     }
@@ -238,14 +242,16 @@ export class EventListComponent implements OnInit {
       if (event.checked) {
         console.log('Turning cheer filter on...');
         this.filter.amountFilter.filterByAmount = true;
+        this.filter.amountFilter.cheerIsActive = true;
         this.cheerFilterActive = true;
       } else {
-        console.log('Turning donations filter off...');
+        console.log('Turning cheer filter off...');
 
         if (!this.donationsFilterActive) {
           this.filter.amountFilter.filterByAmount = false;
         }
 
+        this.filter.amountFilter.cheerIsActive = false;
         this.cheerFilterActive = false;
       }
     }
