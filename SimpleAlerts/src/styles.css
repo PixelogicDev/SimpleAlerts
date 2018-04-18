@@ -4,3 +4,11 @@
 body {
   font-family: 'Roboto Condensed', sans-serif;
 }
+
+.mat-form-field-label {
+  color: #a5d6a7;
+}
+
+.mat-input-underline {
+  background-color: #a5d6a7;
+}
