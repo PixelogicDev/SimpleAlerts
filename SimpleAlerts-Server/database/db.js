@@ -65,7 +65,8 @@ module.exports = {
       let userObject = {
         _id: userData.id,
         twitchDisplayName: userData.display_name,
-        username: userData.name
+        username: userData.name,
+        settings: null
       };
 
       usersCollection.insertOne(userObject, (insertError, data) => {
@@ -77,6 +78,24 @@ module.exports = {
         console.log(`[addNewUser] New user has been inserted.`);
         return resolve(userObject);
       });
+    });
+  },
+
+  updateSettings: settings => {
+    return new Promise((resolve, reject) => {
+      console.log('[updateSettings] Starting...');
+      let usersCollection = db.collection('users');
+
+      try {
+        usersCollection.updateOne(
+          { username: settings.username },
+          { $set: { settings: settings.eventList } }
+        );
+      } catch (error) {
+        console.log('[updateSettings] ' + error);
+        reject(false);
+      }
+      resolve(true);
     });
   }
 };

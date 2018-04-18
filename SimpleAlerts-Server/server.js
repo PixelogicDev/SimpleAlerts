@@ -73,6 +73,20 @@ server.post(apiBase + 'streamlabs/token', async (request, response) => {
   response.send(user);
 });
 
+server.post(apiBase + 'settings/:username', async (request, response) => {
+  var didUpdate = await db.updateSettings(request.body);
+
+  if (didUpdate) {
+    response.send(
+      JSON.stringify({
+        status: 'OK'
+      })
+    );
+  } else {
+    response.send(JSON.stringify({ status: 'NOTOK' }));
+  }
+});
+
 // Twitch Token Request //
 /*server.post(apiBase + 'twitch/token', async (request, response) => {
   //-- User property --//

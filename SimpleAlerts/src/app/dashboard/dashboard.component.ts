@@ -10,6 +10,8 @@ import { Follower } from '../shared/models/follower.model';
 import { Donation } from '../shared/models/donation.model';
 import { Subscription } from '../shared/models/subscription.model';
 import { Cheer } from '../shared/models/cheer.model';
+import { Settings } from '../shared/models/settings/settings.model';
+import { Filter } from '../shared/models/filters/filter.model';
 
 @Component({
   selector: 'app-dashboard',
@@ -21,13 +23,15 @@ export class DashboardComponent implements OnInit {
   code: String;
   ws: $WebSocket;
   streamlabsTokenRoute = 'http://localhost:8000/api/v1/streamlabs/token';
+  updateSettingsRoute = 'http://localhost:8000/api/v1/settings/';
   twitchDisplayName: String;
   username: String;
   streamLabsAuthUrl = 'https://www.streamlabs.com/api/v1.0/authorize' +
-    '?client_id=3cHN5exsWXQhEaKKvTkcuFQTA70Besv08T5aWMjw' +
-    '&redirect_uri=http://localhost:4200/dashboard' +
-    '&response_type=code&scope=donations.read+socket.token';
-  eventListTitles: Array<string> = [];
+  '?client_id=3cHN5exsWXQhEaKKvTkcuFQTA70Besv08T5aWMjw' +
+  '&redirect_uri=http://localhost:4200/dashboard' +
+  '&response_type=code&scope=donations.read+socket.token';
+  eventLists: Array<any> = [];
+
   // email: String;
   // twitchTokenRoute = 'http://localhost:8000/api/v1/twitch/token';
 
@@ -35,8 +39,11 @@ export class DashboardComponent implements OnInit {
     private http: HttpClient,
     private route: ActivatedRoute,
     private router: Router,
+    private settings: Settings,
     private messageService: MessageService
-  ) {}
+  ) {
+    this.settings = new Settings();
+  }
 
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
@@ -78,6 +85,42 @@ export class DashboardComponent implements OnInit {
   }
 
   // Helpers //
+  addEventList(title: string) {
+    if (title !== null) {
+      // Create eventList Obj //
+      const eventList = {
+        // HOPEFULLY creates rando id //
+        id: Math.random()
+          .toString(36)
+          .substring(7),
+        title: title,
+        filter: null
+      };
+
+      this.eventLists.push(eventList);
+
+      // MAD PROPS 3sm_ //
+      (<HTMLInputElement>document.getElementById('listTitle')).value = '';
+    }
+  }
+
+  updateEventList(id: string, filter: Filter) {
+    // Find eventList in array //
+    const listIndex = this.eventLists.findIndex(list => {
+      return list.id === id;
+    });
+
+    // Set filter property on eventList obj //
+    this.eventLists[listIndex].filter = filter;
+    this.settings.eventList = this.eventLists;
+
+    // Send to server for db //
+    this.updateSettings();
+
+    // Log finished //
+    console.log(`Updated settings for: ${this.username}`);
+  }
+
   getStreamlabsData(complete) {
     this.http
       .post(this.streamlabsTokenRoute, { code: this.code })
@@ -85,6 +128,8 @@ export class DashboardComponent implements OnInit {
         console.log('Received Streamlabs Data.');
         this.twitchDisplayName = data['twitchDisplayName'];
         this.username = data['username'];
+        this.settings.username = data['username'];
+        this.settings.eventList = null;
         this.ws = new $WebSocket(
           `ws://127.0.0.1:8080/?user=${data['username']}`
         );
@@ -109,13 +154,12 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-  addEventList(title: string) {
-    if (title !== null) {
-      this.eventListTitles.push(title);
-
-      // MAD PROPS 3sm_ //
-      (<HTMLInputElement>document.getElementById('listTitle')).value = '';
-    }
+  updateSettings() {
+    this.http
+      .post(this.updateSettingsRoute + this.username, this.settings.toJson())
+      .subscribe(response => {
+        console.log(response['status']);
+      });
   }
   /* getTwitchData() {
     this.http

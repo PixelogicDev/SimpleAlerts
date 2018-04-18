@@ -3,8 +3,8 @@
 <div class="event-components">
   <!-- MOD PROPS lithiumx4900 -->
   <!-- https://stackblitz.com/edit/angular-b3aopk -->
-  <div event-lists *ngFor="let title of eventListTitles">
-    <app-event-list [title]=title></app-event-list>
+  <div event-lists *ngFor="let event of eventLists">
+    <app-event-list [parent]="this" [id]=event.id [title]=event.title></app-event-list>
   </div>
   <input id="listTitle" #listTitle placeholder="Event List Title" />
   <button (click)="addEventList(listTitle.value)">Create Event List</button>

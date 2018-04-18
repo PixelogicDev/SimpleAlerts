@@ -11,6 +11,7 @@ import { EventListComponent } from './event-list/event-list.component';
 
 import { MessageService } from './services/message.service';
 import { Filter } from './shared/models/filters/filter.model';
+import { Settings } from './shared/models/settings/settings.model';
 
 // Material Design //
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
@@ -39,7 +40,7 @@ const routes: Routes = [
     MatInputModule,
     BrowserAnimationsModule
   ],
-  providers: [MessageService, Filter],
+  providers: [MessageService, Filter, Settings],
   bootstrap: [RootComponent]
 })
 export class AppModule {}

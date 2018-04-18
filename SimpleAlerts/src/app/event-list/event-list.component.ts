@@ -16,6 +16,8 @@ import { AmountFilter } from '../shared/models/filters/amountFilter.model';
 })
 export class EventListComponent implements OnInit {
   // Properties //
+  @Input() parent: any;
+  @Input() id: string;
   @Input() title: string;
   eventTypes: Array<string>;
   subscription: rxSubscription;
@@ -303,6 +305,12 @@ export class EventListComponent implements OnInit {
         console.log(`Cheer threshold set to: ${this.cheerFilterVal}`);
       }
     }
+  }
+
+  updateSettings() {
+    console.log('Updating settings...');
+    this.parent.updateEventList(this.id, this.filter);
+    this.isEdit = false;
   }
 
   removeList() {
