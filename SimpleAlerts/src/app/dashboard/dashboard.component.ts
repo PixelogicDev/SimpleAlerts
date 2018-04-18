@@ -10,8 +10,11 @@ import { Follower } from '../shared/models/follower.model';
 import { Donation } from '../shared/models/donation.model';
 import { Subscription } from '../shared/models/subscription.model';
 import { Cheer } from '../shared/models/cheer.model';
+
+// Settings //
 import { Settings } from '../shared/models/settings/settings.model';
 import { Filter } from '../shared/models/filters/filter.model';
+import { EventList } from '../shared/models/settings/eventList.model';
 
 @Component({
   selector: 'app-dashboard',
@@ -30,7 +33,8 @@ export class DashboardComponent implements OnInit {
   '?client_id=3cHN5exsWXQhEaKKvTkcuFQTA70Besv08T5aWMjw' +
   '&redirect_uri=http://localhost:4200/dashboard' +
   '&response_type=code&scope=donations.read+socket.token';
-  eventLists: Array<any> = [];
+  // eventLists: Array<any> = [];
+  settings: Settings;
 
   // email: String;
   // twitchTokenRoute = 'http://localhost:8000/api/v1/twitch/token';
@@ -39,11 +43,8 @@ export class DashboardComponent implements OnInit {
     private http: HttpClient,
     private route: ActivatedRoute,
     private router: Router,
-    private settings: Settings,
     private messageService: MessageService
-  ) {
-    this.settings = new Settings();
-  }
+  ) {}
 
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
@@ -87,17 +88,14 @@ export class DashboardComponent implements OnInit {
   // Helpers //
   addEventList(title: string) {
     if (title !== null) {
-      // Create eventList Obj //
-      const eventList = {
-        // HOPEFULLY creates rando id //
-        id: Math.random()
-          .toString(36)
-          .substring(7),
-        title: title,
-        filter: null
-      };
+      const id = Math.random()
+        .toString(36)
+        .substring(7);
 
-      this.eventLists.push(eventList);
+      // Create eventList Obj //
+      const eventList = new EventList(id, title, new Filter());
+
+      this.settings.eventList.push(eventList);
 
       // MAD PROPS 3sm_ //
       (<HTMLInputElement>document.getElementById('listTitle')).value = '';
@@ -106,13 +104,13 @@ export class DashboardComponent implements OnInit {
 
   updateEventList(id: string, filter: Filter) {
     // Find eventList in array //
-    const listIndex = this.eventLists.findIndex(list => {
+    const listIndex = this.settings.eventList.findIndex(list => {
       return list.id === id;
     });
 
     // Set filter property on eventList obj //
-    this.eventLists[listIndex].filter = filter;
-    this.settings.eventList = this.eventLists;
+    this.settings.eventList[listIndex].filter = filter;
+    this.settings.eventList = this.settings.eventList;
 
     // Send to server for db //
     this.updateSettings();
@@ -127,9 +125,21 @@ export class DashboardComponent implements OnInit {
       .subscribe(data => {
         console.log('Received Streamlabs Data.');
         this.twitchDisplayName = data['twitchDisplayName'];
+
+        // Get username info //
         this.username = data['username'];
         this.settings.username = data['username'];
-        this.settings.eventList = null;
+
+        // Get settings data //
+        const currentSettings = data['settings'];
+        if (currentSettings !== null) {
+          this.settings = new Settings(
+            currentSettings.username as String,
+            currentSettings.eventList as Array<EventList>
+          );
+        } else {
+          this.settings = new Settings(this.username, new Array<EventList>());
+        }
         this.ws = new $WebSocket(
           `ws://127.0.0.1:8080/?user=${data['username']}`
         );
