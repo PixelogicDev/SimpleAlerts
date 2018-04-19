@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { $WebSocket } from 'angular2-websocket/angular2-websocket';
@@ -33,9 +33,8 @@ export class DashboardComponent implements OnInit {
   '?client_id=3cHN5exsWXQhEaKKvTkcuFQTA70Besv08T5aWMjw' +
   '&redirect_uri=http://localhost:4200/dashboard' +
   '&response_type=code&scope=donations.read+socket.token';
-  // eventLists: Array<any> = [];
   settings: Settings;
-
+  eventLists: Array<EventList> = [];
   // email: String;
   // twitchTokenRoute = 'http://localhost:8000/api/v1/twitch/token';
 
@@ -96,6 +95,9 @@ export class DashboardComponent implements OnInit {
       const eventList = new EventList(id, title, new Filter());
 
       this.settings.eventList.push(eventList);
+      this.eventLists = this.settings.eventList;
+
+      console.log(this.eventLists);
 
       // MAD PROPS 3sm_ //
       (<HTMLInputElement>document.getElementById('listTitle')).value = '';
@@ -128,18 +130,35 @@ export class DashboardComponent implements OnInit {
 
         // Get username info //
         this.username = data['username'];
-        this.settings.username = data['username'];
 
         // Get settings data //
         const currentSettings = data['settings'];
+
         if (currentSettings !== null) {
+          console.log('Found settings in db.');
+
+          // Get array of eventLists and loop //
+          currentSettings.forEach(list => {
+            const currentEventList = new EventList(
+              list.id,
+              list.title,
+              list.filter
+            );
+
+            console.log(currentEventList.filter);
+
+            this.eventLists.push(currentEventList);
+          });
+
           this.settings = new Settings(
-            currentSettings.username as String,
-            currentSettings.eventList as Array<EventList>
+            currentSettings.username,
+            this.eventLists
           );
         } else {
+          console.log('Did not find any settings object, creating new.');
           this.settings = new Settings(this.username, new Array<EventList>());
         }
+
         this.ws = new $WebSocket(
           `ws://127.0.0.1:8080/?user=${data['username']}`
         );

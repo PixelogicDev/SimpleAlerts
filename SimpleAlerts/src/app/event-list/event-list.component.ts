@@ -19,6 +19,7 @@ export class EventListComponent implements OnInit {
   @Input() parent: any;
   @Input() id: string;
   @Input() title: string;
+  @Input() filter: Filter;
   eventTypes: Array<string>;
   subscription: rxSubscription;
   eventList = new Array<Event>();
@@ -48,10 +49,7 @@ export class EventListComponent implements OnInit {
   donationsFilterActive: Boolean = false;
   cheerFilterActive: Boolean = false;
 
-  constructor(private messageService: MessageService, private filter: Filter) {
-    // Create new filter //
-    this.filter = new Filter();
-
+  constructor(private messageService: MessageService) {
     // Subscribe to Dashboard component events //
     this.messageService.subscribeToEvent().subscribe(event => {
       if (this.follows && event.type === 'new_follower') {
