@@ -61,6 +61,12 @@
   width: 32px;
 }
 
+.display-list .list {
+  height: 301px;
+  overflow: scroll;
+  overflow-x: hidden;
+}
+
 .display-list button {
   float: right;
   position: relative;
@@ -79,7 +85,7 @@
 .display-list .edit {
   float: right;
   position: relative;
-  top: 269px;
+  top: -32px;
   right: 5px;
   width: 26px;
   height: 26px;

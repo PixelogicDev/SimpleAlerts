@@ -16,6 +16,7 @@ import { Filter } from './shared/models/filters/filter.model';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { FollowerEventCellComponent } from './follower-event-cell/follower-event-cell.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -29,7 +30,8 @@ const routes: Routes = [
     RootComponent,
     LoginComponent,
     DashboardComponent,
-    EventListComponent
+    EventListComponent,
+    FollowerEventCellComponent
   ],
   imports: [
     BrowserModule,

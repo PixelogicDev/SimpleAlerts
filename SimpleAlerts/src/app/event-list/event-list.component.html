@@ -37,14 +37,11 @@
   </div>
   <!-- Will display all alerts -->
   <div class="display-list" *ngIf="!isEdit">
-    <div id="event_row" *ngFor="let event of eventList" [ngClass]="event.didRead ? 'event-read': ''" (click)="eventRead(event.id)">
-      {{event.id}}
-      <br>{{event.localeTimestamp}}
-      <br>{{event.from}}
-      <br>{{event.message}}
-      <br>{{event.amount}}
-      <br>{{event.months}}
-      <br>{{event.sub_plan}}
+    <div class="list">
+      <div id="event_row" *ngFor="let event of eventList" [ngClass]="event.didRead ? 'event-read': ''" (click)="eventRead(event.id)">
+        <app-follower-event-cell *ngIf="event.type === 'new_follower'" [id]="event.id" [type]="event.type" [timestamp]="event.timestamp"
+          [from]="event.from" [isTest]="true"></app-follower-event-cell>
+      </div>
     </div>
     <img class="edit" *ngIf="!isEdit" src="../../assets/event-list/icons/edit-pencil.png" (click)="isEdit = !isEdit" />
   </div>
