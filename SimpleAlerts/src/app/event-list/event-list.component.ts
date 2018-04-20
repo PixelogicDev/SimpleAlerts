@@ -72,9 +72,43 @@ export class EventListComponent implements OnInit {
     });
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.initList();
+  }
 
   // -- Helpers -- //
+  initList() {
+    if (this.filter !== null) {
+      console.log('Setting component props...');
+      console.log(this.filter);
+      console.log(this.filter.subscriptionFilter);
+      console.log(this.filter.amountFilter);
+
+      // General Component Val Props //
+      this.bumpFilterVal = this.filter.bumpThreshold;
+      this.resubFilterVal = this.filter.subscriptionFilter.monthsThreshold;
+      this.tierFilterVal = this.filter.subscriptionFilter.subPlanThreshold;
+      this.donationFilterVal = this.filter.amountFilter.donationThreshold;
+      this.cheerFilterVal = this.filter.amountFilter.cheerThreshold;
+
+      // General Componenet All Filters //
+      this.allFilterActive = this.filter.isActive;
+      this.bumpFilterActive = this.filter.bumpIsActive;
+
+      // Subscription Filters //
+      this.resubFilterActive = this.filter.subscriptionFilter.filterBySubPlan;
+      this.tierFilterActive = this.filter.subscriptionFilter.filterByMonths;
+
+      // Donations & Cheers //
+      this.donationsFilterActive = this.filter.amountFilter.donationIsActive;
+      this.cheerFilterActive = this.filter.amountFilter.cheerIsActive;
+
+      console.log('Props set.');
+    } else {
+      console.log('Filter is null. Nothing has changed.');
+    }
+  }
+
   changedEvent(type: string) {
     if (type === 'follows') {
       this.follows = !this.follows;

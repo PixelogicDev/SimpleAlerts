@@ -85,7 +85,6 @@ module.exports = {
     return new Promise((resolve, reject) => {
       console.log('[updateSettings] Starting...');
       let usersCollection = db.collection('users');
-
       try {
         usersCollection.updateOne(
           { username: settings.username },
@@ -96,6 +95,7 @@ module.exports = {
         reject(false);
       }
       resolve(true);
+      console.log('[updateSettings] Updated.');
     });
   }
 };
