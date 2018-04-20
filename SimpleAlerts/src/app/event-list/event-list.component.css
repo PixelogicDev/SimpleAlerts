@@ -26,7 +26,7 @@
 }
 
 .action-button {
-  width: 31%;
+  width: 30%;
 }
 
 .action-button img {
@@ -72,9 +72,21 @@
 }
 
 /* Edit Panel */
-.display-list,
-.edit-panel {
-  height: 302px;
+.display-list {
+  height: 301px;
+}
+
+.display-list .edit {
+  float: right;
+  position: relative;
+  top: 269px;
+  right: 5px;
+  width: 26px;
+  height: 26px;
+}
+
+.edit-content {
+  height: 256px;
   overflow: scroll;
   overflow-x: hidden;
 }
@@ -82,9 +94,8 @@
 .confirm-edit {
   float: right;
   position: relative;
-  top: -35px;
+  top: -32px;
   right: 5px;
-  z-index: 500;
 }
 
 .edit-panel .edit-content {

@@ -46,7 +46,7 @@
       <br>{{event.months}}
       <br>{{event.sub_plan}}
     </div>
-    <button (click)="isEdit = true">Edit</button>
+    <img class="edit" *ngIf="!isEdit" src="../../assets/event-list/icons/edit-pencil.png" (click)="isEdit = !isEdit" />
   </div>
   <!-- Will display edit panel for alert list -->
   <div class="edit-panel" *ngIf="isEdit">
@@ -123,7 +123,7 @@
         </p>
       </div>
     </div>
+    <img class="confirm-edit" *ngIf="isEdit" src="../../assets/event-list/icons/confirm-check-icon.png" (click)="updateSettings()"
+    />
   </div>
 </div>
-<img class="confirm-edit" *ngIf="isEdit" src="../../assets/event-list/icons/confirm-check-icon.png" (click)="updateSettings()"
-/>
