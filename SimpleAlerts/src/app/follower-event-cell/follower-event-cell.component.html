@@ -1,6 +1,19 @@
-<div class="content">
-  New Follwer
-  <div class="data">
-    {{timestamp}} {{from}}
+<div class="cell-content">
+  <div class="timestamp">
+    <img [src]=timeIconPath />
+    <div class="duration">
+      {{duration}}
+    </div>
+  </div>
+  <div class="content">
+    <div class=content-title>
+      New Follower
+    </div>
+    <div class="content-from">
+      {{from}}
+    </div>
+  </div>
+  <div class="indicator">
+    <img [src]=followIconPath />
   </div>
 </div>

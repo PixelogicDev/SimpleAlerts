@@ -8,10 +8,11 @@ import { Component, OnInit, Input } from '@angular/core';
 export class FollowerEventCellComponent implements OnInit {
   @Input() id: string;
   @Input() type: string;
-  @Input() timestamp: string;
+  @Input() duration: string;
   @Input() from: string;
   @Input() isTest: boolean;
-
+  timeIconPath = '../../assets/event-list/common/cell-timestamp.png';
+  followIconPath = '../../assets/event-list/icons/follows-enabled.png';
   constructor() {}
 
   ngOnInit() {}

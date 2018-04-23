@@ -39,9 +39,11 @@
   <div class="display-list" *ngIf="!isEdit">
     <div class="list">
       <div id="event_row" *ngFor="let event of eventList" [ngClass]="event.didRead ? 'event-read': ''" (click)="eventRead(event.id)">
-        <app-follower-event-cell *ngIf="event.type === 'new_follower'" [id]="event.id" [type]="event.type" [timestamp]="event.timestamp"
+        <app-follower-event-cell *ngIf="event.type === 'new_follower'" [id]="event.id" [type]="event.type" [duration]="event.duration"
           [from]="event.from" [isTest]="true"></app-follower-event-cell>
       </div>
+      <!-- MAD PROPS JeremyDwayne / TEST FOLLOW CELL -->
+      <app-follower-event-cell id="1111111" type="new_follower" duration="1hr" from="PixelogicDev" isTest="true"></app-follower-event-cell>
     </div>
     <img class="edit" *ngIf="!isEdit" src="../../assets/event-list/icons/edit-pencil.png" (click)="isEdit = !isEdit" />
   </div>

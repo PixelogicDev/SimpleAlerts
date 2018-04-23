@@ -36,7 +36,10 @@ const routes: Routes = [
   imports: [
     BrowserModule,
     HttpClientModule,
-    RouterModule.forRoot(routes, { enableTracing: true }),
+    RouterModule.forRoot(routes, {
+      enableTracing: true,
+      onSameUrlNavigation: 'reload'
+    }),
     MatSlideToggleModule,
     MatInputModule,
     BrowserAnimationsModule
