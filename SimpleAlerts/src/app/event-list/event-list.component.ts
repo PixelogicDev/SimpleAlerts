@@ -86,7 +86,7 @@ export class EventListComponent implements OnInit {
       console.log(this.filter.amountFilter);
 
       // General Component Val Props //
-      this.bumpFilterVal = this.filter.bumpThreshold;
+      this.bumpFilterVal = this.filter.bumpThreshold / 60000;
       this.resubFilterVal = this.filter.subscriptionFilter.monthsThreshold;
       this.tierFilterVal = this.filter.subscriptionFilter.subPlanThreshold;
       this.donationFilterVal = this.filter.amountFilter.donationThreshold;
@@ -103,6 +103,16 @@ export class EventListComponent implements OnInit {
       // Donations & Cheers //
       this.donationsFilterActive = this.filter.amountFilter.donationIsActive;
       this.cheerFilterActive = this.filter.amountFilter.cheerIsActive;
+
+      // MAD PROPS natsu130 //
+      setInterval(() => {
+        console.log('Running filter...');
+        if (this.eventList.length > 0) {
+          this.eventList = this.filter.runFilters(this.eventList);
+        } else {
+          console.log('Event list is empty.');
+        }
+      }, 10000);
 
       console.log('Props set.');
     } else {

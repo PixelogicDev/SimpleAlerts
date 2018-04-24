@@ -59,6 +59,13 @@ export class Filter {
       }
     }
 
+    // Run duration update //
+    console.log('Updating duration...');
+    filteredEvents.forEach((event, index) => {
+      filteredEvents[index].duration = event.getDuration();
+    });
+    console.log('Duration updated.');
+
     return filteredEvents;
   }
 
@@ -99,6 +106,7 @@ export class Filter {
           tempList.push(event);
         }
       } else {
+        console.log('Event has been read.');
         tempList.push(event);
       }
     });

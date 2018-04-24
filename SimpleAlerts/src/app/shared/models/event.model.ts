@@ -41,7 +41,7 @@ export class Event {
     }
   }
 
-  private getDuration(): string {
+  public getDuration(): string {
     // Set moment locale //
     moment.updateLocale('en', {
       relativeTime: {

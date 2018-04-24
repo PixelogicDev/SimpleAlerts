@@ -5,18 +5,11 @@ import { AmountFilter } from '../filters/amountFilter.model';
 export class EventList {
   id: String;
   title: String;
-  // activeEvents: Array<String>;
   filter: Filter;
 
-  constructor(
-    id: string,
-    title: string,
-    // activeEvents: Array<string>,
-    filter: any
-  ) {
+  constructor(id: string, title: string, filter: any) {
     this.id = id;
     this.title = title;
-    // this.activeEvents = activeEvents;
     this.filter = this.mapJson(filter);
   }
 
