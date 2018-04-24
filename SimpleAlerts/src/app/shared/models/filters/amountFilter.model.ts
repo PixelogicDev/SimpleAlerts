@@ -47,7 +47,7 @@ export class AmountFilter {
             );
 
             // Only bump one time //
-            if (+event.amount >= currentThreshold) {
+            if (+event.amount >= currentThreshold && !event.didBump) {
               console.log('Bumping to top...');
               tempList.unshift(event);
               event.didBump = true;

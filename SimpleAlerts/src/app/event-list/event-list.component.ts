@@ -3,7 +3,6 @@ import { Subscription as rxSubscription } from 'rxjs/Subscription';
 import { MessageService } from '../services/message.service';
 
 import { Event } from '../shared/models/event.model';
-import { FollowerEventCellComponent } from '../event-cells/follower-event-cell/follower-event-cell.component';
 
 // -- Filters -- //
 import { Filter } from '../shared/models/filters/filter.model';

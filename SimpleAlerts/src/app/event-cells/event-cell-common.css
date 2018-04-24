@@ -23,7 +23,7 @@
 }
 
 .content-title {
-  font-size: 26px;
+  font-size: 19px;
 }
 
 .content-from {
@@ -37,7 +37,7 @@
 }
 
 .divider {
-  height: 65%;
+  height: 50%;
   border: 1px #979797 solid;
   margin: 0 10px 0 10px;
 }

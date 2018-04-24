@@ -1,0 +1,28 @@
+<div class="cell-content">
+  <div class="timestamp">
+    <img [src]=timeIconPath />
+    <div class="duration">
+      {{duration}}
+    </div>
+  </div>
+  <div class="content">
+    <div class=content-title>
+      New {{amountType}}
+    </div>
+    <div class="content-from">
+      {{from}}
+    </div>
+  </div>
+  <div class="divider"></div>
+  <div class="message">
+    {{message}}
+  </div>
+  <div class="divider"></div>
+  <div class="amount">
+    {{stringAmount}} {{currency}}
+  </div>
+  <div class="indicator">
+    <img *ngIf="type === 'new_donation'" [src]="donationIconPath" />
+    <img *ngIf="type === 'new_cheer'" [src]="cheerIconPath" />
+  </div>
+</div>

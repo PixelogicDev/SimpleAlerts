@@ -18,6 +18,7 @@ import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FollowerEventCellComponent } from './event-cells/follower-event-cell/follower-event-cell.component';
 import { SubscriberEventCellComponent } from './event-cells/subscriber-event-cell/subscriber-event-cell.component';
+import { AmountEventCellComponent } from './event-cells/amount-event-cell/amount-event-cell.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -33,7 +34,8 @@ const routes: Routes = [
     DashboardComponent,
     EventListComponent,
     FollowerEventCellComponent,
-    SubscriberEventCellComponent
+    SubscriberEventCellComponent,
+    AmountEventCellComponent
   ],
   imports: [
     BrowserModule,

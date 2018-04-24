@@ -11,6 +11,7 @@ export class Event {
   from: string;
   message: string;
   amount: string;
+  stringAmount: string;
   months: string;
   sub_plan: string;
   friendlySubPlan: string;
@@ -31,10 +32,12 @@ export class Event {
 
     if (event.amount) {
       this.amount = event.amount;
+      this.stringAmount = event.stringAmount;
     }
 
     if (event.months) {
       this.months = event.months;
+      this.stringAmount = event.stringAmount;
     }
 
     if (event.sub_plan) {
