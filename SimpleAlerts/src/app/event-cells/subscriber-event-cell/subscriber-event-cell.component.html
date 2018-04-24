@@ -1,0 +1,32 @@
+<div class="cell-content">
+  <div class="timestamp">
+    <img [src]=timeIconPath />
+    <div class="duration">
+      {{duration}}
+    </div>
+  </div>
+  <div class="content">
+    <div class=content-title>
+      New Subscriber
+    </div>
+    <div class="content-from">
+      {{from}}
+    </div>
+  </div>
+  <div class="divider"></div>
+  <div class="message">
+    {{message}}
+  </div>
+  <div class="divider"></div>
+  <div class="month-content">
+    <div class="tier">
+      Tier {{subplan}}
+    </div>
+    <div class="months">
+      Resub x{{months}}
+    </div>
+  </div>
+  <div class="indicator">
+    <img [src]=subscriberIconPath />
+  </div>
+</div>

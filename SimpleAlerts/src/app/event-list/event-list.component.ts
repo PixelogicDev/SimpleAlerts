@@ -3,7 +3,7 @@ import { Subscription as rxSubscription } from 'rxjs/Subscription';
 import { MessageService } from '../services/message.service';
 
 import { Event } from '../shared/models/event.model';
-import { FollowerEventCellComponent } from '../follower-event-cell/follower-event-cell.component';
+import { FollowerEventCellComponent } from '../event-cells/follower-event-cell/follower-event-cell.component';
 
 // -- Filters -- //
 import { Filter } from '../shared/models/filters/filter.model';
@@ -88,7 +88,8 @@ export class EventListComponent implements OnInit {
       // General Component Val Props //
       this.bumpFilterVal = this.filter.bumpThreshold / 60000;
       this.resubFilterVal = this.filter.subscriptionFilter.monthsThreshold;
-      this.tierFilterVal = this.filter.subscriptionFilter.subPlanThreshold;
+      this.tierFilterVal =
+        this.filter.subscriptionFilter.subPlanThreshold / 1000;
       this.donationFilterVal = this.filter.amountFilter.donationThreshold;
       this.cheerFilterVal = this.filter.amountFilter.cheerThreshold;
 
@@ -371,7 +372,7 @@ export class EventListComponent implements OnInit {
       return event.id === id;
     });
 
-    if (foundEvent !== undefined) {
+    if (foundEvent !== undefined && !foundEvent.didRead) {
       console.log('Did find event, changing properties.');
       foundEvent.didRead = true;
 

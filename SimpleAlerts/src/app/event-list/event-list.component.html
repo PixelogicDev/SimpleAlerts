@@ -39,90 +39,109 @@
   <div class="display-list" *ngIf="!isEdit">
     <div class="list">
       <div id="event_row" *ngFor="let event of eventList" [ngClass]="event.didRead ? 'event-read': ''" (click)="eventRead(event.id)">
+        <!-- Followers -->
         <app-follower-event-cell *ngIf="event.type === 'new_follower'" [id]="event.id" [type]="event.type" [duration]="event.duration"
           [from]="event.from" [isTest]="true"></app-follower-event-cell>
+
+        <!-- Subscribers  -->
+        <app-subscriber-event-cell *ngIf="event.type === 'new_subscription'" [id]="event.id" [type]="event.type" [duration]="event.duration"
+          [from]="event.from" [message]="event.message" [months]="event.months" [subplan]="event.friendlySubPlan" [isTest]="true"></app-subscriber-event-cell>
       </div>
-      <!-- MAD PROPS JeremyDwayne / TEST FOLLOW CELL -->
+
+      <!-- MAD PROPS JeremyDwayne / TEST CELLS -->
       <app-follower-event-cell id="1111111" type="new_follower" duration="1hr" from="PixelogicDev" isTest="true"></app-follower-event-cell>
+      <app-subscriber-event-cell id="222222" type="new_subscription" duration="3m" from="PixelogicDev" message="WOWOWOWOWOWOWOWOWOWOWO A NEW MESSGAEH HHAHAHAHA"
+        months="24" subplan="2" isTest="true"></app-subscriber-event-cell>
     </div>
-    <img class="edit" *ngIf="!isEdit" src="../../assets/event-list/icons/edit-pencil.png" (click)="isEdit = !isEdit" />
+    <img class="edit " *ngIf="!isEdit " src="../../assets/event-list/icons/edit-pencil.png " (click)="isEdit=! isEdit " />
   </div>
   <!-- Will display edit panel for alert list -->
-  <div class="edit-panel" *ngIf="isEdit">
-    <div class="edit-content">
-      <div class="title-label">
+  <div class="edit-panel " *ngIf="isEdit ">
+    <div class="edit-content ">
+      <div class="title-label ">
         All Events
       </div>
-      <div class="all-filters">
-        <mat-slide-toggle class="filter-toggle" [color]="color" [checked]="allFilterActive" (change)="filtersChanged($event, 'allFilter')">
+      <div class="all-filters ">
+        <mat-slide-toggle class="filter-toggle " [color]="color " [checked]="allFilterActive " (change)="filtersChanged($event,
+        'allFilter') ">
           All Filters
         </mat-slide-toggle>
-        <p class="edit-detail">
+        <p class="edit-detail ">
           Turn on/off all the filters applied on this event list.
         </p>
-        <mat-slide-toggle class="filter-toggle" [color]="color" [checked]="bumpFilterActive" (change)="filtersChanged($event, 'bumpFilter')">
+        <mat-slide-toggle class="filter-toggle " [color]="color " [checked]="bumpFilterActive " (change)="filtersChanged($event,
+        'bumpFilter') ">
           Bump By Time
         </mat-slide-toggle>
-        <mat-form-field class="filter-input" *ngIf="bumpFilterActive" type="number">
-          <input #bumpTime matInput placeholder="Minutes" value={{bumpFilterVal}} (change)="inputChange(bumpTime, 'bumpVal')">
+        <mat-form-field class="filter-input " *ngIf="bumpFilterActive " type="number ">
+          <input #bumpTime matInput placeholder="Minutes " value={{bumpFilterVal}} (change)="inputChange(bumpTime,
+        'bumpVal') ">
         </mat-form-field>
-        <p class="edit-detail">
+        <p class="edit-detail ">
           Set the amount of minutes to wait before bumping an event to the top of the list if you have not read it yet.
         </p>
       </div>
-      <div *ngIf="subscriptions" class="subscriptions-filter">
-        <div class="title-label">
+      <div *ngIf="subscriptions " class="subscriptions-filter ">
+        <div class="title-label ">
           Subscriptions
         </div>
-        <mat-slide-toggle class="filter-toggle" [color]="color" [checked]="resubFilterActive" (change)="filtersChanged($event, 'resubFilter')">
+        <mat-slide-toggle class="filter-toggle " [color]="color " [checked]="resubFilterActive " (change)="filtersChanged($event,
+        'resubFilter') ">
           Bump By Months
         </mat-slide-toggle>
-        <mat-form-field class="filter-input" *ngIf="resubFilterActive" type="number">
-          <input #resubVal matInput placeholder="Months" value={{resubFilterVal}} (change)="inputChange(resubVal, 'resubVal')">
+        <mat-form-field class="filter-input " *ngIf="resubFilterActive " type="number ">
+          <input #resubVal matInput placeholder="Months " value={{resubFilterVal}} (change)="inputChange(resubVal,
+        'resubVal') ">
         </mat-form-field>
-        <p class="edit-detail">
+        <p class="edit-detail ">
           Set the minimum resub month amount to bump the event to the top of the list.
         </p>
-        <mat-slide-toggle class="filter-toggle" [color]="color" [checked]="tierFilterActive" (change)="filtersChanged($event, 'tierFilter')">
+        <mat-slide-toggle class="filter-toggle " [color]="color " [checked]="tierFilterActive " (change)="filtersChanged($event,
+        'tierFilter') ">
           Bump By Tier
         </mat-slide-toggle>
-        <mat-form-field class="filter-input" *ngIf="tierFilterActive" type="number">
-          <input #tierVal matInput placeholder="Tier Level" value={{tierFilterVal}} (change)="inputChange(tierVal, 'tierVal')">
+        <mat-form-field class="filter-input " *ngIf="tierFilterActive " type="number ">
+          <input #tierVal matInput placeholder="Tier Level " value={{tierFilterVal}} (change)="inputChange(tierVal,
+        'tierVal') ">
         </mat-form-field>
-        <p class="edit-detail">
+        <p class="edit-detail ">
           Set the minimum tier level to bump the event to the top of the list.
         </p>
       </div>
-      <div *ngIf="donations" class="donations-filter">
-        <div class="title-label">
+      <div *ngIf="donations " class="donations-filter ">
+        <div class="title-label ">
           Donations
         </div>
-        <mat-slide-toggle class="filter-toggle" [color]="color" [checked]="donationsFilterActive" (change)="filtersChanged($event, 'donationFilter')">
+        <mat-slide-toggle class="filter-toggle " [color]="color " [checked]="donationsFilterActive " (change)="filtersChanged($event,
+        'donationFilter') ">
           Bump By Amount
         </mat-slide-toggle>
-        <mat-form-field class="filter-input" *ngIf="donationsFilterActive" type="number">
-          <input #donationVal matInput placeholder="Amount" value={{donationFilterVal}} (change)="inputChange(donationVal, 'donationVal')">
+        <mat-form-field class="filter-input " *ngIf="donationsFilterActive " type="number ">
+          <input #donationVal matInput placeholder="Amount " value={{donationFilterVal}} (change)="inputChange(donationVal,
+        'donationVal') ">
         </mat-form-field>
-        <p class="edit-detail">
+        <p class="edit-detail ">
           Set the minimum donation amount to bump the event to the top of the list.
         </p>
       </div>
-      <div *ngIf="cheers" class="cheers-filter">
-        <div class="title-label">
+      <div *ngIf="cheers " class="cheers-filter ">
+        <div class="title-label ">
           Cheers
         </div>
-        <mat-slide-toggle class="filter-toggle" [color]="color" [checked]="cheerFilterActive" (change)="filtersChanged($event, 'cheerFilter')">
+        <mat-slide-toggle class="filter-toggle " [color]="color " [checked]="cheerFilterActive " (change)="filtersChanged($event,
+        'cheerFilter') ">
           Bump By Bits
         </mat-slide-toggle>
-        <mat-form-field class="filter-input" *ngIf="cheerFilterActive" type="number">
-          <input #cheerVal matInput placeholder="Bits" value={{cheerFilterVal}} (change)="inputChange(cheerVal, 'cheerVal')">
+        <mat-form-field class="filter-input " *ngIf="cheerFilterActive " type="number ">
+          <input #cheerVal matInput placeholder="Bits " value={{cheerFilterVal}} (change)="inputChange(cheerVal,
+        'cheerVal') ">
         </mat-form-field>
-        <p class="edit-detail">
+        <p class="edit-detail ">
           Set the minimum bit amount to bump the event to the top of the list.
         </p>
       </div>
     </div>
-    <img class="confirm-edit" *ngIf="isEdit" src="../../assets/event-list/icons/confirm-check-icon.png" (click)="updateSettings()"
+    <img class="confirm-edit " *ngIf="isEdit " src="../../assets/event-list/icons/confirm-check-icon.png " (click)="updateSettings() "
     />
   </div>
 </div>

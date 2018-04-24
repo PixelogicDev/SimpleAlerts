@@ -27,7 +27,7 @@ export class SubFilter {
               }`
             );
 
-            if (+event.months >= this.monthsThreshold) {
+            if (+event.months >= this.monthsThreshold && !event.didBump) {
               console.log('Bumping to top...');
               tempList.unshift(event);
               // Only bump one time //
@@ -61,7 +61,7 @@ export class SubFilter {
             );
 
             // Only bump one time //
-            if (+event.sub_plan >= this.subPlanThreshold) {
+            if (+event.sub_plan >= this.subPlanThreshold && !event.didBump) {
               console.log('Bumping to top...');
               event.didBump = true;
               tempList.unshift(event);

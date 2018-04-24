@@ -13,6 +13,7 @@ export class Event {
   amount: string;
   months: string;
   sub_plan: string;
+  friendlySubPlan: string;
 
   constructor(event: any) {
     this.id = event.id;
@@ -38,6 +39,7 @@ export class Event {
 
     if (event.sub_plan) {
       this.sub_plan = event.sub_plan;
+      this.friendlySubPlan = String(+event.sub_plan / 1000);
     }
   }
 
