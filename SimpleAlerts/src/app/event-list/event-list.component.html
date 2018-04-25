@@ -39,6 +39,14 @@
   <!-- Will display all alerts -->
   <div class="display-list" *ngIf="!isEdit">
     <div class="list">
+      <div *ngIf="eventList.length === 0" class="empty-list">
+        <div class="empty-title">
+          No Events Yet!
+        </div>
+        <div class="empty-detail">
+          Keep being you. They will come.
+        </div>
+      </div>
       <div id="event_row" *ngFor="let event of eventList" [ngClass]="event.didRead ? 'event-read': ''" (click)="eventRead(event.id)">
         <!-- Followers -->
         <app-follower-event-cell *ngIf="event.type === 'new_follower'" [id]="event.id" [type]="event.type" [duration]="event.duration"
@@ -60,13 +68,14 @@
       </div>
 
       <!-- MAD PROPS JeremyDwayne / TEST CELLS -->
-      <app-follower-event-cell id="1111111" type="new_follower" duration="1hr" from="PixelogicDev" isTest="true"></app-follower-event-cell>
+      <!-- <app-follower-event-cell id="1111111" type="new_follower" duration="1hr" from="PixelogicDev" isTest="true"></app-follower-event-cell>
       <app-subscriber-event-cell id="222222" type="new_subscription" duration="3m" from="PixelogicDev" message="WOWOWOWOWOWOWOWOWOWOWO A NEW MESSGAEH HHAHAHAHA"
         months="24" subplan="2" isTest="true"></app-subscriber-event-cell>
       <app-amount-event-cell id="333333" type="new_donation" duration="5h" from="YoMama" message="WOWOWOWOWOWOWOWOWOWOWO A NEW MESSGAEH HHAHAHAHA DONNOOO"
         amount="100" stringAmount="100" currency="USD" isTest="true"></app-amount-event-cell>
       <app-amount-event-cell id="444444" type="new_cheer" duration="2h" from="CheerBAWS" message="WOWOWOWOWOWOWOWOWOWOWO A NEW MESSGAEH HHAHAHAHA CHERR"
-        amount="10000" stringAmount="10000" currency="Bits" isTest="true"></app-amount-event-cell>
+        amount="10000" stringAmount="10000" currency="Bits" isTest="true"></app-amount-event-cell> -->
+
     </div>
     <img class="edit " *ngIf="!isEdit " src="../../assets/event-list/icons/edit-pencil.png " (click)="isEdit=! isEdit " />
   </div>

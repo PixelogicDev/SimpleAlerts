@@ -67,6 +67,25 @@
   overflow-x: hidden;
 }
 
+.display-list .list .empty-list {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100%;
+}
+
+.display-list .list .empty-list .empty-title {
+  font-size: 34px;
+  font-weight: bold;
+  padding-bottom: 10px;
+}
+
+.display-list .list .empty-list .empty-detail {
+  font-size: 22px;
+  font-weight: lighter;
+}
+
 .display-list button {
   float: right;
   position: relative;
