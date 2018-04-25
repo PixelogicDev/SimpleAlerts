@@ -85,17 +85,20 @@ module.exports = {
     return new Promise((resolve, reject) => {
       console.log('[updateSettings] Starting...');
       let usersCollection = db.collection('users');
-      try {
-        usersCollection.updateOne(
-          { username: settings.username },
-          { $set: { settings: settings.eventList } }
-        );
-      } catch (error) {
-        console.log('[updateSettings] ' + error);
-        reject(false);
-      }
-      resolve(true);
-      console.log('[updateSettings] Updated.');
+
+      usersCollection.findOneAndUpdate(
+        { username: settings.username },
+        { $set: { settings: settings.eventList } },
+        (error, doc) => {
+          if (error) {
+            console.log(error);
+            reject(false);
+          } else {
+            console.log('Settings in doc updated.');
+            resolve(true);
+          }
+        }
+      );
     });
   }
 };

@@ -6,11 +6,13 @@ export class EventList {
   id: String;
   title: String;
   filter: Filter;
+  activeEvents: any;
 
-  constructor(id: string, title: string, filter: any) {
+  constructor(id: string, title: string, filter: any, activeEvents: any) {
     this.id = id;
     this.title = title;
     this.filter = this.mapJson(filter);
+    this.activeEvents = activeEvents;
   }
 
   // -- Helpers -- //

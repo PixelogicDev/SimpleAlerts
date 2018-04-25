@@ -91,8 +91,13 @@ export class DashboardComponent implements OnInit {
         .toString(36)
         .substring(7);
 
-      // Create eventList Obj //
-      const eventList = new EventList(id, title, new Filter());
+      // Create eventList //
+      const eventList = new EventList(id, title, new Filter(), {
+        follows: false,
+        subscriptions: false,
+        cheers: false,
+        donations: false
+      });
 
       this.settings.eventList.push(eventList);
       this.eventLists = this.settings.eventList;
@@ -104,7 +109,7 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-  updateEventList(id: string, filter: Filter) {
+  updateEventList(id: string, filter: Filter, activeEvents: any) {
     // Find eventList in array //
     const listIndex = this.settings.eventList.findIndex(list => {
       return list.id === id;
@@ -112,7 +117,9 @@ export class DashboardComponent implements OnInit {
 
     // Set filter property on eventList obj //
     this.settings.eventList[listIndex].filter = filter;
-    this.settings.eventList = this.settings.eventList;
+
+    // Set active event settings //
+    this.settings.eventList[listIndex].activeEvents = activeEvents;
 
     // Send to server for db //
     this.updateSettings();
@@ -142,7 +149,8 @@ export class DashboardComponent implements OnInit {
             const currentEventList = new EventList(
               list.id,
               list.title,
-              list.filter
+              JSON.parse(JSON.stringify(list.filter)),
+              list.activeEvents
             );
 
             console.log(currentEventList.filter);
@@ -150,10 +158,7 @@ export class DashboardComponent implements OnInit {
             this.eventLists.push(currentEventList);
           });
 
-          this.settings = new Settings(
-            currentSettings.username,
-            this.eventLists
-          );
+          this.settings = new Settings(this.username, this.eventLists);
         } else {
           console.log('Did not find any settings object, creating new.');
           this.settings = new Settings(this.username, new Array<EventList>());
@@ -184,6 +189,7 @@ export class DashboardComponent implements OnInit {
   }
 
   updateSettings() {
+    console.log('Updating settings...');
     this.http
       .post(this.updateSettingsRoute + this.username, this.settings.toJson())
       .subscribe(response => {

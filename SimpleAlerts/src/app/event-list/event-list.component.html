@@ -6,25 +6,26 @@
       </div>
       <div class="event-icons">
         <div class="donations" (click)="changedEvent('donations')">
-          <img *ngIf="donations; else donationsDisabled" src="../../assets/event-list/icons/donations-enabled.png" />
+          <img *ngIf="activeEvents.donations; else donationsDisabled" src="../../assets/event-list/icons/donations-enabled.png" />
           <ng-template #donationsDisabled>
             <img src="../../assets/event-list/icons/donations-disabled.png" />
           </ng-template>
         </div>
         <div class="cheers" (click)="changedEvent('cheers')">
-          <img *ngIf="cheers; else cheersDisabled" src="../../assets/event-list/icons/cheers-enabled.png" />
+          <img *ngIf="activeEvents.cheers; else cheersDisabled" src="../../assets/event-list/icons/cheers-enabled.png" />
           <ng-template #cheersDisabled>
             <img src="../../assets/event-list/icons/cheers-disabled.png" />
           </ng-template>
         </div>
         <div class="follows" (click)="changedEvent('follows')">
-          <img *ngIf="follows; else followsDisabled" src="../../assets/event-list/icons/follows-enabled.png" />
+          <img *ngIf="activeEvents.follows; else followsDisabled" src="../../assets/event-list/icons/follows-enabled.png" />
           <ng-template #followsDisabled>
             <img src="../../assets/event-list/icons/follows-disabled.png" />
           </ng-template>
         </div>
         <div class="subscriptions" (click)="changedEvent('subscriptions')">
-          <img *ngIf="subscriptions; else subscriptionsDisabled" src="../../assets/event-list/icons/subscriptions-enabled.png" />
+          <img *ngIf="activeEvents.subscriptions; else subscriptionsDisabled" src="../../assets/event-list/icons/subscriptions-enabled.png"
+          />
           <ng-template #subscriptionsDisabled>
             <img src="../../assets/event-list/icons/subscriptions-disabled.png" />
           </ng-template>
@@ -95,7 +96,7 @@
           Set the amount of minutes to wait before bumping an event to the top of the list if you have not read it yet.
         </p>
       </div>
-      <div *ngIf="subscriptions " class="subscriptions-filter ">
+      <div *ngIf="activeEvents.subscriptions" class="subscriptions-filter ">
         <div class="title-label ">
           Subscriptions
         </div>
@@ -122,7 +123,7 @@
           Set the minimum tier level to bump the event to the top of the list.
         </p>
       </div>
-      <div *ngIf="donations " class="donations-filter ">
+      <div *ngIf="activeEvents.donations" class="donations-filter ">
         <div class="title-label ">
           Donations
         </div>
@@ -138,7 +139,7 @@
           Set the minimum donation amount to bump the event to the top of the list.
         </p>
       </div>
-      <div *ngIf="cheers " class="cheers-filter ">
+      <div *ngIf="activeEvents.cheers" class="cheers-filter ">
         <div class="title-label ">
           Cheers
         </div>

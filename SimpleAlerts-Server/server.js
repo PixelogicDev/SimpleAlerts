@@ -74,6 +74,7 @@ server.post(apiBase + 'streamlabs/token', async (request, response) => {
 });
 
 server.post(apiBase + 'settings/:username', async (request, response) => {
+  // Request.body passes over array of eventLists and username //
   var didUpdate = await db.updateSettings(request.body);
 
   if (didUpdate) {

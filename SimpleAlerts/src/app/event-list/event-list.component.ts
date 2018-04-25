@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectorRef } from '@angular/core';
 import { Subscription as rxSubscription } from 'rxjs/Subscription';
 import { MessageService } from '../services/message.service';
 
@@ -20,13 +20,10 @@ export class EventListComponent implements OnInit {
   @Input() id: string;
   @Input() title: string;
   @Input() filter: Filter;
+  @Input() activeEvents: any;
   eventTypes: Array<string>;
   subscription: rxSubscription;
   eventList = new Array<Event>();
-  follows: Boolean = false;
-  subscriptions: Boolean = false;
-  cheers: Boolean = false;
-  donations: Boolean = false;
   isEdit: Boolean = false;
 
   // Edit Options //
@@ -49,22 +46,28 @@ export class EventListComponent implements OnInit {
   donationsFilterActive: Boolean = false;
   cheerFilterActive: Boolean = false;
 
-  constructor(private messageService: MessageService) {
+  constructor(
+    private messageService: MessageService,
+    private changeRef: ChangeDetectorRef
+  ) {
     // Subscribe to Dashboard component events //
     this.messageService.subscribeToEvent().subscribe(event => {
-      if (this.follows && event.type === 'new_follower') {
+      if (this.activeEvents.follows && event.type === 'new_follower') {
         this.eventList.unshift(new Event(event));
       }
 
-      if (this.subscriptions && event.type === 'new_subscription') {
+      if (
+        this.activeEvents.subscriptions &&
+        event.type === 'new_subscription'
+      ) {
         this.eventList.unshift(new Event(event));
       }
 
-      if (this.cheers && event.type === 'new_cheer') {
+      if (this.activeEvents.cheers && event.type === 'new_cheer') {
         this.eventList.unshift(new Event(event));
       }
 
-      if (this.donations && event.type === 'new_donation') {
+      if (this.activeEvents.donations && event.type === 'new_donation') {
         this.eventList.unshift(new Event(event));
       }
 
@@ -80,9 +83,6 @@ export class EventListComponent implements OnInit {
   initList() {
     if (this.filter !== null) {
       console.log('Setting component props...');
-      console.log(this.filter);
-      console.log(this.filter.subscriptionFilter);
-      console.log(this.filter.amountFilter);
 
       // General Component Val Props //
       this.bumpFilterVal = this.filter.bumpThreshold / 60000;
@@ -122,56 +122,52 @@ export class EventListComponent implements OnInit {
 
   changedEvent(type: string) {
     if (type === 'follows') {
-      this.follows = !this.follows;
+      this.activeEvents.follows = !this.activeEvents.follows;
     }
 
     if (type === 'subscriptions') {
-      this.subscriptions = !this.subscriptions;
+      this.activeEvents.subscriptions = !this.activeEvents.subscriptions;
 
-      if (this.subscriptions) {
+      if (this.activeEvents.subscriptions) {
         this.filter.subscriptionFilter = new SubFilter();
-
-        // Set filterByMonth to true for testing; this should be set on the UI //
-        // this.filter.subscriptionFilter.filterByMonths = true;
-        // this.filter.subscriptionFilter.filterBySubPlan = true;
       } else {
         this.filter.subscriptionFilter = null;
       }
     }
 
     if (type === 'cheers') {
-      this.cheers = !this.cheers;
+      this.activeEvents.cheers = !this.activeEvents.cheers;
 
-      if (this.cheers) {
+      if (this.activeEvents.cheers) {
         if (this.filter.amountFilter !== null) {
           console.log('Amount filter already here.');
         } else {
           this.filter.amountFilter = new AmountFilter();
         }
-
-        // this.filter.amountFilter.filterByAmount = true;
       } else {
-        if (!this.donations) {
+        if (!this.activeEvents.donations) {
           this.filter.amountFilter = null;
         }
       }
     }
 
     if (type === 'donations') {
-      this.donations = !this.donations;
+      this.activeEvents.donations = !this.activeEvents.donations;
 
-      if (this.donations) {
+      if (this.activeEvents.donations) {
         if (this.filter.amountFilter !== null) {
           console.log('Amount filter already here.');
         } else {
           this.filter.amountFilter = new AmountFilter();
         }
       } else {
-        if (!this.cheers) {
+        if (!this.activeEvents.cheers) {
           this.filter.amountFilter = null;
         }
       }
     }
+
+    this.changeRef.detectChanges();
   }
 
   // -- Edit Helpers -- //
@@ -188,16 +184,16 @@ export class EventListComponent implements OnInit {
 
         // Go through each filter and activate them as well //
         this.filter.enableAllFilters();
-        if (this.subscriptions) {
+        if (this.activeEvents.subscriptions) {
           this.resubFilterActive = true;
           this.tierFilterActive = true;
         }
 
-        if (this.donations) {
+        if (this.activeEvents.donations) {
           this.donationsFilterActive = true;
         }
 
-        if (this.cheers) {
+        if (this.activeEvents.cheers) {
           this.cheerFilterActive = true;
         }
 
@@ -208,16 +204,16 @@ export class EventListComponent implements OnInit {
         this.allFilterActive = false;
         this.bumpFilterActive = false;
 
-        if (this.subscriptions) {
+        if (this.activeEvents.subscriptions) {
           this.resubFilterActive = false;
           this.tierFilterActive = false;
         }
 
-        if (this.donations) {
+        if (this.activeEvents.donations) {
           this.donationsFilterActive = false;
         }
 
-        if (this.cheers) {
+        if (this.activeEvents.cheers) {
           this.cheerFilterActive = false;
         }
 
@@ -352,7 +348,7 @@ export class EventListComponent implements OnInit {
 
   updateSettings() {
     console.log('Updating settings...');
-    this.parent.updateEventList(this.id, this.filter);
+    this.parent.updateEventList(this.id, this.filter, this.activeEvents);
     this.isEdit = false;
   }
 

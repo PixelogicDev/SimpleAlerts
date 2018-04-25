@@ -4,7 +4,7 @@
   <!-- MOD PROPS lithiumx4900 -->
   <!-- https://stackblitz.com/edit/angular-b3aopk -->
   <div event-lists *ngFor="let event of eventLists">
-    <app-event-list [parent]="this" [id]=event.id [title]=event.title [filter]=event.filter></app-event-list>
+    <app-event-list [parent]="this" [id]=event.id [title]=event.title [filter]=event.filter [activeEvents]=event.activeEvents></app-event-list>
   </div>
   <input id="listTitle" #listTitle placeholder="Event List Title" />
   <button (click)="addEventList(listTitle.value)">Create Event List</button>
