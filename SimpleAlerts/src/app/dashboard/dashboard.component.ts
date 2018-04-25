@@ -153,8 +153,6 @@ export class DashboardComponent implements OnInit {
               list.activeEvents
             );
 
-            console.log(currentEventList.filter);
-
             this.eventLists.push(currentEventList);
           });
 

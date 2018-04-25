@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Subscription as rxSubscription } from 'rxjs/Subscription';
 import { MessageService } from '../services/message.service';
 
@@ -46,10 +46,7 @@ export class EventListComponent implements OnInit {
   donationsFilterActive: Boolean = false;
   cheerFilterActive: Boolean = false;
 
-  constructor(
-    private messageService: MessageService,
-    private changeRef: ChangeDetectorRef
-  ) {
+  constructor(private messageService: MessageService) {
     // Subscribe to Dashboard component events //
     this.messageService.subscribeToEvent().subscribe(event => {
       if (this.activeEvents.follows && event.type === 'new_follower') {
@@ -166,8 +163,7 @@ export class EventListComponent implements OnInit {
         }
       }
     }
-
-    this.changeRef.detectChanges();
+    this.updateSettings();
   }
 
   // -- Edit Helpers -- //
@@ -347,7 +343,6 @@ export class EventListComponent implements OnInit {
   }
 
   updateSettings() {
-    console.log('Updating settings...');
     this.parent.updateEventList(this.id, this.filter, this.activeEvents);
     this.isEdit = false;
   }

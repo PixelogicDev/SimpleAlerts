@@ -37,7 +37,7 @@ export class EventList {
     if (currentAmountFilter !== null) {
       amountFilter.filterByAmount = currentAmountFilter.filterByAmount;
       amountFilter.cheerIsActive = currentAmountFilter.cheerIsActive;
-      amountFilter.cheerThreshold = currentAmountFilter.cheerIsThreshold;
+      amountFilter.cheerThreshold = currentAmountFilter.cheerThreshold;
       amountFilter.donationIsActive = currentAmountFilter.donationIsActive;
       amountFilter.donationThreshold = currentAmountFilter.donationThreshold;
     } else {
