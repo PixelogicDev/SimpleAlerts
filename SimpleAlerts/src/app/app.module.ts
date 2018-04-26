@@ -19,6 +19,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FollowerEventCellComponent } from './event-cells/follower-event-cell/follower-event-cell.component';
 import { SubscriberEventCellComponent } from './event-cells/subscriber-event-cell/subscriber-event-cell.component';
 import { AmountEventCellComponent } from './event-cells/amount-event-cell/amount-event-cell.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { RemoveEventListModalComponent } from './common/remove-event-list-modal/remove-event-list-modal.component';
+import { MatButtonModule } from '@angular/material/button';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -35,7 +38,8 @@ const routes: Routes = [
     EventListComponent,
     FollowerEventCellComponent,
     SubscriberEventCellComponent,
-    AmountEventCellComponent
+    AmountEventCellComponent,
+    RemoveEventListModalComponent
   ],
   imports: [
     BrowserModule,
@@ -46,8 +50,11 @@ const routes: Routes = [
     }),
     MatSlideToggleModule,
     MatInputModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    MatDialogModule,
+    MatButtonModule
   ],
+  entryComponents: [RemoveEventListModalComponent],
   providers: [MessageService, Filter],
   bootstrap: [RootComponent]
 })

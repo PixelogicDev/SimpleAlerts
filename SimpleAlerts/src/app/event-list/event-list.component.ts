@@ -2,12 +2,17 @@ import { Component, OnInit, Input } from '@angular/core';
 import { Subscription as rxSubscription } from 'rxjs/Subscription';
 import { MessageService } from '../services/message.service';
 
+// -- Models -- //
 import { Event } from '../shared/models/event.model';
 
 // -- Filters -- //
 import { Filter } from '../shared/models/filters/filter.model';
 import { SubFilter } from '../shared/models/filters/subFilter.model';
 import { AmountFilter } from '../shared/models/filters/amountFilter.model';
+
+// -- Design -- //
+import { MatDialog } from '@angular/material';
+import { RemoveEventListModalComponent } from '../common/remove-event-list-modal/remove-event-list-modal.component';
 
 @Component({
   selector: 'app-event-list',
@@ -46,7 +51,10 @@ export class EventListComponent implements OnInit {
   donationsFilterActive: Boolean = false;
   cheerFilterActive: Boolean = false;
 
-  constructor(private messageService: MessageService) {
+  constructor(
+    private messageService: MessageService,
+    public dialog: MatDialog
+  ) {
     // Subscribe to Dashboard component events //
     this.messageService.subscribeToEvent().subscribe(event => {
       if (this.activeEvents.follows && event.type === 'new_follower') {
@@ -348,7 +356,22 @@ export class EventListComponent implements OnInit {
   }
 
   removeList() {
-    console.log('Removing list...');
+    console.log('Opening modal to confirm delete...');
+
+    const dialogRef = this.dialog.open(RemoveEventListModalComponent, {
+      width: '500px',
+      height: '165px',
+      data: { title: this.title }
+    });
+
+    dialogRef.afterClosed().subscribe(confirmed => {
+      console.log('Removing event list...');
+
+      if (confirmed) {
+        // Call remove event list on parent //
+        this.parent.removeEventList(this.id);
+      }
+    });
   }
 
   // MAD PROPS BarneyRubbble //

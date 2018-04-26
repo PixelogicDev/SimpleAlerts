@@ -128,6 +128,22 @@ export class DashboardComponent implements OnInit {
     console.log(`Updated settings for: ${this.username}`);
   }
 
+  removeEventList(id: string) {
+    // Find eventList in array //
+    const listIndex = this.settings.eventList.findIndex(list => {
+      return list.id === id;
+    });
+
+    // Splice array //
+    this.eventLists.splice(listIndex, 1);
+
+    // Send removal to server //
+    this.updateSettings();
+
+    // Log finished //
+    console.log(`Removed event list for: ${this.username}`);
+  }
+
   getStreamlabsData(complete) {
     this.http
       .post(this.streamlabsTokenRoute, { code: this.code })
