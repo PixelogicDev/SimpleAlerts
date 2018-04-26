@@ -97,6 +97,11 @@
 }
 
 /* Edit Panel */
+.edit,
+.confirm-edit {
+  cursor: pointer;
+}
+
 .display-list {
   height: 301px;
 }
