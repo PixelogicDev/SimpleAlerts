@@ -21,8 +21,13 @@
   <div class="amount">
     {{stringAmount}} {{currency}}
   </div>
-  <div class="indicator">
+  <div *ngIf="!didRead" class="indicator">
     <img *ngIf="type === 'new_donation'" [src]="donationIconPath" />
     <img *ngIf="type === 'new_cheer'" [src]="cheerIconPath" />
+  </div>
+  <div *ngIf="didRead" class="indicator">
+    <div class="did-read-remove" (click)="removeEvent()">
+      REMOVE
+    </div>
   </div>
 </div>

@@ -17,9 +17,17 @@ export class SubscriberEventCellComponent implements OnInit {
   @Input() message: string;
   @Input() subplan: string;
   @Input() isTest: boolean;
+  @Input() didRead: boolean;
+  @Input() parent: any;
+
   timeIconPath = '../../../assets/event-list/common/cell-timestamp.png';
   subscriberIconPath = '../../../assets/event-list/icons/subscriptions-enabled.png';
   constructor() {}
 
   ngOnInit() {}
+
+  removeEvent() {
+    console.log('Removing event...');
+    this.parent.removeEvent(this.id);
+  }
 }

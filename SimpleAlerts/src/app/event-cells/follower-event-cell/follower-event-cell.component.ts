@@ -11,9 +11,17 @@ export class FollowerEventCellComponent implements OnInit {
   @Input() duration: string;
   @Input() from: string;
   @Input() isTest: boolean;
+  @Input() didRead: boolean;
+  @Input() parent: any;
+
   timeIconPath = '../../../assets/event-list/common/cell-timestamp.png';
   followIconPath = '../../../assets/event-list/icons/follows-enabled.png';
   constructor() {}
 
   ngOnInit() {}
+
+  removeEvent() {
+    console.log('Removing event...');
+    this.parent.removeEvent(this.id);
+  }
 }

@@ -399,4 +399,16 @@ export class EventListComponent implements OnInit {
       console.log('Could not find event.');
     }
   }
+
+  removeEvent(id: string) {
+    // Find eventList in array //
+    const eventIndex = this.eventList.findIndex(event => {
+      return event.id === id;
+    });
+
+    // Splice array //
+    this.eventList.splice(eventIndex, 1);
+
+    console.log('Event removed.');
+  }
 }

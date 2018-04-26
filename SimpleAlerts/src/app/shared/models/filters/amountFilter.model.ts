@@ -58,6 +58,8 @@ export class AmountFilter {
           } else {
             tempList.push(event);
           }
+        } else {
+          tempList.push(event);
         }
       });
     }

@@ -26,7 +26,12 @@
       Resub x{{months}}
     </div>
   </div>
-  <div class="indicator">
+  <div *ngIf="!didRead" class="indicator">
     <img [src]=subscriberIconPath />
+  </div>
+  <div *ngIf="didRead" class="indicator">
+    <div class="did-read-remove" (click)="removeEvent()">
+      REMOVE
+    </div>
   </div>
 </div>

@@ -15,6 +15,8 @@ export class AmountEventCellComponent implements OnInit {
   @Input() stringAmount: string;
   @Input() currency: string;
   @Input() isTest: boolean;
+  @Input() didRead: boolean;
+  @Input() parent: any;
   amountType: string;
   timeIconPath = '../../../assets/event-list/common/cell-timestamp.png';
   donationIconPath = '../../../assets/event-list/icons/donations-enabled.png';
@@ -27,5 +29,10 @@ export class AmountEventCellComponent implements OnInit {
     } else {
       this.amountType = 'Cheer';
     }
+  }
+
+  removeEvent() {
+    console.log('Removing event...');
+    this.parent.removeEvent(this.id);
   }
 }

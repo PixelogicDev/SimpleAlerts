@@ -6,6 +6,7 @@
   display: flex;
   align-items: center;
   border-bottom: 1px #979797 solid;
+  cursor: pointer;
 }
 
 .cell-content .content .content-title,
@@ -45,4 +46,10 @@
 /* MAD PROPS JeremyDwayne */
 .indicator {
   margin: 0 31px 0 auto;
+}
+
+.indicator .did-read-remove {
+  font-size: 15px;
+  color: #ff0000;
+  cursor: pointer;
 }
