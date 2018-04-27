@@ -1,3 +1,25 @@
+.header {
+  height: 80px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 34px;
+  font-weight: bold;
+  border-bottom: 1px solid #979797;
+}
+
+.header .title {
+  padding-left: 10px;
+}
+
+.header .user {
+  padding-right: 10px;
+}
+
+.event-components {
+  margin: 10px;
+}
+
 .create-event {
   border: 1px dashed #979797;
   border-radius: 5px;
