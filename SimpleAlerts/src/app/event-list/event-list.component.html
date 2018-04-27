@@ -5,24 +5,28 @@
         {{title}}
       </div>
       <div class="event-icons">
+        <!-- Donations -->
         <div class="donations" (click)="changedEvent('donations')" matTooltip="Toggle Donation Events On/Off" matTooltipPosition="above">
           <img *ngIf="activeEvents.donations; else donationsDisabled" src="../../assets/event-list/icons/donations-enabled.png" />
           <ng-template #donationsDisabled>
             <img src="../../assets/event-list/icons/donations-disabled.png" />
           </ng-template>
         </div>
+        <!-- Cheers  -->
         <div class="cheers" (click)="changedEvent('cheers')" matTooltip="Toggle Cheer Events On/Off" matTooltipPosition="above">
           <img *ngIf="activeEvents.cheers; else cheersDisabled" src="../../assets/event-list/icons/cheers-enabled.png" />
           <ng-template #cheersDisabled>
             <img src="../../assets/event-list/icons/cheers-disabled.png" />
           </ng-template>
         </div>
+        <!-- Follows -->
         <div class="follows" (click)="changedEvent('follows')" matTooltip="Toggle Follow Events On/Off" matTooltipPosition="above">
           <img *ngIf="activeEvents.follows; else followsDisabled" src="../../assets/event-list/icons/follows-enabled.png" />
           <ng-template #followsDisabled>
             <img src="../../assets/event-list/icons/follows-disabled.png" />
           </ng-template>
         </div>
+        <!-- Subscriptions -->
         <div class="subscriptions" (click)="changedEvent('subscriptions')" matTooltip="Toggle Sub Events On/Off" matTooltipPosition="above">
           <img *ngIf="activeEvents.subscriptions; else subscriptionsDisabled" src="../../assets/event-list/icons/subscriptions-enabled.png"
           />

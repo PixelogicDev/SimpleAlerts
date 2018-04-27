@@ -3,14 +3,14 @@
 <div class="event-components">
   <!-- MOD PROPS lithiumx4900 -->
   <!-- https://stackblitz.com/edit/angular-b3aopk -->
-  <div event-lists *ngFor="let event of eventLists">
-    <app-event-list [parent]="this" [id]=event.id [title]=event.title [filter]=event.filter [activeEvents]=event.activeEvents></app-event-list>
-  </div>
+  <app-event-list *ngFor="let event of eventLists" [parent]="this" [id]=event.id [title]=event.title [filter]=event.filter
+    [activeEvents]=event.activeEvents></app-event-list>
   <div class="create-event">
     <div class="content">
       Enter a title to get started!
       <mat-form-field class="create-event-input" type="text">
-        <input #title matInput placeholder="Title" (change)="addEventList(title)">
+        <input #title matInput placeholder="Title">
       </mat-form-field>
+      <button mat-raised-button (click)="addEventList(title)" color="accent">Create Event List</button>
     </div>
   </div>
