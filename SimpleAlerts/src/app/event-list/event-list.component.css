@@ -18,6 +18,8 @@
 .list-card .header .title-section {
   font-size: 30px;
   width: 31%;
+  cursor: pointer;
+  border: 0;
 }
 
 .event-icons {

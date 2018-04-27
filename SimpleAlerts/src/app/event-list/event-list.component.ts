@@ -351,7 +351,12 @@ export class EventListComponent implements OnInit {
   }
 
   updateSettings() {
-    this.parent.updateEventList(this.id, this.filter, this.activeEvents);
+    this.parent.updateEventList(
+      this.id,
+      this.title,
+      this.filter,
+      this.activeEvents
+    );
     this.isEdit = false;
   }
 
@@ -410,5 +415,16 @@ export class EventListComponent implements OnInit {
     this.eventList.splice(eventIndex, 1);
 
     console.log('Event removed.');
+  }
+
+  updateTitle(title: string) {
+    console.log('Changing title...');
+    this.title = title;
+    this.parent.updateEventList(
+      this.id,
+      this.title,
+      this.filter,
+      this.activeEvents
+    );
   }
 }

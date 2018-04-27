@@ -101,11 +101,18 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-  updateEventList(id: string, filter: Filter, activeEvents: any) {
+  updateEventList(
+    id: string,
+    title: string,
+    filter: Filter,
+    activeEvents: any
+  ) {
     // Find eventList in array //
     const listIndex = this.settings.eventList.findIndex(list => {
       return list.id === id;
     });
+
+    this.settings.eventList[listIndex].title = title;
 
     // Set filter property on eventList obj //
     this.settings.eventList[listIndex].filter = filter;
