@@ -9,15 +9,22 @@
 }
 
 .header .title {
-  padding-left: 10px;
+  padding-left: 25px;
 }
 
 .header .user {
-  padding-right: 10px;
+  padding-right: 25px;
 }
 
 .event-components {
-  margin: 10px;
+  display: flex;
+  margin: 25px;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.event-components app-event-list {
+  width: 48%;
 }
 
 .create-event {
