@@ -48,8 +48,6 @@ export class DashboardComponent implements OnInit {
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
       this.code = params['code'];
-      // -- MAD PROPS Sliomere -- //
-      // this.twitchAuthComplete = window.document.referrer;
 
       this.getStreamlabsData(() => {
         // Setup Websocket //
@@ -75,24 +73,18 @@ export class DashboardComponent implements OnInit {
           }
         );
       });
-      /* if (this.twitchAuthComplete === '') {
-        console.log('Coming from another auth redirect.');
-        this.getStreamlabsData();
-      } else {
-        this.getTwitchData();
-      } */
     });
   }
 
   // Helpers //
-  addEventList(title: string) {
-    if (title !== null) {
+  addEventList(element: any) {
+    if (element !== null) {
       const id = Math.random()
         .toString(36)
         .substring(7);
 
       // Create eventList //
-      const eventList = new EventList(id, title, new Filter(), {
+      const eventList = new EventList(id, element.value, new Filter(), {
         follows: false,
         subscriptions: false,
         cheers: false,
@@ -105,7 +97,7 @@ export class DashboardComponent implements OnInit {
       console.log(this.eventLists);
 
       // MAD PROPS 3sm_ //
-      (<HTMLInputElement>document.getElementById('listTitle')).value = '';
+      element.value = '';
     }
   }
 

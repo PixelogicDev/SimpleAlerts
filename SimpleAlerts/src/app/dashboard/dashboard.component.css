@@ -1,0 +1,21 @@
+.create-event {
+  border: 1px dashed #979797;
+  border-radius: 5px;
+  width: 48%;
+  height: 390px;
+}
+
+.create-event .content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  font-size: 22px;
+  font-weight: lighter;
+  height: 100%;
+}
+
+.create-event .content .create-event-input {
+  padding-top: 15px;
+  width: 250px;
+}
