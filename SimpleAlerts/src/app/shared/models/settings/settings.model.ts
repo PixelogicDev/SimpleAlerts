@@ -14,9 +14,17 @@ export class Settings {
     return { username: this.username, eventList: this.eventLists };
   }
 
-  private deserializeEventLists(obj: string): Array<EventList> {
+  private deserializeEventLists(data: any): Array<EventList> {
     const lists = new Array<EventList>();
-    const eventLists = JSON.parse(obj);
+    let eventLists;
+
+    console.log(typeof data);
+
+    if (typeof data === 'string') {
+      eventLists = JSON.parse(data);
+    } else {
+      eventLists = data;
+    }
 
     if (eventLists !== null) {
       console.log('Deserializing event lists...');
