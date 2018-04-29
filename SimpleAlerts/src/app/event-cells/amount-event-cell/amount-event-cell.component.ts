@@ -16,6 +16,7 @@ export class AmountEventCellComponent implements OnInit {
   @Input() currency: string;
   @Input() isTest: boolean;
   @Input() didRead: boolean;
+  @Input() didBump: boolean;
   @Input() parent: any;
   amountType: string;
   timeIconPath = '../../../assets/event-list/common/cell-timestamp.png';

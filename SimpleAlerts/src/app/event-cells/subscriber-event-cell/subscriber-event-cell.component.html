@@ -1,36 +1,36 @@
-<div class="cell-content">
-  <div class="timestamp">
+<div class="cell-content" [ngClass]="didBump ? 'bumped' : ''">
+  <div class=" timestamp ">
     <img [src]=timeIconPath />
-    <div class="duration">
+    <div class="duration ">
       {{duration}}
     </div>
   </div>
-  <div class="content">
+  <div class="content ">
     <div class=content-title>
       New Subscriber
     </div>
-    <div class="content-from">
+    <div class="content-from ">
       {{from}}
     </div>
   </div>
-  <div class="divider"></div>
-  <div class="message">
+  <div class="divider "></div>
+  <div class="message ">
     {{message}}
   </div>
-  <div class="divider"></div>
-  <div class="month-content">
-    <div class="tier">
+  <div class="divider "></div>
+  <div class="month-content ">
+    <div class="tier ">
       Tier {{subplan}}
     </div>
-    <div class="months">
+    <div class="months ">
       Resub x{{months}}
     </div>
   </div>
-  <div *ngIf="!didRead" class="indicator">
+  <div *ngIf="!didRead " class="indicator ">
     <img [src]=subscriberIconPath />
   </div>
-  <div *ngIf="didRead" class="indicator">
-    <div class="did-read-remove" (click)="removeEvent()">
+  <div *ngIf="didRead " class="indicator ">
+    <div class="did-read-remove " (click)="removeEvent() ">
       REMOVE
     </div>
   </div>

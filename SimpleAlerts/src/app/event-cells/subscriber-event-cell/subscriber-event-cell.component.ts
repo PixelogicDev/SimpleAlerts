@@ -18,6 +18,7 @@ export class SubscriberEventCellComponent implements OnInit {
   @Input() subplan: string;
   @Input() isTest: boolean;
   @Input() didRead: boolean;
+  @Input() didBump: boolean;
   @Input() parent: any;
 
   timeIconPath = '../../../assets/event-list/common/cell-timestamp.png';

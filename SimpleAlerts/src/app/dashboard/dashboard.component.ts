@@ -57,10 +57,7 @@ export class DashboardComponent implements OnInit {
       // Set properties with session storage //
       this.username = this.sessionData.username;
       this.twitchDisplayName = this.sessionData.displayName;
-      this.settings = new Settings(
-        this.username,
-        JSON.parse(this.sessionData.settings)
-      );
+      this.settings = new Settings(this.username, this.sessionData.settings);
       this.eventLists = this.settings.eventLists;
 
       // On page refresh, websocket connections are broken, always setup again //

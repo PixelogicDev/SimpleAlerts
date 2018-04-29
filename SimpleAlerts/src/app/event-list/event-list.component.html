@@ -53,22 +53,22 @@
       <div id="event_row" *ngFor="let event of eventList" [ngClass]="event.didRead ? 'event-read': ''" (click)="eventRead(event.id)">
         <!-- Followers -->
         <app-follower-event-cell *ngIf="event.type === 'new_follower'" [id]="event.id" [type]="event.type" [duration]="event.duration"
-          [from]="event.from" [isTest]="true" [didRead]="event.didRead" [parent]="this"></app-follower-event-cell>
+          [from]="event.from" [isTest]="true" [didRead]="event.didRead" [didBump]="event.didBump" [parent]="this"></app-follower-event-cell>
 
         <!-- Subscribers  -->
         <app-subscriber-event-cell *ngIf="event.type === 'new_subscription'" [id]="event.id" [type]="event.type" [duration]="event.duration"
           [from]="event.from" [message]="event.message" [months]="event.months" [subplan]="event.friendlySubPlan" [isTest]="true"
-          [didRead]="event.didRead" [parent]="this"></app-subscriber-event-cell>
+          [didRead]="event.didRead" [didBump]="event.didBump" [parent]="this"></app-subscriber-event-cell>
 
         <!-- Donations -->
         <app-amount-event-cell *ngIf="event.type === 'new_donation'" [id]="event.id" [type]="event.type" [duration]="event.duration"
           [from]="event.from" [message]="event.message" [amount]="event.amount" [stringAmount]="event.stringAmount" [currency]="event.currency"
-          [isTest]="true" [didRead]="event.didRead" [parent]="this"></app-amount-event-cell>
+          [isTest]="true" [didRead]="event.didRead" [didBump]="event.didBump" [parent]="this"></app-amount-event-cell>
 
         <!-- Cheers -->
         <app-amount-event-cell *ngIf="event.type === 'new_cheer'" [id]="event.id" [type]="event.type" [duration]="event.duration"
           [from]="event.from" [message]="event.message" [amount]="event.amount" [stringAmount]="event.stringAmount" currency="Bits"
-          [isTest]="true" [didRead]="event.didRead" [parent]="this"></app-amount-event-cell>
+          [isTest]="true" [didRead]="event.didRead" [didBump]="event.didBump" [parent]="this"></app-amount-event-cell>
       </div>
 
       <!-- MAD PROPS JeremyDwayne / TEST CELLS -->

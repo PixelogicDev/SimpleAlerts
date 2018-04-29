@@ -9,6 +9,10 @@
   cursor: pointer;
 }
 
+.bumped {
+  background-color: #fcfca8;
+}
+
 .cell-content .content .content-title,
 .content-from {
   font-weight: bold;

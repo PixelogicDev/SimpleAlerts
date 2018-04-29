@@ -397,6 +397,8 @@ export class EventListComponent implements OnInit {
     if (foundEvent !== undefined && !foundEvent.didRead) {
       console.log('Did find event, changing properties.');
       foundEvent.didRead = true;
+      // Change this property to remove the class to turn cell green //
+      foundEvent.didBump = false;
 
       // Remove current event from array //
       this.eventList.splice(eventIndex, 1);
