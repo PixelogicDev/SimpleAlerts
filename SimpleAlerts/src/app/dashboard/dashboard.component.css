@@ -48,3 +48,90 @@
   padding: 15px 0 15px 0;
   width: 250px;
 }
+
+/* Mobile */
+@media (max-width: 768px) {
+  .event-components app-event-list {
+    width: 100%;
+  }
+
+  .create-event {
+    width: 100%;
+  }
+}
+
+@media (max-width: 650px) {
+  .header .title {
+    width: 100%;
+    padding: 0;
+    text-align: center;
+  }
+  .header .route-name,
+  .user {
+    display: none;
+  }
+  .event-components app-event-list {
+    width: 100%;
+  }
+  .create-event {
+    width: 100%;
+  }
+}
+
+@media (max-width: 414px) {
+  .header .title {
+    width: 100%;
+    padding: 0;
+    text-align: center;
+  }
+  .header .route-name,
+  .user {
+    display: none;
+  }
+  .event-components app-event-list {
+    width: 100%;
+  }
+  .create-event {
+    width: 100%;
+  }
+}
+
+@media (max-width: 375px) {
+  .header .title {
+    width: 100%;
+    padding: 0;
+    text-align: center;
+  }
+
+  .header .route-name,
+  .user {
+    display: none;
+  }
+
+  .event-components app-event-list {
+    width: 100%;
+  }
+  .create-event {
+    width: 100%;
+  }
+}
+
+@media (max-width: 320px) {
+  .header .title {
+    width: 100%;
+    padding: 0;
+    text-align: center;
+  }
+
+  .header .route-name,
+  .user {
+    display: none;
+  }
+
+  .event-components app-event-list {
+    width: 100%;
+  }
+  .create-event {
+    width: 100%;
+  }
+}

@@ -1,8 +1,11 @@
 <div class="list-card">
   <div class="header">
     <div class="header-content">
-      <input #titleInput matTooltip="Click To Edit Title" matTooltipPosition="above" value={{title}} class="title-section" contenteditable="true"
-        role="textbox" (change)="updateTitle(titleInput.value)" />
+      <div *ngIf="!isEditTitle" matTooltip="Click To Edit Title" matTooltipPosition="above" class="title-section" (click)="isEditTitle = !isEditTitle">
+        {{title}}
+      </div>
+      <input *ngIf="isEditTitle" #titleInput value={{title}} class="title-section" contenteditable="true" role="textbox" (change)="updateTitle(titleInput.value)"
+      />
       <div class="event-icons">
         <!-- Donations -->
         <div class="donations" (click)="changedEvent('donations')" matTooltip="Toggle Donation Events On/Off" matTooltipPosition="above">

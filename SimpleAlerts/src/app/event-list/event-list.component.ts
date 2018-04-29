@@ -30,6 +30,7 @@ export class EventListComponent implements OnInit {
   subscription: rxSubscription;
   eventList = new Array<Event>();
   isEdit: Boolean = false;
+  isEditTitle = false;
 
   // Edit Options //
   color = 'accent';
@@ -429,5 +430,6 @@ export class EventListComponent implements OnInit {
       this.filter,
       this.activeEvents
     );
+    this.isEditTitle = false;
   }
 }

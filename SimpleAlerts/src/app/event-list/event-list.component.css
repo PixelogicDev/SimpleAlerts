@@ -28,7 +28,7 @@
 
 .event-icons {
   width: 159px;
-  padding-right: 25px;
+  margin-right: 25px;
 }
 
 .donations,
@@ -109,8 +109,12 @@
   height: 26px;
 }
 
+.edit-panel {
+  height: 301px;
+}
+
 .edit-content {
-  height: 256px;
+  height: 271px;
   overflow: scroll;
   overflow-x: hidden;
 }
@@ -123,7 +127,7 @@
 }
 
 .edit-panel .edit-content {
-  padding: 3%;
+  padding: 15px;
 }
 
 .edit-panel .edit-content .title-label {
@@ -149,9 +153,10 @@
 }
 
 button.delete {
+  display: block;
   width: 250px;
   height: 50px;
-  margin: 0 25% 0 25%;
+  margin: 0 auto;
   color: white;
   background-color: #ff0000;
   opacity: 0.6;
@@ -164,4 +169,61 @@ button.delete {
 
 button.delete:hover {
   background-color: #fb9595;
+}
+
+/* Mobile */
+@media (max-width: 414px) {
+  .list-card .header .header-content .title-section,
+  .event-icons {
+    margin: 0;
+  }
+  .list-card .header .header-content .title-section {
+    font-size: 24px;
+    padding: 0;
+  }
+  .confirm-edit {
+    top: -8px;
+  }
+}
+
+@media (max-width: 375px) {
+  .list-card .header .header-content .title-section,
+  .event-icons {
+    margin: 0;
+  }
+
+  .list-card .header .header-content .title-section {
+    font-size: 24px;
+    padding: 0;
+  }
+
+  .confirm-edit {
+    top: -8px;
+  }
+}
+
+@media (max-width: 320px) {
+  .list-card .header .header-content .title-section,
+  .event-icons {
+    margin: 0;
+  }
+
+  .list-card .header .header-content .title-section {
+    font-size: 20px;
+    padding: 0;
+  }
+
+  .donations,
+  .cheers,
+  .follows {
+    padding-right: 5%;
+  }
+
+  .confirm-edit {
+    top: -8px;
+  }
+
+  .empty-detail {
+    text-align: center;
+  }
 }
