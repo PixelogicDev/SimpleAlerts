@@ -16,6 +16,9 @@ import { Settings } from '../shared/models/settings/settings.model';
 import { Filter } from '../shared/models/filters/filter.model';
 import { EventList } from '../shared/models/settings/eventList.model';
 
+// Session Storage //
+import { SessionStorageService } from '../services/session-storage.service';
+
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -23,7 +26,6 @@ import { EventList } from '../shared/models/settings/eventList.model';
 })
 export class DashboardComponent implements OnInit {
   // Properties //
-  code: String;
   ws: $WebSocket;
   streamlabsTokenRoute = 'http://localhost:8000/api/v1/streamlabs/token';
   updateSettingsRoute = 'http://localhost:8000/api/v1/settings/';
@@ -35,45 +37,38 @@ export class DashboardComponent implements OnInit {
   '&response_type=code&scope=donations.read+socket.token';
   settings: Settings;
   eventLists: Array<EventList> = [];
-  // email: String;
-  // twitchTokenRoute = 'http://localhost:8000/api/v1/twitch/token';
+  sessionData: any;
 
   constructor(
     private http: HttpClient,
     private route: ActivatedRoute,
     private router: Router,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private sessionStorageService: SessionStorageService
   ) {}
 
   ngOnInit() {
-    this.route.queryParams.subscribe(params => {
-      this.code = params['code'];
+    // Check for session data //
+    this.sessionData = this.sessionStorageService.getSessionData();
 
-      this.getStreamlabsData(() => {
-        // Setup Websocket //
-        this.ws.onMessage(
-          (msg: MessageEvent) => {
-            let eventObj;
+    if (this.sessionData) {
+      console.log('Session data is here. Setting props...');
 
-            try {
-              eventObj = JSON.parse(msg.data);
+      // Set properties with session storage //
+      this.username = this.sessionData.username;
+      this.twitchDisplayName = this.sessionData.displayName;
+      this.settings = new Settings(this.username, this.sessionData.settings);
+      this.eventLists = this.settings.eventLists;
 
-              if (eventObj.type === 'connection_open') {
-                console.log(eventObj.data);
-              } else {
-                const eventType = this.generateEventType(eventObj);
-                this.messageService.sendEvent(eventType);
-              }
-            } catch (error) {
-              console.log('Error parsing JSON in SimpleAlertsSocket: ' + error);
-            }
-          },
-          {
-            autoApply: false
-          }
-        );
+      // On page refresh, websocket connections are broken, always setup again //
+      this.connectWebsocket();
+    } else {
+      console.log('Session data not here. Starting auth...');
+
+      this.route.queryParams.subscribe(params => {
+        this.getStreamlabsData(params['code']);
       });
-    });
+    }
   }
 
   // Helpers //
@@ -91,10 +86,9 @@ export class DashboardComponent implements OnInit {
         donations: false
       });
 
-      this.settings.eventList.push(eventList);
-      this.eventLists = this.settings.eventList;
-
-      console.log(this.eventLists);
+      this.settings.eventLists.push(eventList);
+      // To trigger update need to set our eventLists prop here //
+      this.eventLists = this.settings.eventLists;
 
       // MAD PROPS 3sm_ //
       element.value = '';
@@ -108,17 +102,17 @@ export class DashboardComponent implements OnInit {
     activeEvents: any
   ) {
     // Find eventList in array //
-    const listIndex = this.settings.eventList.findIndex(list => {
+    const listIndex = this.settings.eventLists.findIndex(list => {
       return list.id === id;
     });
 
-    this.settings.eventList[listIndex].title = title;
+    this.settings.eventLists[listIndex].title = title;
 
     // Set filter property on eventList obj //
-    this.settings.eventList[listIndex].filter = filter;
+    this.settings.eventLists[listIndex].filter = filter;
 
     // Set active event settings //
-    this.settings.eventList[listIndex].activeEvents = activeEvents;
+    this.settings.eventLists[listIndex].activeEvents = activeEvents;
 
     // Send to server for db //
     this.updateSettings();
@@ -129,7 +123,7 @@ export class DashboardComponent implements OnInit {
 
   removeEventList(id: string) {
     // Find eventList in array //
-    const listIndex = this.settings.eventList.findIndex(list => {
+    const listIndex = this.settings.eventLists.findIndex(list => {
       return list.id === id;
     });
 
@@ -143,9 +137,9 @@ export class DashboardComponent implements OnInit {
     console.log(`Removed event list for: ${this.username}`);
   }
 
-  getStreamlabsData(complete) {
+  getStreamlabsData(code: string) {
     this.http
-      .post(this.streamlabsTokenRoute, { code: this.code })
+      .post(this.streamlabsTokenRoute, { code: code })
       .subscribe(data => {
         console.log('Received Streamlabs Data.');
         this.twitchDisplayName = data['twitchDisplayName'];
@@ -153,35 +147,19 @@ export class DashboardComponent implements OnInit {
         // Get username info //
         this.username = data['username'];
 
-        // Get settings data //
-        const currentSettings = data['settings'];
+        // Create new settings object //
+        this.settings = new Settings(this.username, data['settings']);
+        this.eventLists = this.settings.eventLists;
 
-        if (currentSettings !== null) {
-          console.log('Found settings in db.');
+        // Connect Websocket //
+        this.connectWebsocket();
 
-          // Get array of eventLists and loop //
-          currentSettings.forEach(list => {
-            const currentEventList = new EventList(
-              list.id,
-              list.title,
-              JSON.parse(JSON.stringify(list.filter)),
-              list.activeEvents
-            );
-
-            this.eventLists.push(currentEventList);
-          });
-
-          this.settings = new Settings(this.username, this.eventLists);
-        } else {
-          console.log('Did not find any settings object, creating new.');
-          this.settings = new Settings(this.username, new Array<EventList>());
-        }
-
-        this.ws = new $WebSocket(
-          `ws://127.0.0.1:8080/?user=${data['username']}`
-        );
-
-        complete();
+        // Set session storage //
+        this.sessionStorageService.setSessionData({
+          username: this.username,
+          displayName: this.twitchDisplayName,
+          settings: data['settings']
+        });
       });
   }
 
@@ -209,13 +187,29 @@ export class DashboardComponent implements OnInit {
         console.log(response['status']);
       });
   }
-  /* getTwitchData() {
-    this.http
-      .post(this.twitchTokenRoute, this.generateToken())
-      .subscribe(data => {
-        console.log('Received Twitch Data.');
-        this.displayName = data['twitchDisplayName'];
-        this.email = data['twitchEmail'];
-      });
-  } */
+
+  connectWebsocket() {
+    console.log(this.username);
+    this.ws = new $WebSocket(`ws://127.0.0.1:8080/?user=${this.username}`);
+    // Setup Websocket //
+    this.ws.onMessage(
+      (msg: MessageEvent) => {
+        let eventObj;
+
+        try {
+          eventObj = JSON.parse(msg.data);
+
+          if (eventObj.type === 'connection_open') {
+            console.log(eventObj.data);
+          } else {
+            const eventType = this.generateEventType(eventObj);
+            this.messageService.sendEvent(eventType);
+          }
+        } catch (error) {
+          console.log('Error parsing JSON in SimpleAlertsSocket: ' + error);
+        }
+      },
+      { autoApply: false }
+    );
+  }
 }

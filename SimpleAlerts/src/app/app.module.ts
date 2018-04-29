@@ -11,6 +11,8 @@ import { EventListComponent } from './event-list/event-list.component';
 
 import { MessageService } from './services/message.service';
 import { Filter } from './shared/models/filters/filter.model';
+import { StorageServiceModule } from 'ngx-webstorage-service';
+import { SessionStorageService } from './services/session-storage.service';
 
 // Material Design //
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
@@ -54,10 +56,11 @@ const routes: Routes = [
     BrowserAnimationsModule,
     MatDialogModule,
     MatButtonModule,
-    MatTooltipModule
+    MatTooltipModule,
+    StorageServiceModule
   ],
   entryComponents: [RemoveEventListModalComponent],
-  providers: [MessageService, Filter],
+  providers: [MessageService, SessionStorageService, Filter],
   bootstrap: [RootComponent]
 })
 export class AppModule {}
