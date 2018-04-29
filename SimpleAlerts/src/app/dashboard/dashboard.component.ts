@@ -92,6 +92,9 @@ export class DashboardComponent implements OnInit {
 
       // MAD PROPS 3sm_ //
       element.value = '';
+
+      // Save to database & session storage //
+      this.updateSettings();
     }
   }
 

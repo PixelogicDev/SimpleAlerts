@@ -18,7 +18,7 @@ export class AmountFilter {
   byAmount(eventList: Array<Event>): Array<Event> {
     console.log('Filtering events by amount...');
     const tempList = Array<Event>();
-    let currentThreshold;
+    let currentThreshold = 0;
 
     if (this.filterByAmount) {
       eventList.forEach(event => {
@@ -28,15 +28,11 @@ export class AmountFilter {
           if (this.cheerIsActive && event.type === 'new_cheer') {
             console.log('Using cheer threshold.');
             currentThreshold = this.cheerThreshold;
-          } else {
-            currentThreshold = 0;
           }
 
           if (this.donationIsActive && event.type === 'new_donation') {
             console.log('Using donation threshold.');
             currentThreshold = this.donationThreshold;
-          } else {
-            currentThreshold = 0;
           }
 
           if (currentThreshold !== 0) {

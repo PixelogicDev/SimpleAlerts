@@ -14,8 +14,9 @@ export class Settings {
     return { username: this.username, eventList: this.eventLists };
   }
 
-  private deserializeEventLists(eventLists: any): Array<EventList> {
+  private deserializeEventLists(obj: string): Array<EventList> {
     const lists = new Array<EventList>();
+    const eventLists = JSON.parse(obj);
 
     if (eventLists !== null) {
       console.log('Deserializing event lists...');
