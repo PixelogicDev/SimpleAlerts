@@ -171,7 +171,7 @@ export class EventListComponent implements OnInit {
         }
       }
     }
-    this.updateSettings();
+    this.updateSettings(true);
   }
 
   // -- Edit Helpers -- //
@@ -350,14 +350,17 @@ export class EventListComponent implements OnInit {
     }
   }
 
-  updateSettings() {
+  updateSettings(isEventChange: Boolean) {
     this.parent.updateEventList(
       this.id,
       this.title,
       this.filter,
       this.activeEvents
     );
-    this.isEdit = false;
+
+    if (!isEventChange) {
+      this.isEdit = false;
+    }
   }
 
   removeList() {

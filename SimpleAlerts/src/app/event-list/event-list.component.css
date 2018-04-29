@@ -6,39 +6,31 @@
 }
 
 .list-card .header {
-  min-height: 88px;
-  height: auto;
+  height: 88px;
   border-bottom: 1px solid #979797;
 }
 
 .header .header-content {
-  padding: 3%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .list-card .header .title-section {
-  font-size: 30px;
-  width: 31%;
+  font-family: 'Roboto Condensed', sans-serif;
+  font-size: 28px;
+  width: 50%;
   cursor: pointer;
   border: 0;
+  margin-left: 25px;
 }
 
 .event-icons {
-  width: 36%;
-  text-align: center;
+  width: 159px;
+  padding-right: 25px;
 }
 
-.action-button {
-  width: 30%;
-}
-
-.action-button img {
-  cursor: pointer;
-  float: right;
-}
-
-.title-section,
-.event-icons,
-.action-button,
 .donations,
 .cheers,
 .follows,
@@ -154,4 +146,22 @@
   font-weight: 200;
   padding: 5px 0 20px 0;
   margin: 0;
+}
+
+button.delete {
+  width: 250px;
+  height: 50px;
+  margin: 0 25% 0 25%;
+  color: white;
+  background-color: #ff0000;
+  opacity: 0.6;
+  font-size: 22px;
+  font-family: 'Roboto Condensed', sans-serif;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button.delete:hover {
+  background-color: #fb9595;
 }

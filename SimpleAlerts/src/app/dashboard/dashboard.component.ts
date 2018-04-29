@@ -57,7 +57,10 @@ export class DashboardComponent implements OnInit {
       // Set properties with session storage //
       this.username = this.sessionData.username;
       this.twitchDisplayName = this.sessionData.displayName;
-      this.settings = new Settings(this.username, this.sessionData.settings);
+      this.settings = new Settings(
+        this.username,
+        JSON.parse(this.sessionData.settings)
+      );
       this.eventLists = this.settings.eventLists;
 
       // On page refresh, websocket connections are broken, always setup again //
@@ -181,15 +184,27 @@ export class DashboardComponent implements OnInit {
 
   updateSettings() {
     console.log('Updating settings...');
+
+    // Convert settings to json //
+    const settingsJson = this.settings.toJson();
+
+    // Update session storage //
+    this.sessionStorageService.setSessionData({
+      username: this.username,
+      displayName: this.twitchDisplayName,
+      settings: JSON.stringify(settingsJson.eventList)
+    });
+
+    console.log('Saved to session storage.');
+
     this.http
-      .post(this.updateSettingsRoute + this.username, this.settings.toJson())
+      .post(this.updateSettingsRoute + this.username, settingsJson)
       .subscribe(response => {
         console.log(response['status']);
       });
   }
 
   connectWebsocket() {
-    console.log(this.username);
     this.ws = new $WebSocket(`ws://127.0.0.1:8080/?user=${this.username}`);
     // Setup Websocket //
     this.ws.onMessage(

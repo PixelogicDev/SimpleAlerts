@@ -34,9 +34,6 @@
           </ng-template>
         </div>
       </div>
-      <div class="action-button">
-        <img (click)="removeList()" src="../../assets/event-list/icons/delete-x-icon.png" />
-      </div>
     </div>
   </div>
   <!-- Will display all alerts -->
@@ -168,7 +165,11 @@
           Set the minimum bit amount to bump the event to the top of the list.
         </p>
       </div>
+      <!-- Delete Event List -->
+      <button (click)="removeList()" class="delete">
+        DELETE
+      </button>
     </div>
-    <img class="confirm-edit " *ngIf="isEdit " src="../../assets/event-list/icons/confirm-check-icon.png " (click)="updateSettings() "
+    <img class="confirm-edit " *ngIf="isEdit " src="../../assets/event-list/icons/confirm-check-icon.png " (click)="updateSettings(false) "
     />
   </div>
