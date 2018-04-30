@@ -13,9 +13,9 @@ SimpleAlerts is part of the PixelogicDev 28 Day Projects stream. Visit the chann
 ### Tech
 
 SimpleAlerts was built using all Javascript tech in a full stack soluton:
-**_Client_**: Angular v5.2.0
-**_Server_**: Node.js v8.9.4
-**_Storage_**: MongoDB v3.4.3
+**_Client_**: Angular v5.2.0<br>
+**_Server_**: Node.js v8.9.4<br>
+**_Storage_**: MongoDB v3.4.3<br>
 **_Note: SimpleAlerts has only been tested in Google Chrome browser._**
 
 ### How to use
@@ -96,9 +96,9 @@ When you are ready to run the server, follow these commands:
 #### MongoDB Storage
 
 SimpleAlerts uses a MongoDB Database that stores very basic user settings. Here is a list of everything being stored in the database:
-`id` -> Streamlabs UserID
-`twitchDisplayName` -> Twitch Display Name
-`username` -> Streamlabs username
+`id` -> Streamlabs UserID<br>
+`twitchDisplayName` -> Twitch Display Name<br>
+`username` -> Streamlabs username<br>
 `settings` -> Any event list settings such as threshold, which events are on/off, etc.
 
 ##### Install MongoDB
@@ -122,14 +122,14 @@ This setup will only happen the first time around. Every other time after do the
 ### Thank you
 
 I want to give a huge shoutout to Streamlabs for their awesome API docs and services. Without them, SimpleAlerts would not be alive!
-Also huge shoutout to the following projects used in SimpleAlerts:
-[`angular2-websocket`](https://github.com/afrad/angular2-websocket)
-[`moment`](https://github.com/moment/moment)
-[`ngx-webstorage-service`](https://github.com/dscheerens/ngx-webstorage-service)
-[`body-parser`](https://github.com/expressjs/body-parser)
-[`cors`](https://github.com/expressjs/cors)
-[`dotenv`](https://github.com/motdotla/dotenv)
-[`express`](https://github.com/expressjs/express)
-[`mongodb`](https://github.com/mongodb/node-mongodb-native)
-[`streamlabs-socket-client`](https://github.com/tehkhop/streamlabs-socket-client)
+Also huge shoutout to the following projects used in SimpleAlerts:<br>
+[`angular2-websocket`](https://github.com/afrad/angular2-websocket)<br>
+[`moment`](https://github.com/moment/moment)<br>
+[`ngx-webstorage-service`](https://github.com/dscheerens/ngx-webstorage-service)<br>
+[`body-parser`](https://github.com/expressjs/body-parser)<br>
+[`cors`](https://github.com/expressjs/cors)<br>
+[`dotenv`](https://github.com/motdotla/dotenv)<br>
+[`express`](https://github.com/expressjs/express)<br>
+[`mongodb`](https://github.com/mongodb/node-mongodb-native)<br>
+[`streamlabs-socket-client`](https://github.com/tehkhop/streamlabs-socket-client)<br>
 [`ws`](https://github.com/websockets/ws)
