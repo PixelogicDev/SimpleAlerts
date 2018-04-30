@@ -12,7 +12,7 @@ SimpleAlerts is part of the PixelogicDev 28 Day Projects stream. Visit the chann
 
 ### Tech
 
-SimpleAlerts was built using all Javascript tech in a full stack soluton:
+SimpleAlerts was built using all Javascript tech in a full stack soluton:<br>
 **_Client_**: Angular v5.2.0<br>
 **_Server_**: Node.js v8.9.4<br>
 **_Storage_**: MongoDB v3.4.3<br>
@@ -32,11 +32,11 @@ Each event list will only show cells based on the event enabled for that list. W
 
 The key behind SimpleAlerts is its filter system. This system helps you to never miss an event again. Each event has specific filters that can be applied to them.
 
-###### All Events
+##### All Events
 
 All events have one filter in common which is the "Bump By Time" filter. By enabling this filter, events that pass a minute threshold you set will be bumped to the top of its resepctive event list.
 
-###### Donations & Cheers
+##### Donations & Cheers
 
 Donations and Cheers have the ability to be filtered by amount. For example,by enabling the "Bump By Amount" filter, any donation at that amount or higher will be bumped to the top of its respective event list. This logic also applies for the "Bump By Bits" filter.
 
