@@ -1,9 +1,19 @@
+<div class="header">
+  <div class="title">
+    Pixelogic
+  </div>
+  <div class="nav">
+    <a (click)="scrollToSection(about)">About</a>
+    <a (click)="scrollToSection(contribute)">Contribute</a>
+    <a (click)="scrollToSection(support)">Support</a>
+  </div>
+</div>
 <div class="container">
   <div class="title">
     SimpleAlerts
   </div>
   <div class="detail">
-    Never Miss Another Shoutout.
+    Never miss another shoutout.
   </div>
   <div class="connect-button">
     <a [href]=streamLabsAuthUrl>
@@ -11,36 +21,80 @@
     </a>
   </div>
   <img class="component" src="../../assets/home-page/EventListComp.png" />
-  <div class="title">
-    SimpleAlerts is a streaming tool designed to help organize your alerts by meaningful filters.
+  <div #about class="title">
+    Designed to help organize your alerts by meaningful filters.
   </div>
-  <div class="event-details">
+</div>
+<mat-grid-list cols="2" rowHeight="363px">
+  <mat-grid-tile>
     <div class="donations">
       <img src="../../assets/home-page/donations.png" />
-      <div class="description">
+      <div class="event-details">
         Want to make sure to be alerted right away when someone drops a mind blowning donation? Set a threshold to bump the event
         to the top.
       </div>
     </div>
+  </mat-grid-tile>
+  <mat-grid-tile>
     <div class="cheers">
       <img src="../../assets/home-page/cheers.png" />
-      <div class="description">
-        Don’t forget your high quality cheers! Set a threshold to have SimpleAlerts bump those massive cheers to the top of the list.
+      <div class="event-details">
+        Don’t want to forget your high quality cheers? Set a threshold to have SimpleAlerts bump those massive cheers to the top
+        of the list.
       </div>
     </div>
+  </mat-grid-tile>
+  <mat-grid-tile>
     <div class="follows">
       <img src="../../assets/home-page/follows.png" />
-      <div class="description">
-        Has it passed a couple minutes since you have shouted out your newest followers out? Let SimpleAlerts bump these alerts to
-        the top with a timeframe you set!
+      <div class="event-details">
+        Have a couple minutes passed since you shouted out your newest followers? SimpleAlerts can bump these alerts to the top of
+        the list!
       </div>
     </div>
+  </mat-grid-tile>
+  <mat-grid-tile>
     <div class="subs">
       <img src="../../assets/home-page/subs.png" />
-      <div class="description">
-        Want top make sure you don’t miss a Tier 3 sub or a 24 month resub? SimpleAlerts can bump these alerts to the top of your
+      <div class="event-details">
+        Want to make sure you don’t miss a Tier 3 sub or a 24 month resub? SimpleAlerts can bump these alerts to the top of your
         list so you don’t have to.
       </div>
     </div>
+  </mat-grid-tile>
+</mat-grid-list>
+<div class="container">
+  <div class="title">
+    Made for the community.
   </div>
 </div>
+<mat-grid-list cols="2" rowHeight="400px">
+  <mat-grid-tile>
+    <div class="container">
+      <div #contribute class="title">
+        Open Source. Always Improving.
+      </div>
+      <div class="detail">
+        SimpleAlerts is completely open source. Found a bug or have a killer idea? Contribute now!
+      </div>
+      <a target="_blank" href="https://github.com/PixelogicDev/SimpleAlerts">
+        <img src="../../assets/home-page/GitHub_Logo.png" />
+      </a>
+    </div>
+  </mat-grid-tile>
+  <mat-grid-tile>
+    <div class="container">
+      <div #support class="title">
+        Interested in supporting?
+      </div>
+      <div class="detail">
+        SimpleAlerts was created in 28 days while live on Twitch by PixelogicDev. Go check him out!
+      </div>
+      <div class="social-media">
+        <a target="_blank" href="https://twitch.tv/pixelogicdev">
+          <img src="../../assets/home-page/twitch.png" />
+        </a>
+      </div>
+    </div>
+  </mat-grid-tile>
+</mat-grid-list>

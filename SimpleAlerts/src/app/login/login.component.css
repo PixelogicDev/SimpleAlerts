@@ -1,8 +1,43 @@
+.header {
+  height: 80px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 34px;
+  font-weight: bold;
+  border-bottom: 1px solid #979797;
+}
+
+.header .title {
+  padding-left: 25px;
+}
+
+.header .nav a {
+  padding-right: 25px;
+  font-size: 30px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.header .nav a:hover {
+  color: #5f6c72;
+}
+
 .container {
   display: flex;
   flex-direction: column;
   align-items: center;
   margin: 25px;
+}
+
+.container .title {
+  padding: 50px 0 15px 0;
+}
+
+.container .detail {
+  font-size: 34px;
+  padding-bottom: 50px;
+  text-align: center;
 }
 
 .container .title,
@@ -12,57 +47,32 @@
   text-align: center;
 }
 
-.container .detail {
-  font-size: 34px;
-  padding: 15px 0 40px 0;
-}
-
 .container .connect-button {
-  padding-bottom: 80px;
+  padding-bottom: 100px;
 }
 
 .container .component {
   width: 800px;
-  padding-bottom: 160px;
+  padding-bottom: 200px;
 }
 
-.container .event-details {
-  padding-top: 40px;
-}
-
-.container .event-details .description {
-  font-size: 34px;
-}
-
-.container .event-details .donations,
+.donations,
 .cheers,
 .follows,
-.subs {
-  display: flex;
-  padding-bottom: 40px;
+.subs img {
+  display: block;
+  margin: auto;
 }
 
-.container .event-details .cheers img {
-  padding-left: 47px;
-  width: 68px;
-  height: 80px;
-  padding-right: 16px;
+.donations,
+.cheers,
+.follows,
+.subs .event-details {
+  font-size: 28px;
+  width: 546px;
+  text-align: center;
 }
 
-.container .event-details .follows img {
-  padding-left: 40px;
-  width: 80px;
-  height: 80px;
-  padding-right: 11px;
-}
-
-.container .event-details .subs img {
-  padding-left: 32px;
-  width: 90px;
-  height: 90px;
-  padding-right: 10px;
-}
-
-.container .event-details img {
-  padding: 0 25px 0 58px;
+mat-grid-list {
+  padding-bottom: 200px;
 }

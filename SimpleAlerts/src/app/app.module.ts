@@ -25,6 +25,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { RemoveEventListModalComponent } from './common/remove-event-list-modal/remove-event-list-modal.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatGridListModule } from '@angular/material/grid-list';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -57,7 +58,8 @@ const routes: Routes = [
     MatDialogModule,
     MatButtonModule,
     MatTooltipModule,
-    StorageServiceModule
+    StorageServiceModule,
+    MatGridListModule
   ],
   entryComponents: [RemoveEventListModalComponent],
   providers: [MessageService, SessionStorageService, Filter],
