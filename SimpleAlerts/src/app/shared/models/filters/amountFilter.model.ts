@@ -23,31 +23,19 @@ export class AmountFilter {
     if (this.filterByAmount) {
       eventList.forEach(event => {
         if (!event.didRead) {
-          console.log(`Cheer is active: ${this.cheerIsActive}`);
-          console.log(`Donation is active: ${this.donationIsActive}`);
           if (this.cheerIsActive && event.type === 'new_cheer') {
-            console.log('Using cheer threshold.');
             currentThreshold = this.cheerThreshold;
           }
 
           if (this.donationIsActive && event.type === 'new_donation') {
-            console.log('Using donation threshold.');
             currentThreshold = this.donationThreshold;
           }
 
           if (currentThreshold !== 0) {
-            console.log(
-              `amountThreshold: ${currentThreshold} : currentAmount: ${
-                event.amount
-              }`
-            );
-
             // Only bump one time //
             if (+event.amount >= currentThreshold && !event.didBump) {
-              console.log('Bumping to top...');
               tempList.unshift(event);
               event.didBump = true;
-              console.log('Bumped!');
             } else {
               tempList.push(event);
             }

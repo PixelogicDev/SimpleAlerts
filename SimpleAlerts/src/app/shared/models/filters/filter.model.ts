@@ -28,9 +28,7 @@ export class Filter {
 
       // -- All time threshold -- //
       if (this.bumpIsActive) {
-        console.log('Filtering by timestamp...');
         filteredEvents = this.bumpToTopByTime(filteredEvents);
-        console.log('Timestamp filter complete.');
       }
 
       // -- Sub Filters --//
@@ -39,12 +37,10 @@ export class Filter {
 
         if (this.subscriptionFilter.filterByMonths) {
           filteredEvents = this.subscriptionFilter.byMonths(filteredEvents);
-          console.log('SubFilter complete.');
         }
 
         if (this.subscriptionFilter.filterBySubPlan) {
           filteredEvents = this.subscriptionFilter.bySubPlan(filteredEvents);
-          console.log('SubFilter complete.');
         }
       }
 
@@ -54,17 +50,14 @@ export class Filter {
 
         if (this.amountFilter.filterByAmount) {
           filteredEvents = this.amountFilter.byAmount(filteredEvents);
-          console.log('AmountFilter complete.');
         }
       }
     }
 
     // Run duration update //
-    console.log('Updating duration...');
     filteredEvents.forEach((event, index) => {
       filteredEvents[index].duration = event.getDuration();
     });
-    console.log('Duration updated.');
 
     return filteredEvents;
   }
@@ -92,21 +85,14 @@ export class Filter {
         const eventMs = new Date(event.timestamp).getTime();
         const difference = currentMs - eventMs;
 
-        console.log(
-          `bumpThreshold: ${this.bumpThreshold} : difference: ${difference}`
-        );
-
         // Only bump one time //
         if (difference >= this.bumpThreshold && !event.didBump) {
-          console.log('Bumping to top...');
           tempList.unshift(event);
           event.didBump = true;
-          console.log('Bumped!');
         } else {
           tempList.push(event);
         }
       } else {
-        console.log('Event has been read.');
         tempList.push(event);
       }
     });

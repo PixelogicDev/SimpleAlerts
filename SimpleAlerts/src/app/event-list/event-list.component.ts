@@ -13,6 +13,7 @@ import { AmountFilter } from '../shared/models/filters/amountFilter.model';
 // -- Design -- //
 import { MatDialog } from '@angular/material';
 import { RemoveEventListModalComponent } from '../common/remove-event-list-modal/remove-event-list-modal.component';
+import { environment } from '../../environments/environment.prod';
 
 @Component({
   selector: 'app-event-list',
@@ -88,8 +89,6 @@ export class EventListComponent implements OnInit {
   // -- Helpers -- //
   initList() {
     if (this.filter !== null) {
-      console.log('Setting component props...');
-
       // General Component Val Props //
       this.bumpFilterVal = this.filter.bumpThreshold / 60000;
       this.resubFilterVal = this.filter.subscriptionFilter.monthsThreshold;
@@ -112,15 +111,10 @@ export class EventListComponent implements OnInit {
 
       // MAD PROPS natsu130 //
       setInterval(() => {
-        console.log('Running filter...');
         if (this.eventList.length > 0) {
           this.eventList = this.filter.runFilters(this.eventList);
-        } else {
-          console.log('Event list is empty.');
         }
       }, 10000);
-
-      console.log('Props set.');
     } else {
       console.log('Filter is null. Nothing has changed.');
     }
@@ -145,9 +139,7 @@ export class EventListComponent implements OnInit {
       this.activeEvents.cheers = !this.activeEvents.cheers;
 
       if (this.activeEvents.cheers) {
-        if (this.filter.amountFilter !== null) {
-          console.log('Amount filter already here.');
-        } else {
+        if (this.filter.amountFilter === null) {
           this.filter.amountFilter = new AmountFilter();
         }
       } else {
@@ -161,9 +153,7 @@ export class EventListComponent implements OnInit {
       this.activeEvents.donations = !this.activeEvents.donations;
 
       if (this.activeEvents.donations) {
-        if (this.filter.amountFilter !== null) {
-          console.log('Amount filter already here.');
-        } else {
+        if (this.filter.amountFilter === null) {
           this.filter.amountFilter = new AmountFilter();
         }
       } else {
@@ -178,7 +168,6 @@ export class EventListComponent implements OnInit {
   // -- Edit Helpers -- //
   filtersChanged(event, type) {
     if (type === 'allFilter') {
-      console.log('allFilterChanged is toggled...');
       if (event.checked) {
         console.log('Turning all filters on...');
 
@@ -201,8 +190,6 @@ export class EventListComponent implements OnInit {
         if (this.activeEvents.cheers) {
           this.cheerFilterActive = true;
         }
-
-        console.log('Filters activated.');
       } else {
         console.log('Turning all filters off...');
         this.filter.isActive = false;
@@ -221,13 +208,10 @@ export class EventListComponent implements OnInit {
         if (this.activeEvents.cheers) {
           this.cheerFilterActive = false;
         }
-
-        console.log('Filter deactivatd.');
       }
     }
 
     if (type === 'bumpFilter') {
-      console.log('bumpFilter is toggled...');
       if (event.checked) {
         console.log('Turning bump filter on...');
         this.filter.bumpIsActive = true;
@@ -240,7 +224,6 @@ export class EventListComponent implements OnInit {
     }
 
     if (type === 'resubFilter') {
-      console.log('resubFilter is toggled...');
       if (event.checked) {
         console.log('Turning resub filter on...');
         this.filter.subscriptionFilter.filterByMonths = true;
@@ -253,7 +236,6 @@ export class EventListComponent implements OnInit {
     }
 
     if (type === 'tierFilter') {
-      console.log('tierFiler is toggled...');
       if (event.checked) {
         console.log('Turning tier filter on...');
         this.filter.subscriptionFilter.filterBySubPlan = true;
@@ -266,7 +248,6 @@ export class EventListComponent implements OnInit {
     }
 
     if (type === 'donationFilter') {
-      console.log('donationFilter is toggled...');
       if (event.checked) {
         console.log('Turning donations filter on...');
         this.filter.amountFilter.filterByAmount = true;
@@ -284,7 +265,6 @@ export class EventListComponent implements OnInit {
     }
 
     if (type === 'cheerFilter') {
-      console.log('cheerFilter is toggled...');
       if (event.checked) {
         console.log('Turning cheer filter on...');
         this.filter.amountFilter.filterByAmount = true;
@@ -305,48 +285,52 @@ export class EventListComponent implements OnInit {
 
   inputChange(input, type) {
     if (type === 'bumpVal') {
-      console.log('Setting bump threshold...');
       const valMs = input.value * 60000;
       this.filter.bumpThreshold = valMs;
       this.bumpFilterVal = input.value;
-      console.log(`Bump threshold set to: ${valMs}`);
+      if (!environment.production) {
+        console.log(`Bump threshold set to: ${valMs}`);
+      }
     }
 
     if (type === 'resubVal') {
-      console.log('Setting resub threshold...');
-
       if (this.filter.subscriptionFilter !== null) {
         this.filter.subscriptionFilter.monthsThreshold = input.value;
         this.resubFilterVal = input.value;
-        console.log(`Resub threshold set to: ${this.resubFilterVal}`);
+        if (!environment.production) {
+          console.log(`Resub threshold set to: ${this.resubFilterVal}`);
+        }
       }
     }
 
     if (type === 'tierVal') {
-      console.log('Setting tier threshold...');
       if (this.filter.subscriptionFilter !== null) {
         // Times 1000 because sub plan goes by 1000, 2000, 3000 //
         this.filter.subscriptionFilter.subPlanThreshold = input.value * 1000;
         this.tierFilterVal = input.value;
-        console.log(`Tier threshold set to: ${this.tierFilterVal}`);
+        if (!environment.production) {
+          console.log(`Tier threshold set to: ${this.tierFilterVal}`);
+        }
       }
     }
 
     if (type === 'donationVal') {
-      console.log('Setting donation threshold...');
       if (this.filter.amountFilter !== null) {
         this.filter.amountFilter.donationThreshold = input.value;
         this.donationFilterVal = input.value;
-        console.log(`Donation threshold set to: ${this.donationFilterVal}`);
+        if (!environment.production) {
+          console.log(`Donation threshold set to: ${this.donationFilterVal}`);
+        }
       }
     }
 
     if (type === 'cheerVal') {
-      console.log('Setting bit threshold...');
       if (this.filter.amountFilter !== null) {
         this.filter.amountFilter.cheerThreshold = input.value;
         this.cheerFilterVal = input.value;
-        console.log(`Cheer threshold set to: ${this.cheerFilterVal}`);
+        if (!environment.production) {
+          console.log(`Cheer threshold set to: ${this.cheerFilterVal}`);
+        }
       }
     }
   }
@@ -365,8 +349,6 @@ export class EventListComponent implements OnInit {
   }
 
   removeList() {
-    console.log('Opening modal to confirm delete...');
-
     const dialogRef = this.dialog.open(RemoveEventListModalComponent, {
       width: '500px',
       height: '165px',
@@ -375,7 +357,6 @@ export class EventListComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(confirmed => {
       console.log('Removing event list...');
-
       if (confirmed) {
         // Call remove event list on parent //
         this.parent.removeEventList(this.id);
@@ -385,7 +366,6 @@ export class EventListComponent implements OnInit {
 
   // MAD PROPS BarneyRubbble //
   eventRead(id: string) {
-    console.log(`Did read: ${id}`);
     let foundEvent: Event;
     let eventIndex: number;
 
@@ -395,8 +375,12 @@ export class EventListComponent implements OnInit {
     });
 
     if (foundEvent !== undefined && !foundEvent.didRead) {
-      console.log('Did find event, changing properties.');
+      if (!environment.production) {
+        console.log('Did find event, changing properties.');
+      }
+
       foundEvent.didRead = true;
+
       // Change this property to remove the class to turn cell green //
       foundEvent.didBump = false;
 
@@ -405,7 +389,6 @@ export class EventListComponent implements OnInit {
 
       // Push updated property to bottom of list //
       this.eventList.push(foundEvent);
-      console.log('Property changed.');
     } else {
       console.log('Could not find event.');
     }
@@ -419,12 +402,9 @@ export class EventListComponent implements OnInit {
 
     // Splice array //
     this.eventList.splice(eventIndex, 1);
-
-    console.log('Event removed.');
   }
 
   updateTitle(title: string) {
-    console.log('Changing title...');
     this.title = title;
     this.parent.updateEventList(
       this.id,

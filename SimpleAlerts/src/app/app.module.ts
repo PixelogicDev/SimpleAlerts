@@ -49,7 +49,6 @@ const routes: Routes = [
     BrowserModule,
     HttpClientModule,
     RouterModule.forRoot(routes, {
-      enableTracing: true,
       onSameUrlNavigation: 'reload'
     }),
     MatSlideToggleModule,

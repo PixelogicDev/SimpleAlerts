@@ -22,7 +22,6 @@ export class FollowerEventCellComponent implements OnInit {
   ngOnInit() {}
 
   removeEvent() {
-    console.log('Removing event...');
     this.parent.removeEvent(this.id);
   }
 }

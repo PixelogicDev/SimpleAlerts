@@ -18,6 +18,7 @@ import { EventList } from '../shared/models/settings/eventList.model';
 
 // Session Storage //
 import { SessionStorageService } from '../services/session-storage.service';
+import { environment } from '../../environments/environment.prod';
 
 @Component({
   selector: 'app-dashboard',
@@ -52,7 +53,9 @@ export class DashboardComponent implements OnInit {
     this.sessionData = this.sessionStorageService.getSessionData();
 
     if (this.sessionData) {
-      console.log('Session data is here. Setting props...');
+      if (!environment.production) {
+        console.log('Session data is here. Setting props...');
+      }
 
       // Set properties with session storage //
       this.username = this.sessionData.username;
@@ -63,7 +66,9 @@ export class DashboardComponent implements OnInit {
       // On page refresh, websocket connections are broken, always setup again //
       this.connectWebsocket();
     } else {
-      console.log('Session data not here. Starting auth...');
+      if (!environment.production) {
+        console.log('Session data not here. Starting auth...');
+      }
 
       this.route.queryParams.subscribe(params => {
         this.getStreamlabsData(params['code']);
@@ -119,9 +124,6 @@ export class DashboardComponent implements OnInit {
 
     // Send to server for db //
     this.updateSettings();
-
-    // Log finished //
-    console.log(`Updated settings for: ${this.username}`);
   }
 
   removeEventList(id: string) {
@@ -135,16 +137,16 @@ export class DashboardComponent implements OnInit {
 
     // Send removal to server //
     this.updateSettings();
-
-    // Log finished //
-    console.log(`Removed event list for: ${this.username}`);
   }
 
   getStreamlabsData(code: string) {
     this.http
       .post(this.streamlabsTokenRoute, { code: code })
       .subscribe(data => {
-        console.log('Received Streamlabs Data.');
+        if (!environment.production) {
+          console.log('Received Streamlabs Data.');
+        }
+
         this.twitchDisplayName = data['twitchDisplayName'];
 
         // Get username info //
@@ -183,8 +185,6 @@ export class DashboardComponent implements OnInit {
   }
 
   updateSettings() {
-    console.log('Updating settings...');
-
     // Convert settings to json //
     const settingsJson = this.settings.toJson();
 
@@ -194,8 +194,6 @@ export class DashboardComponent implements OnInit {
       displayName: this.twitchDisplayName,
       settings: JSON.stringify(settingsJson.eventList)
     });
-
-    console.log('Saved to session storage.');
 
     this.http
       .post(this.updateSettingsRoute + this.username, settingsJson)

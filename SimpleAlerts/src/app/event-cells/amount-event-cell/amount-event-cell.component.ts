@@ -33,7 +33,6 @@ export class AmountEventCellComponent implements OnInit {
   }
 
   removeEvent() {
-    console.log('Removing event...');
     this.parent.removeEvent(this.id);
   }
 }

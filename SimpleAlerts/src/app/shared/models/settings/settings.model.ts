@@ -18,8 +18,6 @@ export class Settings {
     const lists = new Array<EventList>();
     let eventLists;
 
-    console.log(typeof data);
-
     if (typeof data === 'string') {
       eventLists = JSON.parse(data);
     } else {
@@ -40,8 +38,6 @@ export class Settings {
 
         lists.push(currentEventList);
       });
-
-      console.log('Event lists set.');
     } else {
       console.log('Did not find any event lists, setting a new one.');
     }
