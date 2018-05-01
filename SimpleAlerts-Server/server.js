@@ -1,40 +1,27 @@
 //-- SHOUTOUT BallistyxStreams: YOU DA BOMB --//
 require('dotenv').config();
 const express = require('express');
-const twitch = require('./twitch/twitch');
 const streamlabs = require('./streamlabs/streamlabs');
 const db = require('./database/db');
 const apiBase = '/api/v1/';
 const https = require('https');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const session = require('express-session');
 const server = express();
-var sessionProps = {
-  secret: process.env.COOKIE_SECRET,
-  cookie: {
-    httpOnly: false
-  },
-  resave: false,
-  saveUninitialized: false
-};
+// const twitch = require('./twitch/twitch');
 
 // Body Parser //
 server.use(bodyParser.json());
 
-if (process.env.NODE_ENV === 'production') {
-  server.set('trust proxy', 1);
-  sessionProps.cookie.secure = true;
-}
-
-// Session Manager //
-// server.use(session(sessionProps));
-
 // Setup CORS //
 server.use(cors());
 
-server.listen(8000, () => {
-  console.log('Server started on port: 8000');
+server.listen(process.env.PORT || 8000, () => {
+  if (process.env.NODE_ENV === 'dev') {
+    console.log('Server started on port: 8000');
+  } else {
+    console.log('Server started on port: ' + process.env.PORT);
+  }
 });
 
 // -- Routes -- //
