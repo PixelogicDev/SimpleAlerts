@@ -38,7 +38,7 @@ server.listen(process.env.PORT || 8000, () => {
 
 // -- Routes -- //
 server.get('/', (request, response) => {
-  response.send('Hit /');
+  response.send('Welcome To SimpleAlerts');
 });
 
 server.post(apiBase + 'streamlabs/token', async (request, response) => {
@@ -97,10 +97,14 @@ server.post(apiBase + 'settings/:username', async (request, response) => {
   if (didUpdate) {
     response.send(
       JSON.stringify({
-        status: 'OK'
+        status: `${request.body.username} updated`
       })
     );
   } else {
-    response.send(JSON.stringify({ status: 'NOTOK' }));
+    response.send(
+      JSON.stringify({
+        status: `${request.body.username} failed to updated.`
+      })
+    );
   }
 });

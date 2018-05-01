@@ -110,7 +110,7 @@ module.exports = {
     let token;
 
     return new Promise((resolve, reject) => {
-      console.log('[Streamlabs.getAuthToken] Starting auth token request...');
+      console.log('[getAuthToken] Starting auth token request...');
 
       // Create body params //
       var bodyData = tokenBodyBuilder(code);
@@ -128,12 +128,12 @@ module.exports = {
         },
         response => {
           response.on('data', tokenJson => {
-            console.log('[Streamlabs.getAuthToken] Response received.');
+            console.log('[getAuthToken] Response received.');
             token = JSON.parse(tokenJson.toString());
           });
 
           response.on('end', () => {
-            console.log('[Streamlabs.getAuthToken] Promise resolved.');
+            console.log('[getAuthToken] Promise resolved.');
             resolve(token.access_token);
           });
         }
@@ -163,12 +163,12 @@ module.exports = {
           },
           response => {
             response.on('data', tokenJson => {
-              console.log('[Streamlabs.getSocketToken] Response received.');
+              console.log('[getSocketToken] Response received.');
               token = JSON.parse(tokenJson.toString());
             });
 
             response.on('end', () => {
-              console.log('[Streamlabs.getSocketToken] Promise resolved.');
+              console.log('[getSocketToken] Promise resolved.');
               resolve(token.socket_token);
             });
           }
