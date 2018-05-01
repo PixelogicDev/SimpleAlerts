@@ -8,6 +8,16 @@ const https = require('https');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const server = express();
+const Raven = require('raven');
+
+// Configure Raven for error capture //
+Raven.config(process.env.RAVEN_PATH, { autoBreadcrumbs: true }).install();
+
+// Add raven request handler //
+server.use(Raven.requestHandler());
+
+// Add error handler //
+server.use(Raven.errorHandler());
 
 // Body Parser //
 server.use(bodyParser.json());
@@ -36,34 +46,36 @@ server.post(apiBase + 'streamlabs/token', async (request, response) => {
   var authCode = request.body.code;
 
   // Given code, need to get auth token for requests //
-  var token = await streamlabs.getAuthToken(authCode);
-  token.catch(error => {
+  var token = await streamlabs.getAuthToken(authCode).catch(error => {
     console.log(`[getAuthToken] ${error}`);
+    Raven.captureException(`[getAuthToken] ${error}`);
   });
 
   // Get user data from Streamlabs //
-  streamlabsUser = await streamlabs.getUserInfo(token);
-  streamlabsUser.catch(error => {
+  streamlabsUser = await streamlabs.getUserInfo(token).catch(error => {
     console.log(`[getUserInfo] ${error}`);
+    Raven.captureException(`[getUserInfo] ${error}`);
   });
 
   // Check to see if user is part of SimpleAlerts //
-  user = await db.findUser(streamlabsUser.twitch.id);
+  user = await db.findUser(streamlabsUser.twitch.id).catch(error => {
+    console.log(`[findUser] ${error}`);
+    Raven.captureException(`[findUser] ${error}`);
+  });
 
   // If no user object is returned, create new user in DB //
   if (user === null) {
     // Create new user in db //
-    user = await db.addNewUser(streamlabsUser.twitch, token);
+    user = await db.addNewUser(streamlabsUser.twitch, token).catch(error => {
+      console.log(`[findUser] ${error}`);
+      Raven.captureException(`[findUser] ${error}`);
+    });
   }
 
-  user.catch(error => {
-    console.log(`[findUser] ${error}`);
-  });
-
   // Given access_token, get socket tocken //
-  var socketToken = await streamlabs.getSocketToken(token);
-  socketToken.catch(error => {
+  var socketToken = await streamlabs.getSocketToken(token).catch(error => {
     console.log(`[getSocketToken] ${error}`);
+    Raven.captureException(`[getSocketToken] ${error}`);
   });
 
   // Setup socket to receive alert //
@@ -74,9 +86,9 @@ server.post(apiBase + 'streamlabs/token', async (request, response) => {
 
 server.post(apiBase + 'settings/:username', async (request, response) => {
   // Request.body passes over array of eventLists and username //
-  var didUpdate = await db.updateSettings(request.body);
-  didUpate.catch(error => {
+  var didUpdate = await db.updateSettings(request.body).catch(error => {
     console.log(`[updateSettings] ${error}`);
+    Raven.captureException(`[updateSettings] ${error}`);
   });
 
   if (didUpdate) {

@@ -30,7 +30,6 @@ module.exports = {
 
           if (user === null) return resolve(null);
           console.log('[findUser] User found. Returning.');
-
           return resolve(user);
         }
       );
