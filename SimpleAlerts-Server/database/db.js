@@ -1,6 +1,5 @@
 const MongoClient = require('mongodb').MongoClient;
 const assert = require('assert');
-const twitch = require('../Twitch/twitch');
 var db;
 var basePath;
 
@@ -10,21 +9,7 @@ MongoClient.connect(process.env.DB_URL, async (err, client) => {
   console.log('Database connection was successful.');
 
   db = client.db(process.env.DB_NAME);
-
-  /* if (process.env.NODE_ENV === 'dev') {
-    basePath = await ngrok.connect(8000);
-  } else {
-    basePath = process.env.BASE_URL;
-  } */
 });
-
-/* var createFollowHookRoute = userID => {
-  return `${basePath}/hook/follower/${userID}`;
-};
-
-var createStreamStatusHookRoute = userID => {
-  return `${basePath}/hook/stream/status/${userID}`;
-}; */
 
 module.exports = {
   findUser: userID => {
@@ -44,12 +29,8 @@ module.exports = {
           }
 
           if (user === null) return resolve(null);
-
           console.log('[findUser] User found. Returning.');
-          /* if (process.env.NODE_ENV === 'dev') {
-            user.followHook = createFollowHookRoute(user._id);
-            user.statusHook = createStreamStatusHookRoute(user._id);
-          } */
+
           return resolve(user);
         }
       );
@@ -71,8 +52,8 @@ module.exports = {
 
       usersCollection.insertOne(userObject, (insertError, data) => {
         if (insertError) {
-          console.log('[addNewUser] ' + insertError);
-          return reject('[addNewUser] ' + insertError);
+          console.log('[addNewUser] Insert Error occured.');
+          return reject(insertError);
         }
 
         console.log(`[addNewUser] New user has been inserted.`);
@@ -92,7 +73,7 @@ module.exports = {
         (error, doc) => {
           if (error) {
             console.log(error);
-            reject(false);
+            reject(error);
           } else {
             console.log('Settings in doc updated.');
             resolve(true);

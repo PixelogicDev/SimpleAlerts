@@ -174,7 +174,8 @@ module.exports = {
           }
         )
         .on('error', error => {
-          console.log('[Streamlabs.getSocketToken] Error received: ' + error);
+          reject(error);
+          console.log('[getSocketToken] Error received');
         })
         .end();
     });
