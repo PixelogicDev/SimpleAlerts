@@ -1,5 +1,4 @@
 //-- SHOUTOUT BallistyxStreams: YOU DA BOMB --//
-require('dotenv').config();
 const express = require('express');
 const app = express();
 const cors = require('cors');
@@ -22,6 +21,6 @@ if (process.env.NODE_ENV === 'production') {
 app.use(bodyParser.json());
 
 // Setup CORS //
-app.options('*', cors());
+app.use(cors());
 
 module.exports = app;

@@ -1,7 +1,9 @@
 // ws://<urlpath>:8000 || process port
+require('dotenv').config();
 const WSServer = require('ws').Server;
 let server;
 if (process.env.NODE_ENV === 'dev') {
+  console.log('Using Dev server');
   server = require('http').createServer();
 } else {
   server = require('https').createServer();
