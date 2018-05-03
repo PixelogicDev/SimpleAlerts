@@ -5,7 +5,12 @@ let server;
 if (process.env.NODE_ENV === 'dev') {
   server = require('http').createServer();
 } else {
-  server = require('https').createServer();
+  server = require('https').createServer((req, res) => {
+    res.setHeader(
+      'Access-Control-Allow-Origin',
+      'https://www.simplealerts.stream'
+    );
+  });
 }
 const cors = require('cors');
 const app = require('../app');
@@ -18,11 +23,11 @@ const apiBase = '/api/v1/';
 let wsClients = new Array();
 
 // Setup CORS //
-// app.use(
-//   cors({
-//     origin: '*'
-//   })
-// );
+app.use(
+  cors({
+    origin: ['http://localhost:4200', 'https://www.simplealerts.stream']
+  })
+);
 
 // Define routes //
 app.get('/', (request, response) => {
