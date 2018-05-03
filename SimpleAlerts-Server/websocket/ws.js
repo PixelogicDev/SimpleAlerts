@@ -58,7 +58,8 @@ app.post(apiBase + 'streamlabs/token', async (request, response) => {
   // Setup socket to receive alert //
   streamlabs.setupSocket(socketToken, user.username, wsClients);
 
-  response.send(user);
+  // Pass port so the websocket knows where to listen to //
+  response.send({ user: user, port: process.env.PORT || 8000 });
 });
 
 app.post(apiBase + 'settings/:username', async (request, response) => {

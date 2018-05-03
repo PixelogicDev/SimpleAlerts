@@ -28,6 +28,7 @@ import { SessionStorageService } from '../services/session-storage.service';
 export class DashboardComponent implements OnInit {
   // Properties //
   ws: $WebSocket;
+  socketPort: String;
   streamlabsTokenRoute = environment.baseServerPath + 'api/v1/streamlabs/token';
   updateSettingsRoute = environment.baseServerPath + 'api/v1/settings/';
   twitchDisplayName: String;
@@ -75,6 +76,7 @@ export class DashboardComponent implements OnInit {
       this.twitchDisplayName = this.sessionData.displayName;
       this.settings = new Settings(this.username, this.sessionData.settings);
       this.eventLists = this.settings.eventLists;
+      this.socketPort = this.sessionData.socketPort;
 
       // On page refresh, websocket connections are broken, always setup again //
       this.connectWebsocket();
@@ -157,13 +159,15 @@ export class DashboardComponent implements OnInit {
           console.log('Received Streamlabs Data.');
         }
 
-        this.twitchDisplayName = data['twitchDisplayName'];
+        const user = data['user'];
+        this.socketPort = data['port'];
+        this.twitchDisplayName = user.twitchDisplayName;
 
         // Get username info //
-        this.username = data['username'];
+        this.username = user.username;
 
         // Create new settings object //
-        this.settings = new Settings(this.username, data['settings']);
+        this.settings = new Settings(this.username, user.settings);
         this.eventLists = this.settings.eventLists;
 
         // Connect Websocket //
@@ -173,7 +177,8 @@ export class DashboardComponent implements OnInit {
         this.sessionStorageService.setSessionData({
           username: this.username,
           displayName: this.twitchDisplayName,
-          settings: data['settings']
+          settings: user.settings,
+          socketPort: this.socketPort
         });
       });
   }
@@ -214,7 +219,9 @@ export class DashboardComponent implements OnInit {
 
   connectWebsocket() {
     this.ws = new $WebSocket(
-      environment.baseSimpleSocketPath + `?user=${this.username}`
+      `${environment.baseSimpleSocketPath}:${this.socketPort}/?user=${
+        this.username
+      }`
     );
     // Setup Websocket //
     this.ws.onMessage(
