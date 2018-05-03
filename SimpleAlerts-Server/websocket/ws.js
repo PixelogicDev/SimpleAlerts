@@ -5,30 +5,18 @@ let server;
 if (process.env.NODE_ENV === 'dev') {
   server = require('http').createServer();
 } else {
-  server = require('https').createServer((req, res) => {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Request-Method', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET');
-    res.setHeader('Access-Control-Allow-Headers', '*');
-  });
+  server = require('https').createServer();
 }
-const cors = require('cors');
 const app = require('../app');
 const db = require('../database/db');
-const wss = new WSServer({ server: server });
+const wss = new WSServer({
+  server: server
+});
 const raven = require('../utilities/raven');
 const streamlabs = require('../streamlabs/streamlabs');
 // -- Props -- //
 const apiBase = '/api/v1/';
 let wsClients = new Array();
-
-// Setup CORS //
-// app.use(
-//   cors({
-//     origin: ['http://localhost:4200', 'https://www.simplealerts.stream'],
-//     allowedHeaders: ['OPTIONS', 'GET', 'PUT', 'POST']
-//   })
-// );
 
 // Define routes //
 app.get('/', (request, response) => {
@@ -79,7 +67,10 @@ app.post(apiBase + 'streamlabs/token', async (request, response) => {
   streamlabs.setupSocket(socketToken, user.username, wsClients);
 
   // Pass port so the websocket knows where to listen to //
-  response.send({ user: user, port: process.env.PORT || 8000 });
+  response.send({
+    user: user,
+    port: process.env.PORT || 8000
+  });
 });
 
 app.post(apiBase + 'settings/:username', async (request, response) => {
