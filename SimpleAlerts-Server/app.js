@@ -4,6 +4,15 @@ const app = express();
 const bodyParser = require('body-parser');
 const raven = require('./utilities/raven');
 
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+
+  next();
+});
+
+// Body Parser //
+app.use(bodyParser.json());
+
 if (process.env.NODE_ENV === 'production') {
   raven.instance
     .config(process.env.RAVEN_PATH, { autoBreadcrumbs: true })
@@ -15,8 +24,5 @@ if (process.env.NODE_ENV === 'production') {
   // Add error handler //
   app.use(raven.instance.errorHandler());
 }
-
-// Body Parser //
-app.use(bodyParser.json());
 
 module.exports = app;

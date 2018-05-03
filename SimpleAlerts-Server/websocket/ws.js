@@ -18,11 +18,11 @@ const apiBase = '/api/v1/';
 let wsClients = new Array();
 
 // Setup CORS //
-app.use(
-  cors({
-    origin: '*'
-  })
-);
+// app.use(
+//   cors({
+//     origin: '*'
+//   })
+// );
 
 // Define routes //
 app.get('/', (request, response) => {
