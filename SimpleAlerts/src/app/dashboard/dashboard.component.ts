@@ -219,9 +219,7 @@ export class DashboardComponent implements OnInit {
 
   connectWebsocket() {
     this.ws = new $WebSocket(
-      `${environment.baseSimpleSocketPath}:${this.socketPort}/?user=${
-        this.username
-      }`
+      `${environment.baseSimpleSocketPath}/?user=${this.username}`
     );
     // Setup Websocket //
     this.ws.onMessage(
