@@ -10,6 +10,7 @@ if (process.env.NODE_ENV === 'dev') {
       'Access-Control-Allow-Origin',
       'https://www.simplealerts.stream'
     );
+    res.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET, PUT, POST');
   });
 }
 const cors = require('cors');
@@ -25,7 +26,8 @@ let wsClients = new Array();
 // Setup CORS //
 app.use(
   cors({
-    origin: ['http://localhost:4200', 'https://www.simplealerts.stream']
+    origin: ['http://localhost:4200', 'https://www.simplealerts.stream'],
+    allowedHeaders: ['OPTIONS', 'GET', 'PUT', 'POST']
   })
 );
 
