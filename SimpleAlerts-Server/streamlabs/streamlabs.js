@@ -1,6 +1,7 @@
 const https = require('https');
 const authBaseHostName = 'streamlabs.com';
 const StreamlabsSocketClient = require('streamlabs-socket-client');
+var client = null;
 
 //-- Helpers --//
 var streamData = (data, username, clients) => {
@@ -194,41 +195,45 @@ module.exports = {
   },
 
   setupSocket: (socketToken, username, clients) => {
-    var client = new StreamlabsSocketClient({
-      token: socketToken,
-      emitTests: true,
-      rawEvent: ['connect']
-    });
+    if (client === null || !client.client.connected) {
+      client = new StreamlabsSocketClient({
+        token: socketToken,
+        emitTests: true,
+        rawEvent: ['connect']
+      });
 
-    client.on('follow', follower => {
-      var followerObj = eventDataParser(follower, 'new_follower');
-      streamData(followerObj, username, clients);
-    });
+      client.on('follow', follower => {
+        var followerObj = eventDataParser(follower, 'new_follower');
+        streamData(followerObj, username, clients);
+      });
 
-    client.on('donation', donation => {
-      var donationObj = eventDataParser(donation, 'new_donation');
-      streamData(donationObj, username, clients);
-    });
+      client.on('donation', donation => {
+        var donationObj = eventDataParser(donation, 'new_donation');
+        streamData(donationObj, username, clients);
+      });
 
-    client.on('subscription', subscription => {
-      var subscriptionObj = eventDataParser(subscription, 'new_subscription');
-      streamData(subscriptionObj, username, clients);
-    });
+      client.on('subscription', subscription => {
+        var subscriptionObj = eventDataParser(subscription, 'new_subscription');
+        streamData(subscriptionObj, username, clients);
+      });
 
-    client.on('resubscription', resubscription => {
-      var resubscriptionObj = eventDataParser(
-        resubscription,
-        'new_resubscription'
-      );
-      streamData(resubscriptionObj, username, clients);
-    });
+      client.on('resubscription', resubscription => {
+        var resubscriptionObj = eventDataParser(
+          resubscription,
+          'new_resubscription'
+        );
+        streamData(resubscriptionObj, username, clients);
+      });
 
-    client.on('bits', bits => {
-      var bitsObj = eventDataParser(bits, 'new_cheer');
-      streamData(bitsObj, username, clients);
-    });
+      client.on('bits', bits => {
+        var bitsObj = eventDataParser(bits, 'new_cheer');
+        streamData(bitsObj, username, clients);
+      });
 
-    client.connect();
+      client.connect();
+    } else {
+      console.log('Client already connected.');
+    }
   },
 
   getUserInfo: token => {
