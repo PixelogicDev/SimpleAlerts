@@ -1,7 +1,7 @@
 //-- SHOUTOUT BallistyxStreams: YOU DA BOMB --//
 const express = require('express');
 const app = express();
-// const cors = require('cors');
+const cors = require('cors');
 const bodyParser = require('body-parser');
 const raven = require('./utilities/raven');
 
@@ -21,5 +21,7 @@ if (process.env.NODE_ENV === 'production') {
 
 // Body Parser //
 app.use(bodyParser.json());
+
+app.use(cors());
 
 module.exports = app;

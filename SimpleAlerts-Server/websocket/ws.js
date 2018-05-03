@@ -94,7 +94,7 @@ app.post(apiBase + 'settings/:username', async (request, response) => {
   }
 });
 
-app.options('/*', (request, response) => {
+/* app.options('/*', (request, response) => {
   console.log('Received options. Handeling...');
   if (process.env.NODE_ENV === 'dev') {
     response.header('Access-Control-Allow-Origin', '*');
@@ -116,7 +116,7 @@ app.options('/*', (request, response) => {
   );
 
   response.send(204);
-});
+}); */
 
 // https://stackoverflow.com/questions/34808925/express-and-websocket-listening-on-the-same-port?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
 // Mount app on server //
