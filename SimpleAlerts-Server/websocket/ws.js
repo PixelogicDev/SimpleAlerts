@@ -94,6 +94,30 @@ app.post(apiBase + 'settings/:username', async (request, response) => {
   }
 });
 
+app.options('/*', (request, response) => {
+  console.log('Received options. Handeling...');
+  if (process.env.NODE_ENV === 'dev') {
+    response.header('Access-Control-Allow-Origin', '*');
+  } else {
+    response.header(
+      'Access-Control-Allow-Origin',
+      'https://www.simplealerts.stream'
+    );
+  }
+
+  response.header(
+    'Access-Control-Allow-Methods',
+    'GET,PUT,POST,DELETE,OPTIONS'
+  );
+
+  response.header(
+    'Access-Control-Allow-Headers',
+    'Content-Type, Authorization, Content-Length, X-Requested-With'
+  );
+
+  response.send(204);
+});
+
 // https://stackoverflow.com/questions/34808925/express-and-websocket-listening-on-the-same-port?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
 // Mount app on server //
 server.on('request', app);
