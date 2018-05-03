@@ -23,6 +23,5 @@ app.use(bodyParser.json());
 
 // Setup CORS //
 app.options('*', cors());
-app.use(cors());
 
 module.exports = app;
