@@ -5,13 +5,9 @@ var client = null;
 
 //-- Helpers --//
 var streamData = (data, username, clients) => {
-  console.log('Sending stream data to client...');
-
   clients.forEach(client => {
     if (client.id === `/?user=${username}`) {
-      console.log('Socket found, sending data...');
       client.send(data);
-      console.log('Data has been sent.');
       return;
     }
   });
@@ -28,7 +24,6 @@ var tokenBodyBuilder = code => {
 };
 
 var eventDataParser = (event, type) => {
-  console.log(`[eventDataParser] Starting to parse ${type}...`);
   var eventObj;
 
   switch (type) {
@@ -113,8 +108,6 @@ var eventDataParser = (event, type) => {
       defualt: console.log(`[eventDataParser] ${type} not found.`);
       return;
   }
-
-  console.log(`[eventDataParser] ${type} parsed.`);
   return eventObj;
 };
 
@@ -146,7 +139,6 @@ module.exports = {
           });
 
           response.on('end', () => {
-            console.log('[getAuthToken] Promise resolved.');
             resolve(token.access_token);
           });
         }
@@ -176,12 +168,10 @@ module.exports = {
           },
           response => {
             response.on('data', tokenJson => {
-              console.log('[getSocketToken] Response received.');
               token = JSON.parse(tokenJson.toString());
             });
 
             response.on('end', () => {
-              console.log('[getSocketToken] Promise resolved.');
               resolve(token.socket_token);
             });
           }
@@ -254,7 +244,6 @@ module.exports = {
           });
 
           response.on('end', () => {
-            console.log('[getUserInfo] Resolved User Data.');
             resolve(JSON.parse(userData.toString()));
           });
         }

@@ -17,7 +17,6 @@ module.exports = {
     let usersCollection = db.collection('users');
 
     return new Promise((resolve, reject) => {
-      console.log('[findUser] Starting...');
       usersCollection.findOne(
         {
           _id: userID
@@ -29,7 +28,6 @@ module.exports = {
           }
 
           if (user === null) return resolve(null);
-          console.log('[findUser] User found. Returning.');
           return resolve(user);
         }
       );
@@ -74,7 +72,7 @@ module.exports = {
             console.log(error);
             reject(error);
           } else {
-            console.log('Settings in doc updated.');
+            console.log('Settings updated.');
             resolve(true);
           }
         }

@@ -1,12 +1,7 @@
-// ws://<urlpath>:8000 || process port
 require('dotenv').config();
 const WSServer = require('ws').Server;
 let server;
-// if (process.env.NODE_ENV === 'dev') {
 server = require('http').createServer();
-// } else {
-//   server = require('https').createServer();
-// }
 const app = require('../app');
 const db = require('../database/db');
 const wss = new WSServer({
@@ -68,8 +63,7 @@ app.post(apiBase + 'streamlabs/token', async (request, response) => {
 
   // Pass port so the websocket knows where to listen to //
   response.send({
-    user: user,
-    port: process.env.PORT || 8000
+    user: user
   });
 });
 
@@ -93,30 +87,6 @@ app.post(apiBase + 'settings/:username', async (request, response) => {
     );
   }
 });
-
-/* app.options('/*', (request, response) => {
-  console.log('Received options. Handeling...');
-  if (process.env.NODE_ENV === 'dev') {
-    response.header('Access-Control-Allow-Origin', '*');
-  } else {
-    response.header(
-      'Access-Control-Allow-Origin',
-      'https://www.simplealerts.stream'
-    );
-  }
-
-  response.header(
-    'Access-Control-Allow-Methods',
-    'GET,PUT,POST,DELETE,OPTIONS'
-  );
-
-  response.header(
-    'Access-Control-Allow-Headers',
-    'Content-Type, Authorization, Content-Length, X-Requested-With'
-  );
-
-  response.send(204);
-}); */
 
 // https://stackoverflow.com/questions/34808925/express-and-websocket-listening-on-the-same-port?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
 // Mount app on server //
@@ -143,7 +113,6 @@ wss.on('connection', (ws, request) => {
   ws.on('message', message => {
     // Check for 'close' message; if close that means page refreshed or page closed. //
     if (message === 'close') {
-      console.log('Closing socket...');
       findCloseSocket(ws);
     }
   });
@@ -165,10 +134,8 @@ var findCloseSocket = ws => {
   });
 
   if (socketIndex !== -1) {
-    console.log('Found socket, closing...');
     wsClients[socketIndex].close;
     wsClients.splice(socketIndex, 1);
-    console.log('Socket closed.');
   } else {
     console.log('Socket not found.');
     raven.logException(
