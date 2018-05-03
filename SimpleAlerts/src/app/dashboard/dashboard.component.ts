@@ -15,10 +15,10 @@ import { Cheer } from '../shared/models/cheer.model';
 import { Settings } from '../shared/models/settings/settings.model';
 import { Filter } from '../shared/models/filters/filter.model';
 import { EventList } from '../shared/models/settings/eventList.model';
+import { environment } from '../../environments/environment';
 
 // Session Storage //
 import { SessionStorageService } from '../services/session-storage.service';
-import { environment } from '../../environments/environment.prod';
 
 @Component({
   selector: 'app-dashboard',
@@ -28,14 +28,10 @@ import { environment } from '../../environments/environment.prod';
 export class DashboardComponent implements OnInit {
   // Properties //
   ws: $WebSocket;
-  streamlabsTokenRoute = 'http://localhost:8000/api/v1/streamlabs/token';
-  updateSettingsRoute = 'http://localhost:8000/api/v1/settings/';
+  streamlabsTokenRoute = environment.baseServerPath + 'api/v1/streamlabs/token';
+  updateSettingsRoute = environment.baseServerPath + 'api/v1/settings/';
   twitchDisplayName: String;
   username: String;
-  streamLabsAuthUrl = 'https://www.streamlabs.com/api/v1.0/authorize' +
-  '?client_id=3cHN5exsWXQhEaKKvTkcuFQTA70Besv08T5aWMjw' +
-  '&redirect_uri=http://localhost:4200/dashboard' +
-  '&response_type=code&scope=donations.read+socket.token';
   settings: Settings;
   eventLists: Array<EventList> = [];
   sessionData: any;
@@ -217,7 +213,9 @@ export class DashboardComponent implements OnInit {
   }
 
   connectWebsocket() {
-    this.ws = new $WebSocket(`ws://127.0.0.1:8000/?user=${this.username}`);
+    this.ws = new $WebSocket(
+      environment.baseSimpleSocketPath + `?user=${this.username}`
+    );
     // Setup Websocket //
     this.ws.onMessage(
       (msg: MessageEvent) => {
