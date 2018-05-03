@@ -2,11 +2,11 @@
 require('dotenv').config();
 const WSServer = require('ws').Server;
 let server;
-if (process.env.NODE_ENV === 'dev') {
-  server = require('http').createServer();
-} else {
-  server = require('https').createServer();
-}
+// if (process.env.NODE_ENV === 'dev') {
+server = require('http').createServer();
+// } else {
+//   server = require('https').createServer();
+// }
 const app = require('../app');
 const db = require('../database/db');
 const wss = new WSServer({
