@@ -21,7 +21,8 @@ let wsClients = new Array();
 app.use(
   cors({
     origin: ['http://localhost:4200', 'https://www.simplealerts.stream'],
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE'
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    preflightContinue: true
   })
 );
 
