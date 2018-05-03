@@ -2,10 +2,13 @@
 require('dotenv').config();
 const WSServer = require('ws').Server;
 let server;
+let origin;
 if (process.env.NODE_ENV === 'dev') {
   server = require('http').createServer();
+  origin = 'http://localhost:4200';
 } else {
   server = require('https').createServer();
+  origin = 'https://www.simplealerts.stream';
 }
 const cors = require('cors');
 const app = require('../app');
@@ -18,8 +21,12 @@ const apiBase = '/api/v1/';
 let wsClients = new Array();
 
 // Setup CORS //
-app.options(`${apiBase}'streamlabs/token'`, cors());
-app.use(cors());
+app.use(
+  cors({
+    origin: ['http://localhost:4200', 'https://www.simplealerts.stream'],
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE'
+  })
+);
 
 // Define routes //
 app.get('/', (request, response) => {
