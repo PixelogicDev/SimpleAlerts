@@ -6,11 +6,10 @@ if (process.env.NODE_ENV === 'dev') {
   server = require('http').createServer();
 } else {
   server = require('https').createServer((req, res) => {
-    res.setHeader(
-      'Access-Control-Allow-Origin',
-      'https://www.simplealerts.stream'
-    );
-    res.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET, PUT, POST');
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Request-Method', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET');
+    res.setHeader('Access-Control-Allow-Headers', '*');
   });
 }
 const cors = require('cors');
@@ -24,12 +23,12 @@ const apiBase = '/api/v1/';
 let wsClients = new Array();
 
 // Setup CORS //
-app.use(
-  cors({
-    origin: ['http://localhost:4200', 'https://www.simplealerts.stream'],
-    allowedHeaders: ['OPTIONS', 'GET', 'PUT', 'POST']
-  })
-);
+// app.use(
+//   cors({
+//     origin: ['http://localhost:4200', 'https://www.simplealerts.stream'],
+//     allowedHeaders: ['OPTIONS', 'GET', 'PUT', 'POST']
+//   })
+// );
 
 // Define routes //
 app.get('/', (request, response) => {
