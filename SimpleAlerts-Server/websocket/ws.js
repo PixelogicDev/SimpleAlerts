@@ -28,12 +28,14 @@ app.post(apiBase + 'streamlabs/token', async (request, response) => {
     raven.logException(`[getAuthToken] ${error}`);
   });
 
+  console.log(token);
   // Get user data from Streamlabs //
   var streamlabsUser = await streamlabs.getUserInfo(token).catch(error => {
     console.log(`[getUserInfo] ${error}`);
     raven.logException(`[getUserInfo] ${error}`);
   });
 
+  console.log(streamlabsUser);
   // Check to see if user is part of SimpleAlerts //
   user = await db.findUser(streamlabsUser.twitch.id).catch(error => {
     console.log(`[findUser] ${error}`);
@@ -49,6 +51,7 @@ app.post(apiBase + 'streamlabs/token', async (request, response) => {
     });
   }
 
+  conole.log(user);
   // Given access_token, get socket tocken //
   var socketToken = await streamlabs.getSocketToken(token).catch(error => {
     console.log(`[getSocketToken] ${error}`);
