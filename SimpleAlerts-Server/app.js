@@ -25,7 +25,7 @@ app.use(
   cors({
     origin: ['http://localhost:4200', 'https://www.simplealerts.stream'],
     methods: ['OPTIONS', 'GET', 'PUT', 'POST'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'Accept']
+    allowedHeaders: ['content-type', 'Authorization', 'Origin', 'Accept']
   })
 );
 
