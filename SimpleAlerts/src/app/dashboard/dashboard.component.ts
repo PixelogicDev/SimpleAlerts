@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { $WebSocket } from 'angular2-websocket/angular2-websocket';
@@ -40,6 +40,25 @@ export class DashboardComponent implements OnInit {
   eventLists: Array<EventList> = [];
   sessionData: any;
 
+  // Close websocket before close //
+  @HostListener('window:beforeunload', ['$event'])
+  beforeUnloadHander(event) {
+    // Refresh or page closed, closet socket //
+    this.ws.send('close').subscribe(
+      msg => {
+        console.log('next', msg.data);
+      },
+      msg => {
+        console.log('error', msg);
+      },
+      () => {
+        console.log('complete');
+        // Tell server to close socket //
+        this.ws.close();
+      }
+    );
+  }
+
   constructor(
     private http: HttpClient,
     private route: ActivatedRoute,
@@ -53,9 +72,7 @@ export class DashboardComponent implements OnInit {
     this.sessionData = this.sessionStorageService.getSessionData();
 
     if (this.sessionData) {
-      if (!environment.production) {
-        console.log('Session data is here. Setting props...');
-      }
+      console.log('Session data is here. Setting props...');
 
       // Set properties with session storage //
       this.username = this.sessionData.username;
@@ -66,16 +83,13 @@ export class DashboardComponent implements OnInit {
       // On page refresh, websocket connections are broken, always setup again //
       this.connectWebsocket();
     } else {
-      if (!environment.production) {
-        console.log('Session data not here. Starting auth...');
-      }
+      console.log('Session data not here. Starting auth...');
 
       this.route.queryParams.subscribe(params => {
         this.getStreamlabsData(params['code']);
       });
     }
   }
-
   // Helpers //
   addEventList(element: any) {
     if (element !== null) {
@@ -203,7 +217,7 @@ export class DashboardComponent implements OnInit {
   }
 
   connectWebsocket() {
-    this.ws = new $WebSocket(`ws://127.0.0.1:8080/?user=${this.username}`);
+    this.ws = new $WebSocket(`ws://127.0.0.1:8000/?user=${this.username}`);
     // Setup Websocket //
     this.ws.onMessage(
       (msg: MessageEvent) => {

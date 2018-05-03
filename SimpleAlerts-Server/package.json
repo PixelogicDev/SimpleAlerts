@@ -2,8 +2,9 @@
   "name": "simplealerts-server",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "websocket/ws.js",
   "scripts": {
+    "start": "node websocket/ws.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

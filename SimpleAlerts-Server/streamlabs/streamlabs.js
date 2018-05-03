@@ -1,9 +1,21 @@
 const https = require('https');
 const authBaseHostName = 'streamlabs.com';
 const StreamlabsSocketClient = require('streamlabs-socket-client');
-const websocket = require('../websocket/ws');
 
 //-- Helpers --//
+var streamData = (data, username, clients) => {
+  console.log('Sending stream data to client...');
+
+  clients.forEach(client => {
+    if (client.id === `/?user=${username}`) {
+      console.log('Socket found, sending data...');
+      client.send(data);
+      console.log('Data has been sent.');
+      return;
+    }
+  });
+};
+
 var tokenBodyBuilder = code => {
   return JSON.stringify({
     grant_type: 'authorization_code',
@@ -181,7 +193,7 @@ module.exports = {
     });
   },
 
-  setupSocket: (socketToken, username) => {
+  setupSocket: (socketToken, username, clients) => {
     var client = new StreamlabsSocketClient({
       token: socketToken,
       emitTests: true,
@@ -190,17 +202,17 @@ module.exports = {
 
     client.on('follow', follower => {
       var followerObj = eventDataParser(follower, 'new_follower');
-      websocket.streamData(followerObj, username);
+      streamData(followerObj, username, clients);
     });
 
     client.on('donation', donation => {
       var donationObj = eventDataParser(donation, 'new_donation');
-      websocket.streamData(donationObj, username);
+      streamData(donationObj, username, clients);
     });
 
     client.on('subscription', subscription => {
       var subscriptionObj = eventDataParser(subscription, 'new_subscription');
-      websocket.streamData(subscriptionObj, username);
+      streamData(subscriptionObj, username, clients);
     });
 
     client.on('resubscription', resubscription => {
@@ -208,12 +220,12 @@ module.exports = {
         resubscription,
         'new_resubscription'
       );
-      websocket.streamData(resubscriptionObj, username);
+      streamData(resubscriptionObj, username, clients);
     });
 
     client.on('bits', bits => {
       var bitsObj = eventDataParser(bits, 'new_cheer');
-      websocket.streamData(bitsObj, username);
+      streamData(bitsObj, username, clients);
     });
 
     client.connect();
