@@ -2,13 +2,10 @@
 require('dotenv').config();
 const WSServer = require('ws').Server;
 let server;
-let origin;
 if (process.env.NODE_ENV === 'dev') {
   server = require('http').createServer();
-  origin = 'http://localhost:4200';
 } else {
   server = require('https').createServer();
-  origin = 'https://www.simplealerts.stream';
 }
 const cors = require('cors');
 const app = require('../app');
