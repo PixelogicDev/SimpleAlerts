@@ -6,6 +6,6 @@ export const environment = {
   streamLabsAuthUrl:
     'https://www.streamlabs.com/api/v1.0/authorize' +
     '?client_id=3cHN5exsWXQhEaKKvTkcuFQTA70Besv08T5aWMjw' +
-    '&redirect_uri=https://simplealerts.stream/dashboard' +
+    '&redirect_uri=https://www.simplealerts.stream/dashboard' +
     '&response_type=code&scope=donations.read+socket.token'
 };
