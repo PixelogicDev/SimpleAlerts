@@ -7,6 +7,7 @@ if (process.env.NODE_ENV === 'dev') {
 } else {
   server = require('https').createServer();
 }
+const cors = require('cors');
 const app = require('../app');
 const db = require('../database/db');
 const wss = new WSServer({ server: server });
@@ -15,6 +16,10 @@ const streamlabs = require('../streamlabs/streamlabs');
 // -- Props -- //
 const apiBase = '/api/v1/';
 let wsClients = new Array();
+
+// Setup CORS //
+app.options(`${apiBase}'streamlabs/token'`, cors());
+app.use(cors());
 
 // Define routes //
 app.get('/', (request, response) => {
