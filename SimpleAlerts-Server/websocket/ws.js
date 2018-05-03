@@ -1,6 +1,10 @@
 // ws://<urlpath>:8000 || process port
 const WSServer = require('ws').Server;
-const server = require('http').createServer();
+if (process.env.NODE_ENV === 'dev') {
+  const server = require('http').createServer();
+} else {
+  const server = require('https').createServer();
+}
 const app = require('../app');
 const db = require('../database/db');
 const wss = new WSServer({ server: server });
