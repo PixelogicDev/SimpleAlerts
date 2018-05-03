@@ -21,6 +21,8 @@ app.post(apiBase + 'streamlabs/token', async (request, response) => {
 
   // Use code from client to request token //
   var authCode = request.body.code;
+  console.log(authCode);
+  console.log(body);
 
   // Given code, need to get auth token for requests //
   var token = await streamlabs.getAuthToken(authCode).catch(error => {
