@@ -72,7 +72,7 @@ You don't have to be streaming in order to see SimpleAlerts in action. To see ho
 
 2.  Create a new event list and turn on all events by clicking the symbols at the top right of the list to toggle them on
 
-3.  Open another browser window and login to https://streamlabs.co,
+3.  Open another browser window and login to https://streamlabs.com,
 
 4.  Navigate to the widgets section and click on "Alert Box"
 
