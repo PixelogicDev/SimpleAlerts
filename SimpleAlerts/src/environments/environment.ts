@@ -7,7 +7,7 @@ export const environment = {
   production: false,
   envName: 'dev',
   baseServerPath: 'http://localhost:8000/',
-  baseSimpleSocketPath: 'ws://127.0.0.1',
+  baseSimpleSocketPath: 'ws://127.0.0.1:8000',
   streamLabsAuthUrl:
     'https://www.streamlabs.com/api/v1.0/authorize' +
     '?client_id=3cHN5exsWXQhEaKKvTkcuFQTA70Besv08T5aWMjw' +

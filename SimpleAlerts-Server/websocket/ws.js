@@ -96,6 +96,8 @@ server.on('request', app);
 wss.on('connection', (ws, request) => {
   console.log(`${request.url} connected to SimpleAlerts Socket`);
 
+  ws.isAlive = true;
+
   // Set Id on socket //
   ws.id = request.url;
 
@@ -116,6 +118,11 @@ wss.on('connection', (ws, request) => {
       findCloseSocket(ws);
     }
   });
+
+  // Verify the connection is still alive //
+  ws.on('pong', () => {
+    heartbeat(ws);
+  });
 });
 
 // Listen to server //
@@ -128,7 +135,7 @@ server.listen(process.env.PORT || 8000, () => {
 });
 
 //-- Helpers --//
-var findCloseSocket = ws => {
+const findCloseSocket = ws => {
   var socketIndex = wsClients.findIndex(item => {
     return item.id === ws.id;
   });
@@ -143,3 +150,19 @@ var findCloseSocket = ws => {
     );
   }
 };
+
+const noop = () => {};
+
+// Called when ping is sent //
+const heartbeat = ws => {
+  ws.isAlive = true;
+}
+
+// Fires a check every 15s to see if socket is still alive //
+setInterval(() => {
+  wsClients.forEach(ws => {
+    if (ws.isAlive === false) return ws.close();
+    ws.isAlive = false;
+    ws.ping(noop);
+  });
+}, 15000);
