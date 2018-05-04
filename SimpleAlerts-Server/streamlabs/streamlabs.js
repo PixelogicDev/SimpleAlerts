@@ -147,6 +147,7 @@ var createSocketClient = (socketToken, username, clients) => {
   });
 
   client.connect();
+
   // Send back to overwrite/put into array //
   return client;
 };

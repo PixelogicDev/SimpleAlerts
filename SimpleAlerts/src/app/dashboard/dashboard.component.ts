@@ -37,10 +37,10 @@ export class DashboardComponent implements OnInit {
   eventLists: Array<EventList> = [];
   sessionData: any;
 
-  // Close websocket before close //
+  // Close websocket before page leave //
   @HostListener('window:beforeunload', ['$event'])
   beforeUnloadHander(event) {
-    // Refresh or page closed, closet socket //
+    // Refresh or page closed, close socket //
     this.ws.send('close').subscribe(
       msg => {
         console.log('next', msg.data);
@@ -155,10 +155,6 @@ export class DashboardComponent implements OnInit {
     this.http
       .post(this.streamlabsTokenRoute, { code: code })
       .subscribe(data => {
-        if (!environment.production) {
-          console.log('Received Streamlabs Data.');
-        }
-
         const user = data['user'];
         this.socketPort = data['port'];
         this.twitchDisplayName = user.twitchDisplayName;

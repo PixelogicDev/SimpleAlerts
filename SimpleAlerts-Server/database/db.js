@@ -3,7 +3,7 @@ const assert = require('assert');
 var db;
 var basePath;
 
-// Use connect method to connect to the server
+// Use connect method to connect to the server //
 MongoClient.connect(process.env.DB_URL, async (err, client) => {
   assert.equal(null, err);
   console.log('Database connection was successful.');
@@ -17,8 +17,7 @@ module.exports = {
     let usersCollection = db.collection('users');
 
     return new Promise((resolve, reject) => {
-      usersCollection.findOne(
-        {
+      usersCollection.findOne({
           _id: userID
         },
         (error, user) => {
@@ -34,7 +33,6 @@ module.exports = {
     });
   },
 
-  // Twitch user ID //
   addNewUser: userData => {
     return new Promise((resolve, reject) => {
       console.log('[addNewUser] Starting...');
@@ -64,9 +62,13 @@ module.exports = {
       console.log('[updateSettings] Starting...');
       let usersCollection = db.collection('users');
 
-      usersCollection.findOneAndUpdate(
-        { username: settings.username },
-        { $set: { settings: settings.eventList } },
+      usersCollection.findOneAndUpdate({
+          username: settings.username
+        }, {
+          $set: {
+            settings: settings.eventList
+          }
+        },
         (error, doc) => {
           if (error) {
             console.log(error);
