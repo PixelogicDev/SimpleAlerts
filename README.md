@@ -1,14 +1,32 @@
 # SimpleAlerts
 
+## Table Of Contents
+
+1.  [Introduction](#introduction)
+2.  [Tech](#tech)
+3.  [How to use](#how-to-use)
+    1.  [Event Lists](#event-lists)
+    2.  [Event Cells](#event-cells)
+    3.  [Filters](#filters)
+        1.  [All Events](#all-events)
+        2.  [Donations & Cheers](#donations-&-cheers)
+        3.  [Subscriptions](#subscriptions)
+4.  [Testing](#testing)
+5.  [Contributing](#contributing)
+6.  [Thank you](#thank-you)
+7.  [License](#license)
+
 Never miss another shoutout again. SimpleAlerts is a streaming tool that helps organize your alerts by using meaningful filters.
 
 ### Introduction
 
-SimpleAlerts was created to help streamers visualize their stream events in a way that is more intuitive. It offers a way to separate your events into whatever groupings makes the most sense to you.
+Welcome to SimpleAlerts! SimpleAlerts was created to help streamers visualize their stream events in a way that is more intuitive. It offers a way to separate your events into whatever groupings makes the most sense to you.
 
 The simplisitic UI of SimpleAlerts makes it easy to get started and understand how to apply different filters to your events. These filters can help keep you on track with shouting out your loyal viewers.
 
 SimpleAlerts is part of the PixelogicDev 28 Day Projects stream. Visit the channel [here](https://www.twitch.tv/pixelogicdev) to see more projects like this!
+
+**_NOTE: SimpleAlerts is currently in Beta! As people begin using the app, the more improvements will happen. Start using SimpleAlers now to help improve it!_**
 
 ### Tech
 
@@ -16,9 +34,11 @@ SimpleAlerts was built using all Javascript tech in a full stack soluton:<br>
 **_Client_**: Angular v5.2.0<br>
 **_Server_**: Node.js v8.9.4<br>
 **_Storage_**: MongoDB v3.4.3<br>
-**_Note: SimpleAlerts has only been tested in Google Chrome browser._**
+**_Note: SimpleAlerts has only been tested in Google Chrome browser and may have issues on other browsers._**
 
 ### How to use
+
+**_NOTE: SimpleAlerts uses Streamlabs to retrieve your events. Currently, SimpleAlerts only supports login through Twitch on Streamlabs._**
 
 #### Event Lists
 
@@ -44,6 +64,20 @@ Donations and Cheers have the ability to be filtered by amount. For example,by e
 
 Subscriptions have become a large part of Twitch and are also a large part of SimpleAlerts! With subscriptions you have the ability to enable two filters, "Bump By Months" & "Bump By Tier". "Bump By Months" will push events to the top of its respective list when a resub month threshold has occured. "Bump By Tier" has the same concept. If an event with a specific tier level is hit or passed, the event will be bumped to the top of its respective list.
 
+### Testing
+
+You don't have to be streaming in order to see SimpleAlerts in action. To see how SimpleAlerts works before using it, follow these steps:
+
+1.  Head over to https://www.simplealerts.stream and connect with Streamlabs
+
+2.  Create a new event list and turn on all events by clicking the symbols at the top right of the list to toggle them on
+
+3.  Open another browser window and login to https://streamlabs.co,
+
+4.  Navigate to the widgets section and click on "Alert Box"
+
+5.  You should now see "Test" events that you can trigger.
+
 ### Contributing
 
 SimpleAlerts is an open source application that is looking for contributions! If you are interested in contributing and/or found a bug, please see below to get started with contributing.
@@ -58,7 +92,11 @@ SimpleAlerts runs an Angular client that is simple to get up and running.
 
 ##### ENV Properties
 
-TODO
+There are some properties within the client file `environment.ts` that need to be setup for you to run your test app:
+
+* `baseServerPath` -> Should be the path of your node server
+* `baseSimpleSocketPath` -> Should be the path of your websocket on your server
+* `streamLabesAuthUrl` -> The auth path for your specific application
 
 ##### Start Client
 
@@ -133,3 +171,13 @@ Also huge shoutout to the following projects used in SimpleAlerts:<br>
 [`mongodb`](https://github.com/mongodb/node-mongodb-native)<br>
 [`streamlabs-socket-client`](https://github.com/tehkhop/streamlabs-socket-client)<br>
 [`ws`](https://github.com/websockets/ws)
+
+### License
+
+Copyright 2018 Pixelogic
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
