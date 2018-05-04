@@ -1,7 +1,7 @@
 const https = require('https');
 const authBaseHostName = 'streamlabs.com';
 const StreamlabsSocketClient = require('streamlabs-socket-client');
-var client = null;
+var socketClients = new Array();
 
 //-- Helpers --//
 var streamData = (data, username, clients) => {
@@ -111,6 +111,46 @@ var eventDataParser = (event, type) => {
   return eventObj;
 };
 
+var createSocketClient = (socketToken, username, clients) => {
+  client = new StreamlabsSocketClient({
+    token: socketToken,
+    emitTests: true,
+    rawEvent: ['connect']
+  });
+
+  client.on('follow', follower => {
+    var followerObj = eventDataParser(follower, 'new_follower');
+    streamData(followerObj, username, clients);
+  });
+
+  client.on('donation', donation => {
+    var donationObj = eventDataParser(donation, 'new_donation');
+    streamData(donationObj, username, clients);
+  });
+
+  client.on('subscription', subscription => {
+    var subscriptionObj = eventDataParser(subscription, 'new_subscription');
+    streamData(subscriptionObj, username, clients);
+  });
+
+  client.on('resubscription', resubscription => {
+    var resubscriptionObj = eventDataParser(
+      resubscription,
+      'new_resubscription'
+    );
+    streamData(resubscriptionObj, username, clients);
+  });
+
+  client.on('bits', bits => {
+    var bitsObj = eventDataParser(bits, 'new_cheer');
+    streamData(bitsObj, username, clients);
+  });
+
+  client.connect();
+  // Send back to overwrite/put into array //
+  return client;
+};
+
 module.exports = {
   getAuthToken: code => {
     let token;
@@ -121,8 +161,7 @@ module.exports = {
       // Create body params //
       var bodyData = tokenBodyBuilder(code);
 
-      var request = https.request(
-        {
+      var request = https.request({
           method: 'POST',
           hostname: authBaseHostName,
           path: '/api/v1.0/token',
@@ -157,8 +196,7 @@ module.exports = {
   getSocketToken: accessToken => {
     return new Promise((resolve, reject) => {
       request = https
-        .request(
-          {
+        .request({
             method: 'GET',
             hostname: authBaseHostName,
             path: `/api/v1.0/socket/token?access_token=${accessToken}`,
@@ -185,44 +223,24 @@ module.exports = {
   },
 
   setupSocket: (socketToken, username, clients) => {
-    if (client === null || !client.client.connected) {
-      client = new StreamlabsSocketClient({
-        token: socketToken,
-        emitTests: true,
-        rawEvent: ['connect']
+    // Access client socket array //
+    var clientIndex = -1;
+    if (socketClients.length !== 0) {
+      clientIndex = socketClients.findIndex(client => {
+        return client.token === socketToken;
       });
+    }
 
-      client.on('follow', follower => {
-        var followerObj = eventDataParser(follower, 'new_follower');
-        streamData(followerObj, username, clients);
-      });
-
-      client.on('donation', donation => {
-        var donationObj = eventDataParser(donation, 'new_donation');
-        streamData(donationObj, username, clients);
-      });
-
-      client.on('subscription', subscription => {
-        var subscriptionObj = eventDataParser(subscription, 'new_subscription');
-        streamData(subscriptionObj, username, clients);
-      });
-
-      client.on('resubscription', resubscription => {
-        var resubscriptionObj = eventDataParser(
-          resubscription,
-          'new_resubscription'
-        );
-        streamData(resubscriptionObj, username, clients);
-      });
-
-      client.on('bits', bits => {
-        var bitsObj = eventDataParser(bits, 'new_cheer');
-        streamData(bitsObj, username, clients);
-      });
-
-      client.connect();
+    if (clientIndex !== -1) {
+      if (!socketClients[clientIndex].client.connected) {
+        console.log('Found client, but disconnected.');
+        var newClient = createSocketClient(socketToken, username, clients);
+        socketClients[clientIndex] = newClient;
+      }
     } else {
-      console.log('Client already connected.');
+      console.log('Client does not exist, creating new client...');
+      var newClient = createSocketClient(socketToken, username, clients);
+      socketClients.push(newClient);
     }
   },
 
