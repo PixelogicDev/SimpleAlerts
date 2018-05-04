@@ -1,5 +1,7 @@
 # SimpleAlerts
 
+### Never miss another shoutout again. SimpleAlerts is a streaming tool that helps organize your alerts by using meaningful filters.
+
 #### Table Of Contents
 
 1.  [Introduction](#introduction)
@@ -15,8 +17,6 @@
 5.  [Contributing](#contributing)
 6.  [Thank you](#thank-you)
 7.  [License](#license)
-
-Never miss another shoutout again. SimpleAlerts is a streaming tool that helps organize your alerts by using meaningful filters.
 
 ### Introduction
 
