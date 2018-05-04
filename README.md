@@ -9,7 +9,7 @@
     2.  [Event Cells](#event-cells)
     3.  [Filters](#filters)
         1.  [All Events](#all-events)
-        2.  [Donations & Cheers](#donations-&-cheers)
+        2.  [Donations & Cheers](#donations-and-cheers)
         3.  [Subscriptions](#subscriptions)
 4.  [Testing](#testing)
 5.  [Contributing](#contributing)
@@ -56,7 +56,7 @@ The key behind SimpleAlerts is its filter system. This system helps you to never
 
 All events have one filter in common which is the "Bump By Time" filter. By enabling this filter, events that pass a minute threshold you set will be bumped to the top of its resepctive event list.
 
-##### Donations & Cheers
+##### Donations and Cheers
 
 Donations and Cheers have the ability to be filtered by amount. For example,by enabling the "Bump By Amount" filter, any donation at that amount or higher will be bumped to the top of its respective event list. This logic also applies for the "Bump By Bits" filter.
 
