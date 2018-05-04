@@ -12,6 +12,11 @@
   padding-left: 25px;
 }
 
+.subtitle {
+  font-size: 20px !important;
+  font-weight: 200 !important;
+}
+
 .header .nav a {
   padding-right: 25px;
   font-size: 30px;
@@ -52,7 +57,7 @@
 }
 
 .container .component {
-  width: 800px;
+  width: 75%;
   padding-bottom: 200px;
 }
 
@@ -69,10 +74,23 @@
 .follows,
 .subs .event-details {
   font-size: 28px;
-  width: 546px;
   text-align: center;
 }
 
 mat-grid-list {
   padding-bottom: 200px;
+}
+
+@media (max-width: 414px) {
+  .header .title {
+    width: 100%;
+    text-align: center;
+    padding: 0;
+  }
+  .nav a {
+    display: none;
+  }
+  .container .component {
+    width: 100%;
+  }
 }

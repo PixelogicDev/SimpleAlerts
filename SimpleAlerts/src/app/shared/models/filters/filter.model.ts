@@ -24,8 +24,6 @@ export class Filter {
   public runFilters(eventList: Array<Event>): Array<Event> {
     let filteredEvents = eventList;
     if (this.isActive) {
-      console.log('Filter is active.');
-
       // -- All time threshold -- //
       if (this.bumpIsActive) {
         filteredEvents = this.bumpToTopByTime(filteredEvents);
@@ -33,8 +31,6 @@ export class Filter {
 
       // -- Sub Filters --//
       if (this.subscriptionFilter !== null) {
-        console.log('SubFilter available.');
-
         if (this.subscriptionFilter.filterByMonths) {
           filteredEvents = this.subscriptionFilter.byMonths(filteredEvents);
         }
@@ -46,8 +42,6 @@ export class Filter {
 
       // -- Amount Filters (Donations & Cheers) -- //
       if (this.amountFilter !== null) {
-        console.log('Amount filter is available.');
-
         if (this.amountFilter.filterByAmount) {
           filteredEvents = this.amountFilter.byAmount(filteredEvents);
         }

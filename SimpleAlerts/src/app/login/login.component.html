@@ -11,6 +11,9 @@
 <div class="container">
   <div class="title">
     SimpleAlerts
+    <div class="subtitle">
+      BETA
+    </div>
   </div>
   <div class="detail">
     Never miss another shoutout.
@@ -25,7 +28,7 @@
     Designed to help organize your alerts by meaningful filters.
   </div>
 </div>
-<mat-grid-list cols="2" rowHeight="363px">
+<mat-grid-list [cols]="breakpoint" rowHeight="2:2" (window:resize)="onResize($event)">
   <mat-grid-tile>
     <div class="donations">
       <img src="../../assets/home-page/donations.png" />
@@ -68,7 +71,8 @@
     Made for the community.
   </div>
 </div>
-<mat-grid-list cols="2" rowHeight="400px">
+<mat-grid-list [cols]="breakpoint" rowHeight="2:3" (window:resize)="onResize($event)">
+
   <mat-grid-tile>
     <div class="container">
       <div #contribute class="title">

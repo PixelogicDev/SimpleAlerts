@@ -25,8 +25,6 @@ export class Settings {
     }
 
     if (eventLists !== null) {
-      console.log('Deserializing event lists...');
-
       // Get array of eventLists and loop //
       eventLists.forEach(list => {
         const currentEventList = new EventList(

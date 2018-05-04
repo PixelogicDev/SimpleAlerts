@@ -16,7 +16,6 @@ export class AmountFilter {
   }
 
   byAmount(eventList: Array<Event>): Array<Event> {
-    console.log('Filtering events by amount...');
     const tempList = Array<Event>();
     let currentThreshold = 0;
 
