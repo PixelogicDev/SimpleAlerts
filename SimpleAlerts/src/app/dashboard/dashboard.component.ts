@@ -40,20 +40,8 @@ export class DashboardComponent implements OnInit {
   // Close websocket before page leave //
   @HostListener('window:beforeunload', ['$event'])
   beforeUnloadHander(event) {
-    // Refresh or page closed, close socket //
-    this.ws.send('close').subscribe(
-      msg => {
-        console.log('next', msg.data);
-      },
-      msg => {
-        console.log('error', msg);
-      },
-      () => {
-        console.log('complete');
-        // Tell server to close socket //
-        this.ws.close();
-      }
-    );
+    // On refresh or page close, tell server to close the socket connection //
+    this.ws.close(true);
   }
 
   constructor(

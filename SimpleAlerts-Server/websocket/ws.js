@@ -11,7 +11,6 @@ const raven = require('../utilities/raven');
 const streamlabs = require('../streamlabs/streamlabs');
 // -- Props -- //
 const apiBase = '/api/v1/';
-let wsClients = new Array();
 
 // Define routes //
 app.get('/', (request, response) => {
@@ -46,22 +45,22 @@ app.post(apiBase + 'streamlabs/token', async (request, response) => {
   // If no user object is returned, create new user in DB //
   if (user === null) {
     // Create new user in db //
-    user = await db.addNewUser(streamlabsUser.twitch, token).catch(error => {
+    user = await db.addNewUser(streamlabsUser.twitch).catch(error => {
       console.log(`[findUser] ${error}`);
       raven.logException(`[findUser] ${error}`);
     });
   }
 
-  // Given access_token, get socket tocken //
+  // Given access_token, get socket token //
   var socketToken = await streamlabs.getSocketToken(token).catch(error => {
     console.log(`[getSocketToken] ${error}`);
     raven.logException(`[getSocketToken] ${error}`);
   });
 
   // Setup socket to receive alert //
-  streamlabs.setupSocket(socketToken, user.username, wsClients);
+  streamlabs.setupSocket(socketToken, user.username, wss.clients);
 
-  // Pass port so the websocket knows where to listen to //
+  // Pass user object to client //
   response.send({
     user: user
   });
@@ -94,15 +93,12 @@ server.on('request', app);
 
 // Setup on connection //
 wss.on('connection', (ws, request) => {
-  console.log(`${request.url} connected to SimpleAlerts Socket`);
+  console.log(`[${request.url}] Connected to SimpleAlerts Socket`);
 
   ws.isAlive = true;
 
   // Set Id on socket //
   ws.id = request.url;
-
-  // Push to local array //
-  wsClients.push(ws);
 
   var response = JSON.stringify({
     type: 'connection_open',
@@ -112,11 +108,18 @@ wss.on('connection', (ws, request) => {
   ws.send(response);
 
   //-- OnMessage --//
-  ws.on('message', message => {
-    // Check for 'close' message; if close that means page refreshed or page closed. //
-    if (message === 'close') {
-      findCloseSocket(ws);
-    }
+  ws.on('message', message => {});
+
+  ws.on('close', reason => {
+    console.log(`[${ws.id}] Closing socket connection...`);
+    // Close SimpleAlerts Socket //
+    ws.close();
+
+    // Close Streamlabs Socket //
+    // TODO: Figure out if this needs to be closed or not //
+    // streamlabs.closeSocket(ws.id.split('=')[1]);
+
+    console.log(`[${ws.id}] WS connection closed.`);
   });
 
   // Verify the connection is still alive //
@@ -135,22 +138,6 @@ server.listen(process.env.PORT || 8000, () => {
 });
 
 //-- Helpers --//
-const findCloseSocket = ws => {
-  var socketIndex = wsClients.findIndex(item => {
-    return item.id === ws.id;
-  });
-
-  if (socketIndex !== -1) {
-    wsClients[socketIndex].close;
-    wsClients.splice(socketIndex, 1);
-  } else {
-    console.log('Socket not found.');
-    raven.logException(
-      `[findCloseSocket] socket could not be found and closed.`
-    );
-  }
-};
-
 const noop = () => {};
 
 // Called when ping is sent //
@@ -160,7 +147,7 @@ const heartbeat = ws => {
 
 // Fires a check every 15s to see if socket is still alive //
 setInterval(() => {
-  wsClients.forEach(ws => {
+  wss.clients.forEach(ws => {
     if (ws.isAlive === false) return ws.close();
     ws.isAlive = false;
     ws.ping(noop);

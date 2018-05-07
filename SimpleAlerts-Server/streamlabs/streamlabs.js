@@ -118,6 +118,7 @@ var createSocketClient = (socketToken, username, clients) => {
     rawEvent: ['connect']
   });
 
+  // SL events //
   client.on('follow', follower => {
     var followerObj = eventDataParser(follower, 'new_follower');
     streamData(followerObj, username, clients);
@@ -147,6 +148,11 @@ var createSocketClient = (socketToken, username, clients) => {
   });
 
   client.connect();
+
+  // Socket Events //
+  client.client.on('connect', () => {
+    console.log(`[${username}] SL client connected.`);
+  });
 
   // Send back to overwrite/put into array //
   return client;
@@ -226,21 +232,23 @@ module.exports = {
   setupSocket: (socketToken, username, clients) => {
     // Access client socket array //
     var clientIndex = -1;
+
     if (socketClients.length !== 0) {
       clientIndex = socketClients.findIndex(client => {
-        return client.token === socketToken;
+        return client.id === username;
       });
     }
 
     if (clientIndex !== -1) {
       if (!socketClients[clientIndex].client.connected) {
-        console.log('Found client, but disconnected.');
-        var newClient = createSocketClient(socketToken, username, clients);
-        socketClients[clientIndex] = newClient;
+        console.log(`[${username}] Client found but disconnected. Reconnecting...`);
+        socketClients[clientIndex].connect();
+        console.log(`[${username}] Reconnected to SL socket.`);
       }
     } else {
       console.log('Client does not exist, creating new client...');
       var newClient = createSocketClient(socketToken, username, clients);
+      newClient['id'] = username
       socketClients.push(newClient);
     }
   },
@@ -275,5 +283,24 @@ module.exports = {
 
       request.end();
     });
+  },
+
+  // TODO: Figure out if we really need this //
+  closeSocket: username => {
+    // Access client socket array //
+    var clientIndex = -1;
+
+    if (socketClients.length !== 0) {
+      clientIndex = socketClients.findIndex(client => {
+        return client.id === username;
+      });
+    }
+
+    // Close SL socket for client //
+    if (clientIndex !== -1) {
+      socketClients[clientIndex].client.close();
+    } else {
+      console.log('[closeSocket] Client could not be found.');
+    }
   }
 };
